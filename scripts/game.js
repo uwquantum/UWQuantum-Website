@@ -241,19 +241,9 @@ function refreshDebugInput() {
 setInterval(refreshDebugInput, 5000);
 setTimeout(refreshDebugInput, 200);
 
-// ---- Storage ----
-function initDB() {
-    if (!localStorage.getItem('qc_Leaderboard')) localStorage.setItem('qc_Leaderboard', JSON.stringify({}));
-    if (!localStorage.getItem('qc_Auth'))        localStorage.setItem('qc_Auth', JSON.stringify({}));
-    if (!localStorage.getItem('qc_Submissions')) localStorage.setItem('qc_Submissions', JSON.stringify({}));
-    if (!localStorage.getItem('qc_Opponents'))   localStorage.setItem('qc_Opponents', JSON.stringify({}));
-    if (!localStorage.getItem('qc_LastResult'))  localStorage.setItem('qc_LastResult', JSON.stringify({}));
-}
-initDB();
-// Clean up the legacy locally-cached week anchor (we now derive it dynamically
-// from server-anchored time, so a wrong device clock at first visit can't
-// permanently poison the week numbers).
-localStorage.removeItem('qc_WeekAnchor');
+// One-time cleanup of legacy localStorage keys from the pre-Supabase version.
+['qc_Leaderboard','qc_Auth','qc_Submissions','qc_Opponents','qc_LastResult','qc_WeekAnchor']
+    .forEach(k => localStorage.removeItem(k));
 
 // ---- Login persistence (cookie + localStorage redundancy) ----
 const SESSION_COOKIE = 'qc_user';
@@ -446,116 +436,29 @@ function checkGameState() {
     const wk = getWeekNumber();
     if (lastSeenWeek === -1) lastSeenWeek = wk;
 
-    // If week incremented, we crossed Wed 7 PM — resolve and reset
+    // If the week incremented (we crossed Wed 7 PM), refresh the dashboard
+    // so the new rule and a cleared wavefunction are displayed. The actual
+    // matchmaking + resolution happens on the server (Supabase Edge Function),
+    // so the client just re-fetches state.
     if (wk > lastSeenWeek) {
-        resolveMatches();
         hasSubmittedThisWeek = false;
         resetWeeklyState();
         lastSeenWeek = wk;
+        if (currentUser) renderLastResult();
+        renderLeaderboard();
     }
 
-    const lockout = isLockoutNow();
-    if (lockout) {
-        const opps = JSON.parse(localStorage.getItem('qc_Opponents'));
-        const subs = JSON.parse(localStorage.getItem('qc_Submissions'));
-        if (Object.keys(opps).length === 0 && Object.keys(subs).length > 0) performMatchmaking();
-    }
-    updateUI(lockout);
+    updateUI(isLockoutNow());
 }
 
-function performMatchmaking() {
-    const subs = JSON.parse(localStorage.getItem('qc_Submissions'));
-    const players = Object.keys(subs);
-    const opps = {};
-    players.sort(() => Math.random() - 0.5);
-
-    if (players.length % 2 !== 0) {
-        const botName = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)] + ' Bot';
-        const p1 = players.pop();
-        opps[p1] = botName;
-        opps[botName] = p1;
-        generateBotSubmission(botName);
-    }
-    while (players.length >= 2) {
-        const p1 = players.pop(), p2 = players.pop();
-        opps[p1] = p2; opps[p2] = p1;
-    }
-    localStorage.setItem('qc_Opponents', JSON.stringify(opps));
-}
-
-function generateBotSubmission(botName) {
-    const bot = new Array(N).fill(0);
-    const peak = Math.floor(Math.random() * N);
-    const width = 2 + Math.random() * 2;
-    const weights = new Array(N).fill(0).map((_, i) => Math.exp(-((i - peak) ** 2) / (2 * width * width)) + 0.15);
-    const wSum = weights.reduce((a, b) => a + b, 0);
-    for (let i = 0; i < N; i++) bot[i] = Math.round((weights[i] / wSum) * TOTAL);
-    const drift = TOTAL - bot.reduce((s, v) => s + v, 0);
-    bot[peak] += drift;
-
-    const tokenIdx = (Math.random() < 0.6) ? Math.floor(Math.random() * N) : -1;
-    const subs = JSON.parse(localStorage.getItem('qc_Submissions'));
-    subs[botName] = { amps: bot, token: tokenIdx };
-    localStorage.setItem('qc_Submissions', JSON.stringify(subs));
-}
-
-function normalizeSubmission(raw) {
-    if (!raw) return { amps: new Array(N).fill(0), token: -1 };
-    if (Array.isArray(raw)) return { amps: raw, token: -1 };
-    return raw;
-}
-
-function resolveMatches() {
-    const ruleId = RULES[lastSeenWeek % RULES.length].id; // rule of the week JUST ENDED
-    const subs = JSON.parse(localStorage.getItem('qc_Submissions'));
-    const opps = JSON.parse(localStorage.getItem('qc_Opponents'));
-    const lb = JSON.parse(localStorage.getItem('qc_Leaderboard'));
-    const results = JSON.parse(localStorage.getItem('qc_LastResult'));
-    const processed = new Set();
-
-    for (const [p1, p2] of Object.entries(opps)) {
-        if (processed.has(p1) || processed.has(p2)) continue;
-        const s1 = normalizeSubmission(subs[p1]);
-        const s2 = normalizeSubmission(subs[p2]);
-
-        // 1. apply weekly rule
-        const ruled = applyRule(ruleId, s1.amps, s2.amps);
-        const final1 = ruled.my, final2 = ruled.opp;
-
-        // 2. count channel wins
-        let p1Wins = 0, p2Wins = 0;
-        for (let i = 0; i < N; i++) {
-            if (final1[i] > final2[i]) p1Wins++;
-            else if (final2[i] > final1[i]) p2Wins++;
-        }
-
-        // 3. roll token gambles
-        const p1TokenBonus = rollTokenBonus(s1.token);
-        const p2TokenBonus = rollTokenBonus(s2.token);
-        p1Wins += p1TokenBonus;
-        p2Wins += p2TokenBonus;
-
-        if (lb[p1] !== undefined) lb[p1] += p1Wins;
-        if (lb[p2] !== undefined) lb[p2] += p2Wins;
-
-        results[p1] = { opponent: p2, youAmps: final1, oppAmps: final2, youWins: p1Wins, oppWins: p2Wins, youToken: s1.token, youTokenBonus: p1TokenBonus, ruleId };
-        results[p2] = { opponent: p1, youAmps: final2, oppAmps: final1, youWins: p2Wins, oppWins: p1Wins, youToken: s2.token, youTokenBonus: p2TokenBonus, ruleId };
-        processed.add(p1); processed.add(p2);
-    }
-
-    localStorage.setItem('qc_Leaderboard', JSON.stringify(lb));
-    localStorage.setItem('qc_LastResult', JSON.stringify(results));
-    localStorage.setItem('qc_Submissions', JSON.stringify({}));
-    localStorage.setItem('qc_Opponents', JSON.stringify({}));
-    renderLeaderboard();
-}
+// NOTE: Matchmaking, weekly resolution, and bot generation now happen on the
+// server side via the Supabase Edge Function (`resolve-week`), scheduled by
+// pg_cron to run every Wednesday at 7 PM. The client no longer touches that
+// logic — it only submits its own wavefunction and reads the resulting
+// `matches` + `profiles` tables to display history and leaderboard.
 
 function updateUI(isLockout) {
     if (!currentUser) return;
-
-    const subs = JSON.parse(localStorage.getItem('qc_Submissions'));
-    const opps = JSON.parse(localStorage.getItem('qc_Opponents'));
-    hasSubmittedThisWeek = !!subs[currentUser];
 
     renderRulePanel();
     renderSchedulePanel(isLockout);
@@ -564,7 +467,9 @@ function updateUI(isLockout) {
         statusBanner.textContent = 'Submissions locked — wave functions resolve Wed 7 PM';
         lockoutMessage.classList.remove('hidden');
         activeGameArea.classList.add('hidden');
-        opponentNameDisplay.textContent = opps[currentUser] || '— (no submission this week)';
+        opponentNameDisplay.textContent = hasSubmittedThisWeek
+            ? 'Revealed at resolution (Wed 7 PM)'
+            : '— (no submission this week)';
     } else {
         statusBanner.textContent = 'Open submission — closes Wed 9 AM';
         lockoutMessage.classList.add('hidden');
@@ -573,15 +478,6 @@ function updateUI(isLockout) {
 
         if (hasSubmittedThisWeek) {
             submitPointsBtn.textContent = 'Update wavefunction';
-            const stored = normalizeSubmission(subs[currentUser]);
-            // Reflect stored state into the heatmap if user hasn't changed it locally
-            if (allZero()) {
-                amplitudes = stored.amps.slice();
-                superposedIndex = stored.token ?? -1;
-                paintHeatmap();
-                updatePointsCounter();
-                updateTokenButton();
-            }
         } else {
             submitPointsBtn.textContent = 'Submit wavefunction';
         }
@@ -648,37 +544,65 @@ tabRegister.addEventListener('click', () => {
     registerError.classList.add('hidden');
 });
 
-loginBtn.addEventListener('click', () => {
+// Build a pseudo-email from a username so Supabase auth works without
+// collecting real email addresses. The handle_new_user() trigger in the
+// database copies the username from raw_user_meta_data into profiles.
+const usernameToEmail = (u) => `${u.toLowerCase().replace(/[^a-z0-9_-]/g, '')}@uwquantum.club`;
+
+loginBtn.addEventListener('click', async () => {
     loginError.classList.add('hidden');
     const user = loginUser.value.trim(), pass = loginPass.value.trim();
     if (!user || !pass) { loginError.textContent = 'Please enter both fields.'; loginError.classList.remove('hidden'); return; }
-    const auth = JSON.parse(localStorage.getItem('qc_Auth'));
-    if (user in auth && auth[user] === pass) {
-        currentUser = user; rememberUser(user); showDashboard();
-    } else {
-        loginError.textContent = 'Incorrect username or password.'; loginError.classList.remove('hidden');
+    const { error } = await sb.auth.signInWithPassword({
+        email: usernameToEmail(user),
+        password: pass,
+    });
+    if (error) {
+        loginError.textContent = error.message.includes('Invalid')
+            ? 'Incorrect username or password.'
+            : error.message;
+        loginError.classList.remove('hidden');
+        return;
     }
+    currentUser = user;
+    rememberUser(user);
+    showDashboard();
 });
 
-registerBtn.addEventListener('click', () => {
+registerBtn.addEventListener('click', async () => {
     registerError.classList.add('hidden');
     const user = registerUser.value.trim(), pass = registerPass.value.trim();
     if (!user || !pass) { registerError.textContent = 'Required.'; registerError.classList.remove('hidden'); return; }
-    if (pass.length < 6 || !/[a-zA-Z]/.test(pass) || !/[0-9]/.test(pass)) {
-        registerError.textContent = 'At least 6 characters with one letter and one number.';
+    if (!/^[a-zA-Z0-9_-]{3,20}$/.test(user)) {
+        registerError.textContent = 'Username: 3–20 characters, letters/digits/underscore/dash only.';
         registerError.classList.remove('hidden'); return;
     }
-    const auth = JSON.parse(localStorage.getItem('qc_Auth'));
-    const lb = JSON.parse(localStorage.getItem('qc_Leaderboard'));
-    if (user in auth) { registerError.textContent = 'Username taken.'; registerError.classList.remove('hidden'); return; }
-    auth[user] = pass; lb[user] = 0;
-    localStorage.setItem('qc_Auth', JSON.stringify(auth));
-    localStorage.setItem('qc_Leaderboard', JSON.stringify(lb));
-    currentUser = user; rememberUser(user); showDashboard();
+    if (pass.length < 6 || !/[a-zA-Z]/.test(pass) || !/[0-9]/.test(pass)) {
+        registerError.textContent = 'Password: at least 6 characters with one letter and one number.';
+        registerError.classList.remove('hidden'); return;
+    }
+    const { error } = await sb.auth.signUp({
+        email: usernameToEmail(user),
+        password: pass,
+        options: { data: { username: user } },
+    });
+    if (error) {
+        registerError.textContent = error.message.includes('registered')
+            ? 'Username taken.'
+            : error.message;
+        registerError.classList.remove('hidden');
+        return;
+    }
+    currentUser = user;
+    rememberUser(user);
+    showDashboard();
 });
 
-logoutBtn.addEventListener('click', () => {
-    currentUser = null; forgetUser(); showAuth();
+logoutBtn.addEventListener('click', async () => {
+    await sb.auth.signOut();
+    currentUser = null;
+    forgetUser();
+    showAuth();
 });
 
 function showAuth() {
@@ -694,39 +618,70 @@ function resetWeeklyState() {
     updateTokenButton();
 }
 
-function showDashboard() {
+async function getCurrentUserId() {
+    const { data } = await sb.auth.getUser();
+    return data?.user?.id || null;
+}
+
+async function loadMyExistingSubmission() {
+    const uid = await getCurrentUserId();
+    if (!uid) return;
+    const { data } = await sb
+        .from('submissions')
+        .select('amps, token_idx')
+        .eq('user_id', uid)
+        .eq('week_number', getWeekNumber())
+        .maybeSingle();
+    if (data) {
+        amplitudes = data.amps.slice();
+        superposedIndex = data.token_idx ?? -1;
+        hasSubmittedThisWeek = true;
+        paintHeatmap();
+        updatePointsCounter();
+        updateTokenButton();
+    }
+}
+
+async function showDashboard() {
     authPanel.classList.add('hidden'); dashboardPanel.classList.remove('hidden');
     playerNameDisplay.textContent = currentUser;
     buildHeatmap();
     resetWeeklyState();
     submissionMessage.classList.add('hidden');
     lastSeenWeek = getWeekNumber();
-    // Pre-load any existing submission for this user
-    const subs = JSON.parse(localStorage.getItem('qc_Submissions'));
-    const my = subs[currentUser];
-    if (my) {
-        const stored = normalizeSubmission(my);
-        amplitudes = stored.amps.slice();
-        superposedIndex = stored.token ?? -1;
-        paintHeatmap();
-        updatePointsCounter();
-        updateTokenButton();
-    }
+    await loadMyExistingSubmission();
     renderLeaderboard();
     checkGameState();
 }
 
 // ---- Submit / resubmit ----
-$('channels-form').addEventListener('submit', (e) => {
+$('channels-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     if (isLockoutNow()) return;
     const total = amplitudes.reduce((s, v) => s + v, 0);
     if (total > TOTAL || total === 0) return;
 
-    const subs = JSON.parse(localStorage.getItem('qc_Submissions'));
-    const wasUpdate = !!subs[currentUser];
-    subs[currentUser] = { amps: amplitudes.slice(), token: superposedIndex };
-    localStorage.setItem('qc_Submissions', JSON.stringify(subs));
+    const uid = await getCurrentUserId();
+    if (!uid) {
+        submissionMessage.textContent = 'Please log in to submit.';
+        submissionMessage.classList.remove('hidden');
+        return;
+    }
+
+    const wasUpdate = hasSubmittedThisWeek;
+    const { error } = await sb.from('submissions').upsert({
+        user_id: uid,
+        week_number: getWeekNumber(),
+        amps: amplitudes.slice(),
+        token_idx: superposedIndex,
+        updated_at: new Date(Date.now() + serverOffsetMs).toISOString(),
+    }, { onConflict: 'user_id,week_number' });
+
+    if (error) {
+        submissionMessage.textContent = 'Submit failed: ' + error.message;
+        submissionMessage.classList.remove('hidden');
+        return;
+    }
 
     hasSubmittedThisWeek = true;
     submitPointsBtn.textContent = 'Update wavefunction';
@@ -738,11 +693,36 @@ $('channels-form').addEventListener('submit', (e) => {
 });
 
 // ---- Resolution rendering ----
-function renderLastResult() {
+async function renderLastResult() {
     if (!currentUser) return;
-    const results = JSON.parse(localStorage.getItem('qc_LastResult'));
-    const r = results[currentUser];
-    if (!r) { resolutionPanel.classList.add('hidden'); resolutionPanel.innerHTML = ''; return; }
+    const uid = await getCurrentUserId();
+    if (!uid) return;
+
+    // Pull this player's most recent resolved match
+    const { data } = await sb
+        .from('matches')
+        .select('*')
+        .or(`player_a_id.eq.${uid},player_b_id.eq.${uid}`)
+        .order('resolved_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+    if (!data) { resolutionPanel.classList.add('hidden'); resolutionPanel.innerHTML = ''; return; }
+
+    const youAreA = data.player_a_id === uid;
+    const r = {
+        opponent: youAreA ? data.player_b_name : data.player_a_name,
+        youAmps: youAreA ? (data.amps_a || []) : (data.amps_b || []),
+        oppAmps: youAreA ? (data.amps_b || []) : (data.amps_a || []),
+        youWins: youAreA ? data.player_a_score : data.player_b_score,
+        oppWins: youAreA ? data.player_b_score : data.player_a_score,
+        youToken: youAreA ? (data.token_a ?? -1) : (data.token_b ?? -1),
+        youTokenBonus: youAreA ? (data.token_bonus_a ?? 0) : (data.token_bonus_b ?? 0),
+        ruleId: data.rule_id,
+    };
+    // If the schema doesn't yet carry amps_a/amps_b (early version), bail gracefully
+    if (!r.youAmps.length || !r.oppAmps.length) {
+        resolutionPanel.classList.add('hidden'); resolutionPanel.innerHTML = ''; return;
+    }
 
     const ruleName = (RULES.find(x => x.id === r.ruleId) || {}).name || 'standard';
     const maxVal = Math.max(...r.youAmps, ...r.oppAmps, 1);
@@ -784,25 +764,47 @@ function renderLastResult() {
     resolutionPanel.classList.remove('hidden');
 }
 
-function renderLeaderboard() {
-    const lb = JSON.parse(localStorage.getItem('qc_Leaderboard'));
-    if (!lb) return;
-    const sorted = Object.entries(lb)
-        .filter(([name]) => !name.includes('Bot'))
-        .sort((a, b) => b[1] - a[1]);
+async function renderLeaderboard() {
+    const { data, error } = await sb
+        .from('profiles')
+        .select('username, total_points')
+        .order('total_points', { ascending: false })
+        .limit(50);
+    if (error) {
+        leaderboardList.innerHTML = `<li><span>Leaderboard unavailable</span><span></span></li>`;
+        return;
+    }
     leaderboardList.innerHTML = '';
-    if (sorted.length === 0) {
+    if (!data || data.length === 0) {
         leaderboardList.innerHTML = '<li><span>No players yet — register to be first!</span><span></span></li>';
         return;
     }
-    sorted.forEach(([name, score], index) => {
+    data.forEach((row, index) => {
         const li = document.createElement('li');
-        if (name === currentUser) li.classList.add('is-me');
-        li.innerHTML = `<span>${index + 1}. ${name}</span><span>${score} pts</span>`;
+        if (row.username === currentUser) li.classList.add('is-me');
+        li.innerHTML = `<span>${index + 1}. ${row.username}</span><span>${row.total_points} pts</span>`;
         leaderboardList.appendChild(li);
     });
 }
 
 // ---- Init ----
-const savedUser = recallUser();
-if (savedUser) { currentUser = savedUser; showDashboard(); } else { showAuth(); renderLeaderboard(); }
+// Restore session via Supabase (it persists in localStorage with key qc-supabase-auth)
+(async () => {
+    const { data } = await sb.auth.getSession();
+    if (data.session) {
+        // Look up the username from the profile
+        const { data: profile } = await sb
+            .from('profiles')
+            .select('username')
+            .eq('id', data.session.user.id)
+            .maybeSingle();
+        if (profile) {
+            currentUser = profile.username;
+            rememberUser(profile.username);
+            await showDashboard();
+            return;
+        }
+    }
+    showAuth();
+    renderLeaderboard();
+})();
