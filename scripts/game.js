@@ -58,7 +58,7 @@ const RULES = [
         name: 'Quantum measurement',
         short: 'Your tallest channel collapses to 0.',
         long: 'The act of measuring a quantum state changes it. Each player\'s channel with the most quanta gets reduced to zero when the week resolves, the universe takes back your boldest bet.',
-        physics: 'Measurement back-action, observing a quantum system disturbs it.',
+        physics: 'Measurement back-action, observing a quantum system collapses it.',
     },
     {
         id: 'pauli_exclusion',
@@ -788,7 +788,7 @@ async function renderLeaderboard() {
         .from('profiles')
         .select('username, total_points')
         .order('total_points', { ascending: false })
-        .limit(3);
+        .limit(10);
     if (error) {
         leaderboardList.innerHTML = `<li><span>Leaderboard unavailable</span><span></span></li>`;
         return;
