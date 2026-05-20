@@ -5,21 +5,10 @@
 const $ = (id) => document.getElementById(id);
 
 // ---- DOM ----
-const authPanel = $('game-auth');
+// Auth UI lives on join.html now; on game.html we only have the sign-in CTA
+// card (shown when no session) and the dashboard (shown when there is one).
+const signinCta = $('game-signin-cta');
 const dashboardPanel = $('game-dashboard');
-const tabLogin = $('tab-login');
-const tabRegister = $('tab-register');
-const loginForm = $('login-form');
-const registerForm = $('register-form');
-const loginBtn = $('login-btn');
-const registerBtn = $('register-btn');
-const loginEmail = $('login-email');
-const loginPass = $('login-password');
-const registerUser = $('register-username');
-const registerEmail = $('register-email');
-const registerPass = $('register-password');
-const loginError = $('login-error');
-const registerError = $('register-error');
 const logoutBtn = $('logout-btn');
 const playerNameDisplay = $('player-name');
 const opponentNameDisplay = $('opponent-name');
@@ -538,112 +527,23 @@ function renderSchedulePanel(isLockout) {
     `;
 }
 
-// ---- Auth ----
-tabLogin.addEventListener('click', () => {
-    tabLogin.classList.add('active'); tabRegister.classList.remove('active');
-    loginForm.classList.remove('hidden'); registerForm.classList.add('hidden');
-    loginError.classList.add('hidden');
-});
-tabRegister.addEventListener('click', () => {
-    tabRegister.classList.add('active'); tabLogin.classList.remove('active');
-    registerForm.classList.remove('hidden'); loginForm.classList.add('hidden');
-    registerError.classList.add('hidden');
-});
+// ---- Session controls ----
+// Login + registration live on join.html (handled by scripts/auth.js). Here we
+// only need to toggle between the sign-in CTA card (no session) and the
+// dashboard (active session), plus handle logout.
 
-// Accept only University of Waterloo emails. We compare case-insensitively
-// and allow common variants like @edu.uwaterloo.ca for grad students.
-const UW_EMAIL_RE = /^[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)?uwaterloo\.ca$/i;
-
-loginBtn.addEventListener('click', async () => {
-    loginError.classList.add('hidden');
-    const email = loginEmail.value.trim().toLowerCase();
-    const pass = loginPass.value.trim();
-    if (!email || !pass) {
-        loginError.textContent = 'Please enter both email and password.';
-        loginError.classList.remove('hidden'); return;
-    }
-    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-    if (error) {
-        loginError.textContent = /invalid|credentials/i.test(error.message)
-            ? 'Incorrect email or password.'
-            : error.message;
-        loginError.classList.remove('hidden');
-        return;
-    }
-    // Look up the display username from the profiles table
-    const { data: profile } = await sb
-        .from('profiles')
-        .select('username')
-        .eq('id', (await sb.auth.getUser()).data.user.id)
-        .maybeSingle();
-    currentUser = profile?.username || email.split('@')[0];
-    rememberUser(currentUser);
-    showDashboard();
-});
-
-registerBtn.addEventListener('click', async () => {
-    registerError.classList.add('hidden');
-    const user = registerUser.value.trim();
-    const email = registerEmail.value.trim().toLowerCase();
-    const pass = registerPass.value.trim();
-
-    if (!user || !email || !pass) {
-        registerError.textContent = 'All fields are required.';
-        registerError.classList.remove('hidden'); return;
-    }
-    if (!/^[a-zA-Z0-9_-]{3,20}$/.test(user)) {
-        registerError.textContent = 'Username: 3–20 characters, letters/digits/underscore/dash only.';
-        registerError.classList.remove('hidden'); return;
-    }
-    if (!UW_EMAIL_RE.test(email)) {
-        registerError.textContent = 'Email must end with @uwaterloo.ca.';
-        registerError.classList.remove('hidden'); return;
-    }
-    if (pass.length < 6 || !/[a-zA-Z]/.test(pass) || !/[0-9]/.test(pass)) {
-        registerError.textContent = 'Password: at least 6 characters with one letter and one number.';
-        registerError.classList.remove('hidden'); return;
-    }
-    const { data, error } = await sb.auth.signUp({
-        email,
-        password: pass,
-        options: { data: { username: user } },
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+        await sb.auth.signOut();
+        currentUser = null;
+        forgetUser();
+        showAuth();
     });
-    if (error) {
-        registerError.textContent = /registered|already/i.test(error.message)
-            ? 'An account with this email already exists. Try logging in.'
-            : error.message;
-        registerError.classList.remove('hidden');
-        return;
-    }
-    // If Supabase has "Confirm email" enabled, signUp returns success but no
-    // session. The user must click the link in their email before they can
-    // submit anything. Tell them explicitly so they don't end up stuck on a
-    // dashboard with a null session.
-    if (!data.session) {
-        registerError.textContent =
-            `Account created. Check your ${email} inbox for a confirmation link, then return here to log in.`;
-        registerError.classList.remove('hidden');
-        return;
-    }
-    currentUser = user;
-    rememberUser(user);
-    showDashboard();
-});
-
-logoutBtn.addEventListener('click', async () => {
-    await sb.auth.signOut();
-    currentUser = null;
-    forgetUser();
-    showAuth();
-});
+}
 
 function showAuth() {
-    authPanel.classList.remove('hidden'); dashboardPanel.classList.add('hidden');
-    loginEmail.value = '';
-    loginPass.value = '';
-    registerUser.value = '';
-    registerEmail.value = '';
-    registerPass.value = '';
+    if (signinCta)      signinCta.classList.remove('hidden');
+    if (dashboardPanel) dashboardPanel.classList.add('hidden');
 }
 
 function resetWeeklyState() {
@@ -682,7 +582,8 @@ async function loadMyExistingSubmission() {
 }
 
 async function showDashboard() {
-    authPanel.classList.add('hidden'); dashboardPanel.classList.remove('hidden');
+    if (signinCta) signinCta.classList.add('hidden');
+    dashboardPanel.classList.remove('hidden');
     playerNameDisplay.textContent = currentUser;
     buildHeatmap();
     resetWeeklyState();

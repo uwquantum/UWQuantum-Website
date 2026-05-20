@@ -109,6 +109,29 @@
 /* Dashboard layout overrides */
 .qc-dashboard { max-width: none; }
 
+/* Sign-in CTA card (shown on game.html when there's no session) */
+.qc-signin-cta {
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+}
+.qc-signin-blurb {
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+}
+.qc-signin-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.3rem;
+}
+
+/* Auth card on join.html */
+.qc-auth-card { max-width: 560px; }
+
 /* Rule + schedule strip */
 .qc-rule-section {
     max-width: 1260px;
