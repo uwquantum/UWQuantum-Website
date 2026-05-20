@@ -1,187 +1,146 @@
 \documentclass[11pt]{article}
 \usepackage[a4paper,margin=1in]{geometry}
-\usepackage{xcolor}
-\usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{parskip}
-\usepackage{tcolorbox}
-
-\definecolor{qcink}{HTML}{191919}
-\definecolor{qcmuted}{HTML}{5a5955}
-\definecolor{qccoral}{HTML}{d97757}
-\definecolor{qcblue}{HTML}{6d8db5}
-\definecolor{qcgreen}{HTML}{6b9c7c}
-\definecolor{qcteal}{HTML}{2f7d70}
-\definecolor{qcamber}{HTML}{f3c97a}
-\definecolor{qcdark}{HTML}{2b2a24}
-\definecolor{qccream}{HTML}{ece4d2}
 
 \hypersetup{
     colorlinks=true,
-    linkcolor=qcteal,
-    urlcolor=qcteal,
-    pdftitle={Quantum Channels --- Rules \& Concepts},
+    linkcolor=blue,
+    urlcolor=blue,
+    pdftitle={Quantum Channels: Rules and Concepts},
     pdfauthor={Waterloo Quantum Club},
-}
-
-\titleformat{\section}{\Large\bfseries\color{qcink}}{\thesection}{0.6em}{}
-\titleformat{\subsection}{\large\bfseries\color{qcink}}{\thesubsection}{0.5em}{}
-
-\newtcolorbox{rulebox}[1]{
-    colback=qcdark,
-    colframe=qcdark,
-    coltext=qccream,
-    arc=8pt,
-    boxrule=0pt,
-    left=12pt, right=12pt, top=8pt, bottom=8pt,
-    title=\textcolor{qcamber}{\bfseries\small\MakeUppercase{#1}},
-    fonttitle=\sffamily,
-    coltitle=qcamber,
-}
-
-\newtcolorbox{conceptbox}[2]{
-    colback=#1,
-    coltext=qcink,
-    colframe=#1,
-    arc=8pt,
-    boxrule=0pt,
-    left=12pt, right=12pt, top=8pt, bottom=8pt,
-    title=\textbf{\small\MakeUppercase{#2}},
-    fonttitle=\sffamily,
-    coltitle=qcink,
 }
 
 \begin{document}
 
 \begin{center}
-    {\Huge\bfseries Quantum Channels}\\[4pt]
-    {\large\itshape A weekly strategy game inspired by quantum mechanics}\\[8pt]
-    {\color{qcmuted} Waterloo Quantum Club}
+    {\LARGE\bfseries Quantum Channels}\\[4pt]
+    {\large\itshape Rules, scoring, and the physics behind the game}\\[6pt]
+    Waterloo Quantum Club
 \end{center}
 
-\vspace{0.8em}
+\vspace{0.6em}
 \hrule
-\vspace{1.2em}
+\vspace{1em}
 
 \section{What is this?}
 
-\textbf{Quantum Channels} is a friendly weekly game you play in your browser. Every
-week, you split 100 ``quanta'' across 10 channels and try to outscore your opponent.
-The twist? Each week the rules change to mimic a real principle of quantum mechanics
---- so by playing, you build intuition for the strange behaviour of the quantum world.
+\emph{Quantum Channels} is a friendly weekly game you play in your browser.
+Every week, you split 100 ``quanta'' across 10 channels and try to outscore
+your opponent. The twist: each week the rules change to mimic a real principle
+of quantum mechanics, so by playing you build intuition for the strange
+behaviour of the quantum world.
 
-You do \emph{not} need any physics background to play. The game teaches you as you go.
+You do not need any physics background to play. The game teaches you as you go.
 
 \section{How a round works}
 
 \begin{itemize}[leftmargin=1.5em, itemsep=4pt]
     \item You have \textbf{100 quanta} to spread across \textbf{10 channels}.
-    \item Slide each channel up or down to place quanta there. The total has to add up to 100 (or less).
+    \item Type a value in each channel, or drag the slider, to assign quanta there. The total has to add up to 100.
     \item You can also place a \textbf{Superposition Token} on one channel (more on that below).
     \item Hit ``Submit'' to lock in your wavefunction.
 \end{itemize}
 
 \subsection*{When can I play?}
 
-\begin{rulebox}{Weekly schedule}
-\begin{itemize}[leftmargin=1.2em, itemsep=2pt]
-    \item \textbf{Submit your wavefunction} --- any time, all week, until \textbf{Wednesday 9:00 AM}.
-    \item \textbf{Resubmit any time} --- you can change your mind and update your wavefunction until the 9 AM deadline.
-    \item \textbf{Submissions close} --- Wednesday 9 AM. Your opponent is revealed.
-    \item \textbf{Results posted \& new week opens} --- Wednesday \textbf{7:00 PM}. The next week's rule is revealed, and submissions open again.
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt]
+    \item \textbf{Submit your wavefunction}: any time, all week, until \textbf{Wednesday 9:00 AM}.
+    \item \textbf{Resubmit any time}: you can change your mind and update your
+          wavefunction until the 9 AM deadline.
+    \item \textbf{Submissions close}: Wednesday 9 AM. Your opponent is revealed.
+    \item \textbf{Results posted and new week opens}: Wednesday \textbf{7:00 PM}.
+          The next week's rule is revealed, and submissions open again.
 \end{itemize}
-\end{rulebox}
 
 \section{Scoring}
 
-For each of the 10 channels, the player with \textbf{more quanta} in that channel wins it.
-A tie gives no points. Each channel you win = \textbf{1 point}. Your weekly score is added
-to your total on the leaderboard.
+For each of the 10 channels, the player with \textbf{more quanta} in that
+channel wins it. A tie gives no points. Each channel you win is worth
+\textbf{1 point}. Your weekly score is added to your total on the leaderboard.
 
 A perfect week is 10 points. A wipe-out is 0. Most games land in between.
 
 \section{The superposition token}
 
-Every week you get one Superposition Token. Tap any channel cell to place your token
-there. The channel you choose matters: at resolution, the token only triggers if you
-\textbf{win} that channel. So pick one you're confident about.
+Every week you get one Superposition Token. Tap any channel cell to place
+your token there. The channel you choose matters: at resolution, the token
+only triggers if you \textbf{win} that channel.
 
 \begin{itemize}[leftmargin=1.5em]
     \item If you \textbf{lose} (or tie) the channel: the token does nothing.
     \item If you \textbf{win} the channel: a coin is flipped.
     \begin{itemize}
-        \item \textbf{Heads (50\%)} --- the token grants \textbf{+3 bonus points}.
-        \item \textbf{Tails (50\%)} --- the token grants \textbf{+0 points}.
+        \item \textbf{Heads (50\%)}: the token grants \textbf{+3 bonus points}.
+        \item \textbf{Tails (50\%)}: the token grants \textbf{+0 points}.
     \end{itemize}
 \end{itemize}
 
 The token mirrors a real two-state quantum system: until you measure it, the
-particle is in \emph{both} winning and losing states at once. Measurement
-collapses it onto one outcome.
+particle is in both winning and losing states at once. Measurement collapses
+it onto one outcome.
 
 \section{Weekly rules}
 
-This is the fun part. Each week introduces a new quantum rule, revealed only when the
-new week opens. Each rule maps to a real concept from quantum mechanics. After the last
-rule, the cycle repeats.
+Each week introduces a new quantum rule. Each rule maps to a real concept
+from quantum mechanics. After the last rule, the cycle repeats.
 
-\begin{conceptbox}{qcblue!85}{Week 1 --- Quantum measurement}
-\textbf{The rule:} when the week resolves, each player's \textbf{tallest channel
-collapses to 0}.
+\subsection*{Week 1: Quantum measurement}
+\textbf{The rule:} when the week resolves, each player's \textbf{tallest
+channel collapses to 0}.
 
-\textbf{What it teaches:} in quantum mechanics, measuring a system disturbs it.
-Just by looking at where a particle is, you change its state. The boldest bet in
-your wavefunction is the one that gets ``measured'' first --- and that
+\textbf{What it teaches:} in quantum mechanics, measuring a system disturbs
+it. Just by looking at where a particle is, you change its state. The boldest
+bet in your wavefunction is the one that gets measured first, and that
 measurement wipes it out.
-\end{conceptbox}
 
-\begin{conceptbox}{qccoral!85}{Week 2 --- Pauli exclusion}
+\subsection*{Week 2: Pauli exclusion}
 \textbf{The rule:} for every channel where \emph{both} you and your opponent
-placed quanta, \textbf{both stacks are wiped to 0}. The channel rejects everyone.
+placed quanta, \textbf{both stacks are wiped to 0}. The channel rejects
+everyone.
 
-\textbf{What it teaches:} two identical fermions (like electrons) cannot occupy the
-same quantum state at the same time --- the Pauli exclusion principle. In the game,
-if you both try to ``occupy'' the same channel, neither of you gets it.
-Predict where your opponent will bet --- and bet somewhere else.
-\end{conceptbox}
+\textbf{What it teaches:} two identical fermions (like electrons) cannot
+occupy the same quantum state at the same time, which is the Pauli exclusion
+principle. In the game, if you both try to ``occupy'' the same channel,
+neither of you gets it. Predict where your opponent will bet, and bet
+somewhere else.
 
-\begin{conceptbox}{qcgreen!85}{Week 3 --- Quantum tunneling}
-\textbf{The rule:} after both players submit, every channel rolls a 25\% chance to
-\textbf{shift all of its quanta into the next channel to its right} (channel 10
-wraps to channel 1). The channel left behind is empty.
+\subsection*{Week 3: Quantum tunneling}
+\textbf{The rule:} after both players submit, every channel rolls a 25\%
+chance to \textbf{shift all of its quanta into the next channel to its
+right} (channel 10 wraps to channel 1). The channel left behind is empty.
 
-\textbf{What it teaches:} quantum tunneling. A particle can sometimes leak through
-a barrier that classical physics says is impossible. Your carefully-placed quanta
-might just \emph{tunnel away}, leaving the original channel empty and stacking
-into the next one.
-\end{conceptbox}
+\textbf{What it teaches:} quantum tunneling. A particle can sometimes leak
+through a barrier that classical physics says is impossible. Your
+carefully-placed quanta might just tunnel away, leaving the original channel
+empty and stacking into the next one.
 
-\begin{conceptbox}{qccream}{Week 4 --- Heisenberg uncertainty}
-\textbf{The rule:} after submission, one randomly-chosen channel per player has its
-value \textbf{shifted by a random integer between $-15$ and $+15$ quanta} (the channel
-can't go below 0). Scoring stays the same: 1 point per channel you win.
+\subsection*{Week 4: Heisenberg uncertainty}
+\textbf{The rule:} after submission, one randomly-chosen channel per player
+has its value \textbf{shifted by a random integer between $-15$ and $+15$
+quanta} (the channel can't go below 0). Scoring stays the same: 1 point per
+channel you win.
 
-\textbf{What it teaches:} the uncertainty principle. Some pairs of properties (like
-position and momentum) can't both be known exactly at the same time. The game adds a
-dose of uncertainty to one of your channels --- you won't know which, or how much,
-until resolution.
-\end{conceptbox}
+\textbf{What it teaches:} the uncertainty principle. Some pairs of properties
+(like position and momentum) can't both be known exactly at the same time.
+The game adds a dose of uncertainty to one of your channels. You won't know
+which, or how much, until resolution.
 
 \section{Strategy tips}
 
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Spread, don't pile.} If the tallest-collapse rule is active, piling
-          quanta on one channel guarantees you lose them. Even when it isn't, big
-          stacks tend to be exposed by the weekly twist.
-    \item \textbf{You only need +1.} You don't have to crush your opponent in a channel
-          --- one extra quantum is enough to win it.
-    \item \textbf{Use the token tactically.} The superposition token works best on a
-          channel you don't mind losing. If it transfers, you've doubled up; if not,
-          no harm done.
-    \item \textbf{Read the rule of the week.} Don't play week 3 like week 1 --- the
-          best distribution depends on what the universe is going to do to your
-          quanta.
+    \item \textbf{Spread, don't pile.} If the tallest-collapse rule is active,
+          piling quanta on one channel guarantees you lose them. Even when it
+          isn't, big stacks tend to be exposed by the weekly twist.
+    \item \textbf{You only need $+1$.} You don't have to crush your opponent in
+          a channel. One extra quantum is enough to win it.
+    \item \textbf{Use the token tactically.} Place the token on a channel
+          you're confident you'll win, since the bonus only fires if you win
+          the channel.
+    \item \textbf{Read the rule of the week.} Don't play week 3 like week 1.
+          The best distribution depends on what the universe is going to do
+          to your quanta.
 \end{itemize}
 
 \section{Frequently asked}
@@ -190,25 +149,25 @@ until resolution.
 No. The opponent is hidden until Wednesday 9 AM, when submissions close.
 
 \textbf{What if I forget to submit?} \\
-You sit out the week --- no opponent, no score added. The physicist-bots only
-appear when there's an \emph{odd} number of players who submitted (to keep the
-matchmaking paired). So don't forget!
+You sit out the week, with no opponent and no score added. The physicist-bots
+only appear when there's an odd number of players who submitted, so the
+matchmaking can pair everyone up.
 
 \textbf{Can I change my submission?} \\
-Yes! You can resubmit as many times as you want until Wednesday 9 AM. Only the
-last one counts.
+Yes. You can resubmit as many times as you want until Wednesday 9 AM. Only
+the last one counts.
 
 \textbf{When does the new rule appear?} \\
-The new week (and its rule) opens at Wednesday 7 PM, after the previous week's
+The new week and its rule open at Wednesday 7 PM, after the previous week's
 results are posted.
 
-\vspace{1.2em}
+\vspace{1em}
 \hrule
-\vspace{0.6em}
+\vspace{0.4em}
 \begin{center}
-    \small\color{qcmuted}
-    Waterloo Quantum Club --- play at \href{https://uwquantum.com/game.html}{uwquantum.com/game.html}\\
-    Questions? Find us on Discord.
+\small
+Waterloo Quantum Club, play at \href{https://uwquantum.com/game.html}{uwquantum.com/game.html}.\\
+Questions? Find us on Discord.
 \end{center}
 
 \end{document}

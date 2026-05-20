@@ -35,10 +35,10 @@ const LOCKOUT_HOUR = 9;
 const RESOLVE_HOUR = 19;
 const RESOLVE_DAY = 3;  // Wednesday
 
-// FIXED week-0 anchor: Wednesday 2026-05-13 23:00:00 UTC (= 7 PM EDT).
-// Must stay in sync with the SQL constant inside qc_current_week() so the
-// client and the database agree on which week is active.
-const WEEK_ANCHOR_MS = Date.UTC(2026, 4, 13, 23, 0, 0);  // months are 0-indexed
+// Week 1 starts at Wednesday 2026-05-20 23:00:00 UTC (= 7 PM EDT).
+// The first 7-day stretch after this anchor is Week 1 (display index = code index + 1).
+// Must stay in sync with the SQL constant inside qc_current_week().
+const WEEK_ANCHOR_MS = Date.UTC(2026, 4, 20, 23, 0, 0);  // months are 0-indexed
 
 // ---- Weekly rules ----
 const RULES = [
@@ -524,6 +524,12 @@ function renderSchedulePanel(isLockout) {
     if (!schedulePanel) return;
     const lockout = getNextLockout();
     const resolve = getNextResolution();
+    let statusText;
+    if (!currentUser)              statusText = 'log in to play';
+    else if (hasSubmittedThisWeek) statusText = 'submitted ✓';
+    else if (isLockout)            statusText = 'no submission this week';
+    else                           statusText = 'not yet submitted';
+
     schedulePanel.innerHTML = `
         <div class="qc-sched-item">
             <span class="qc-sched-label">Submissions close</span>
@@ -536,9 +542,9 @@ function renderSchedulePanel(isLockout) {
             <span class="qc-sched-hint">in ${fmtCountdown(resolve)}</span>
         </div>
         <div class="qc-sched-item">
-            <span class="qc-sched-label">Resubmit anytime</span>
-            <span class="qc-sched-value">until Wed 9 AM</span>
-            <span class="qc-sched-hint">${currentUser ? (hasSubmittedThisWeek ? 'submitted ✓' : 'not yet submitted') : 'log in to play'}</span>
+            <span class="qc-sched-label">Your status</span>
+            <span class="qc-sched-value">${statusText}</span>
+            <span class="qc-sched-hint">${currentUser && !isLockout ? 'edit anytime before close' : ''}</span>
         </div>
     `;
 }
@@ -795,10 +801,23 @@ async function renderLeaderboard() {
 renderRulePanel();
 renderSchedulePanel(isLockoutNow());
 
+// Only these emails see the debug time-travel panel.
+const ADMIN_EMAILS = ['a35kalra@uwaterloo.ca', 'mkjdesil@uwaterloo.ca'];
+function maybeRevealDebugPanel(email) {
+    const panel = $('debug-panel');
+    if (!panel) return;
+    if (email && ADMIN_EMAILS.includes(email.toLowerCase())) {
+        panel.hidden = false;
+    } else {
+        panel.hidden = true;
+    }
+}
+
 // Restore session via Supabase (it persists in localStorage with key qc-supabase-auth).
 (async () => {
     const { data } = await sb.auth.getSession();
     if (data.session) {
+        maybeRevealDebugPanel(data.session.user.email);
         const { data: profile } = await sb
             .from('profiles')
             .select('username')
@@ -811,6 +830,7 @@ renderSchedulePanel(isLockoutNow());
             return;
         }
     }
+    maybeRevealDebugPanel(null);
     showAuth();
     renderLeaderboard();
 })();
