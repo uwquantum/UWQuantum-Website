@@ -1,5 +1,5 @@
 // ==========================================
-// Auth handlers — used on join.html.
+// Auth handlers, used on join.html.
 // If the visitor already has a Supabase session, we replace the auth card
 // with a "you're signed in" panel and leave the rest of the page browseable
 // (no forced redirect). Otherwise we wire up the login + register forms;

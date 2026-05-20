@@ -1,11 +1,11 @@
 // ==========================================
-// Quantum Channels — interactive weekly game
+// Quantum Channels, interactive weekly game
 // ==========================================
 
 const $ = (id) => document.getElementById(id);
 
 // Escape user-supplied strings before splicing them into innerHTML. Username,
-// opponent name, and any other DB-sourced text MUST go through this — even
+// opponent name, and any other DB-sourced text MUST go through this, even
 // though we validate on signup, a determined attacker could call the Supabase
 // API directly with a malicious username, and that string would later land in
 // every other player's leaderboard.
@@ -57,29 +57,29 @@ const RULES = [
         id: 'tallest_collapse',
         name: 'Quantum measurement',
         short: 'Your tallest channel collapses to 0.',
-        long: 'The act of measuring a quantum state changes it. Each player\'s channel with the most quanta gets reduced to zero when the week resolves — the universe takes back your boldest bet.',
-        physics: 'Measurement back-action — observing a quantum system disturbs it.',
+        long: 'The act of measuring a quantum state changes it. Each player\'s channel with the most quanta gets reduced to zero when the week resolves, the universe takes back your boldest bet.',
+        physics: 'Measurement back-action, observing a quantum system disturbs it.',
     },
     {
         id: 'pauli_exclusion',
         name: 'Pauli exclusion',
         short: 'If both players land on the same channel, both stacks vanish.',
-        long: 'Two identical fermions can\'t share a quantum state. If you AND your opponent both put quanta in the same channel, BOTH of your stacks in that channel are set to 0 — the channel rejects you both. Predict where your opponent will bet and avoid them.',
-        physics: 'Pauli\'s exclusion principle — no two identical fermions can occupy the same quantum state.',
+        long: 'Two identical fermions can\'t share a quantum state. If you AND your opponent both put quanta in the same channel, BOTH of your stacks in that channel are set to 0, the channel rejects you both. Predict where your opponent will bet and avoid them.',
+        physics: 'Pauli\'s exclusion principle, no two identical fermions can occupy the same quantum state.',
     },
     {
         id: 'tunneling',
         name: 'Quantum tunneling',
         short: 'Each channel has a 25% chance to shift its quanta one step right.',
-        long: 'Particles can leak through barriers they shouldn\'t classically cross. After submission, every channel rolls a 25% chance to MOVE all its quanta into the next channel to its right (10 wraps to 1). The original channel ends up empty — your quanta tunneled away.',
-        physics: 'Quantum tunneling — particles have a non-zero probability of crossing energy barriers.',
+        long: 'Particles can leak through barriers they shouldn\'t classically cross. After submission, every channel rolls a 25% chance to MOVE all its quanta into the next channel to its right (10 wraps to 1). The original channel ends up empty, your quanta tunneled away.',
+        physics: 'Quantum tunneling, particles have a non-zero probability of crossing energy barriers.',
     },
     {
         id: 'uncertainty',
         name: 'Heisenberg uncertainty',
         short: 'One random channel per player shifts by ±15 quanta.',
-        long: 'You can\'t know everything precisely. After submission, one randomly-chosen channel from each player gets a random shift between −15 and +15 quanta added to its value (clamped to 0 if it would go negative). Points per channel won are unchanged — still 1 point each.',
-        physics: 'Uncertainty principle — complementary properties cannot both be known exactly.',
+        long: 'You can\'t know everything precisely. After submission, one randomly-chosen channel from each player gets a random shift between −15 and +15 quanta added to its value (clamped to 0 if it would go negative). Points per channel won are unchanged, still 1 point each.',
+        physics: 'Uncertainty principle, complementary properties cannot both be known exactly.',
     },
 ];
 
@@ -96,7 +96,7 @@ let lastSeenWeek = -1;
 // the device's date/time can't let a player submit during lockout or skip weeks.
 // On page load we fetch the real time from a public time API and store the
 // offset (in ms) between server time and the local clock. From then on, getNow()
-// returns Date.now() + serverOffsetMs — immune to the user editing their system
+// returns Date.now() + serverOffsetMs, immune to the user editing their system
 // clock at runtime. The debug panel can layer an additional preview offset on
 // top for UI testing only; once Supabase is wired up the real schedule will be
 // enforced by the server-side Edge Function regardless of what the client shows.
@@ -374,7 +374,7 @@ superposeBtn.addEventListener('click', () => {
             hint.textContent = 'Tap any channel cell to place your token there.';
             hint.style.color = 'var(--qc-amp)';
             setTimeout(() => {
-                hint.textContent = 'Drag a slider to assign quanta. Tap a channel to place your superposition token — if you win that channel, it gambles +0 or +3 bonus points (50/50). Lose the channel and the token does nothing.';
+                hint.textContent = 'Drag a slider to assign quanta. Tap a channel to place your superposition token, if you win that channel, it gambles +0 or +3 bonus points (50/50). Lose the channel and the token does nothing.';
                 hint.style.color = '';
             }, 4000);
         }
@@ -393,7 +393,7 @@ function pauliExclusion(my, opp) {
     const m = my.slice(), o = opp.slice();
     for (let i = 0; i < N; i++) {
         if (m[i] > 0 && o[i] > 0) {
-            // Both fermions get evicted — channel can't hold either of them.
+            // Both fermions get evicted, channel can't hold either of them.
             m[i] = 0;
             o[i] = 0;
         }
@@ -442,7 +442,7 @@ function applyRule(ruleId, my, opp) {
 }
 
 // Token is a pure gamble: if armed (tokenIdx >= 0), 50/50 chance to grant 0 or 3 bonus points.
-// Channel placement is purely visual/symbolic — the gamble outcome doesn't depend on the channel.
+// Channel placement is purely visual/symbolic, the gamble outcome doesn't depend on the channel.
 function rollTokenBonus(tokenIdx) {
     if (tokenIdx < 0 || tokenIdx >= N) return 0;
     return Math.random() < 0.5 ? 3 : 0;
@@ -476,7 +476,7 @@ function checkGameState() {
 // NOTE: Matchmaking, weekly resolution, and bot generation now happen on the
 // server side via the Supabase Edge Function (`resolve-week`), scheduled by
 // pg_cron to run every Wednesday at 7 PM. The client no longer touches that
-// logic — it only submits its own wavefunction and reads the resulting
+// logic, it only submits its own wavefunction and reads the resulting
 // `matches` + `profiles` tables to display history and leaderboard.
 
 function updateUI(isLockout) {
@@ -486,14 +486,14 @@ function updateUI(isLockout) {
     renderSchedulePanel(isLockout);
 
     if (isLockout) {
-        statusBanner.textContent = 'Submissions locked — wave functions resolve Wed 7 PM';
+        statusBanner.textContent = 'Submissions locked, wave functions resolve Wed 7 PM';
         lockoutMessage.classList.remove('hidden');
         activeGameArea.classList.add('hidden');
         opponentNameDisplay.textContent = hasSubmittedThisWeek
             ? 'Revealed at resolution (Wed 7 PM)'
-            : '— (no submission this week)';
+            : ',  (no submission this week)';
     } else {
-        statusBanner.textContent = 'Open submission — closes Wed 9 AM';
+        statusBanner.textContent = 'Open submission, closes Wed 9 AM';
         lockoutMessage.classList.add('hidden');
         activeGameArea.classList.remove('hidden');
         opponentNameDisplay.textContent = 'Hidden until Wed 9 AM';
@@ -589,7 +589,7 @@ function resetWeeklyState() {
 
 async function getCurrentUserId() {
     // getSession() reads the persisted token straight from localStorage with
-    // no network call — much more reliable than getUser(), which makes an
+    // no network call, much more reliable than getUser(), which makes an
     // HTTP request and can spuriously return null on a slow/flaky network.
     const { data } = await sb.auth.getSession();
     return data?.session?.user?.id || null;
@@ -700,7 +700,7 @@ async function renderLastResult() {
     const ruleName = (RULES.find(x => x.id === r.ruleId) || {}).name || 'standard';
     const maxVal = Math.max(...r.youAmps, ...r.oppAmps, 1);
 
-    // Tally for the standings header (channel wins only — token bonus is shown separately)
+    // Tally for the standings header (channel wins only, token bonus is shown separately)
     let youCh = 0, oppCh = 0, ties = 0;
     for (let i = 0; i < N; i++) {
         if (r.youAmps[i] > r.oppAmps[i]) youCh++;
@@ -753,14 +753,14 @@ async function renderLastResult() {
         } else if (r.youTokenBonus > 0) {
             tokenLine = `Your superposition token on ${tch} paid out: <strong>+${r.youTokenBonus} bonus points</strong>!`;
         } else {
-            tokenLine = `You won ${tch}, but the token gamble rolled <strong>+0</strong> — no bonus this week.`;
+            tokenLine = `You won ${tch}, but the token gamble rolled <strong>+0</strong>, no bonus this week.`;
         }
     }
 
     resolutionPanel.innerHTML = `
         <div class="qc-resolution-head">
             <h4 class="qc-resolution-title">Last week vs ${esc(r.opponent)}</h4>
-            <div class="qc-resolution-score">You ${Number(r.youWins) | 0} — ${Number(r.oppWins) | 0} ${esc(r.opponent)}</div>
+            <div class="qc-resolution-score">You ${Number(r.youWins) | 0}, ${Number(r.oppWins) | 0} ${esc(r.opponent)}</div>
         </div>
         <p class="qc-resolution-rule">Rule applied: <strong>${esc(ruleName)}</strong></p>
         <p class="qc-resolution-rule">${tokenLine}</p>
@@ -795,7 +795,7 @@ async function renderLeaderboard() {
     }
     leaderboardList.innerHTML = '';
     if (!data || data.length === 0) {
-        leaderboardList.innerHTML = '<li><span>No players yet — register to be first!</span><span></span></li>';
+        leaderboardList.innerHTML = '<li><span>No players yet, register to be first!</span><span></span></li>';
         return;
     }
     data.forEach((row, index) => {
@@ -807,7 +807,7 @@ async function renderLeaderboard() {
 }
 
 // ---- Init ----
-// The rule + schedule panels are informational — populate them immediately so
+// The rule + schedule panels are informational, populate them immediately so
 // they're visible even before the auth check completes (and for logged-out users).
 renderRulePanel();
 renderSchedulePanel(isLockoutNow());

@@ -109,6 +109,18 @@
 /* Dashboard layout overrides */
 .qc-dashboard { max-width: none; }
 
+.page-hero-rules-link {
+    margin-top: 1.2rem;
+    font-size: 0.95rem;
+}
+.page-hero-rules-link a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+}
+.page-hero-rules-link a:hover { opacity: 0.65; }
+
 /* Sign-in CTA card (shown on game.html when there's no session) */
 .qc-signin-cta {
     max-width: 620px;

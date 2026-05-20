@@ -160,7 +160,7 @@ void main() {
   float k = uBright * dt;
   vec3 cyan = vec3(0.2, 1.0, 1.0);
   vec3 red  = vec3(1.0, 0.15, 0.25);
-  // Perceptual density compression — |psi|^2 spans many orders of magnitude
+  // Perceptual density compression, |psi|^2 spans many orders of magnitude
   // between the compact core and the outer lobes. A power curve squeezes that
   // huge range into something the display can show at once, revealing nodes
   // and angular structure that would otherwise blow out to pure white.

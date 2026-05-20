@@ -4,7 +4,7 @@
 //   - SUPABASE_URL is your project's public hostname.
 //   - SUPABASE_ANON_KEY is the public anonymous JWT, designed to be exposed
 //     in the browser. Row Level Security (set up in the SQL migration) is
-//     what actually protects your data — never paste the service_role key.
+//     what actually protects your data, never paste the service_role key.
 //
 // Replace the two values below with the URL + anon public key from
 // Supabase dashboard → Project Settings → Data API.
