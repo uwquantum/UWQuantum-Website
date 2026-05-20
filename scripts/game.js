@@ -13,9 +13,10 @@ const loginForm = $('login-form');
 const registerForm = $('register-form');
 const loginBtn = $('login-btn');
 const registerBtn = $('register-btn');
-const loginUser = $('login-username');
+const loginEmail = $('login-email');
 const loginPass = $('login-password');
 const registerUser = $('register-username');
+const registerEmail = $('register-email');
 const registerPass = $('register-password');
 const loginError = $('login-error');
 const registerError = $('register-error');
@@ -544,37 +545,53 @@ tabRegister.addEventListener('click', () => {
     registerError.classList.add('hidden');
 });
 
-// Build a pseudo-email from a username so Supabase auth works without
-// collecting real email addresses. The handle_new_user() trigger in the
-// database copies the username from raw_user_meta_data into profiles.
-const usernameToEmail = (u) => `${u.toLowerCase().replace(/[^a-z0-9_-]/g, '')}@uwquantum.club`;
+// Accept only University of Waterloo emails. We compare case-insensitively
+// and allow common variants like @edu.uwaterloo.ca for grad students.
+const UW_EMAIL_RE = /^[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)?uwaterloo\.ca$/i;
 
 loginBtn.addEventListener('click', async () => {
     loginError.classList.add('hidden');
-    const user = loginUser.value.trim(), pass = loginPass.value.trim();
-    if (!user || !pass) { loginError.textContent = 'Please enter both fields.'; loginError.classList.remove('hidden'); return; }
-    const { error } = await sb.auth.signInWithPassword({
-        email: usernameToEmail(user),
-        password: pass,
-    });
+    const email = loginEmail.value.trim().toLowerCase();
+    const pass = loginPass.value.trim();
+    if (!email || !pass) {
+        loginError.textContent = 'Please enter both email and password.';
+        loginError.classList.remove('hidden'); return;
+    }
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
     if (error) {
-        loginError.textContent = error.message.includes('Invalid')
-            ? 'Incorrect username or password.'
+        loginError.textContent = /invalid|credentials/i.test(error.message)
+            ? 'Incorrect email or password.'
             : error.message;
         loginError.classList.remove('hidden');
         return;
     }
-    currentUser = user;
-    rememberUser(user);
+    // Look up the display username from the profiles table
+    const { data: profile } = await sb
+        .from('profiles')
+        .select('username')
+        .eq('id', (await sb.auth.getUser()).data.user.id)
+        .maybeSingle();
+    currentUser = profile?.username || email.split('@')[0];
+    rememberUser(currentUser);
     showDashboard();
 });
 
 registerBtn.addEventListener('click', async () => {
     registerError.classList.add('hidden');
-    const user = registerUser.value.trim(), pass = registerPass.value.trim();
-    if (!user || !pass) { registerError.textContent = 'Required.'; registerError.classList.remove('hidden'); return; }
+    const user = registerUser.value.trim();
+    const email = registerEmail.value.trim().toLowerCase();
+    const pass = registerPass.value.trim();
+
+    if (!user || !email || !pass) {
+        registerError.textContent = 'All fields are required.';
+        registerError.classList.remove('hidden'); return;
+    }
     if (!/^[a-zA-Z0-9_-]{3,20}$/.test(user)) {
         registerError.textContent = 'Username: 3–20 characters, letters/digits/underscore/dash only.';
+        registerError.classList.remove('hidden'); return;
+    }
+    if (!UW_EMAIL_RE.test(email)) {
+        registerError.textContent = 'Email must end with @uwaterloo.ca.';
         registerError.classList.remove('hidden'); return;
     }
     if (pass.length < 6 || !/[a-zA-Z]/.test(pass) || !/[0-9]/.test(pass)) {
@@ -582,13 +599,13 @@ registerBtn.addEventListener('click', async () => {
         registerError.classList.remove('hidden'); return;
     }
     const { error } = await sb.auth.signUp({
-        email: usernameToEmail(user),
+        email,
         password: pass,
         options: { data: { username: user } },
     });
     if (error) {
-        registerError.textContent = error.message.includes('registered')
-            ? 'Username taken.'
+        registerError.textContent = /registered|already/i.test(error.message)
+            ? 'An account with this email already exists. Try logging in.'
             : error.message;
         registerError.classList.remove('hidden');
         return;
@@ -607,7 +624,11 @@ logoutBtn.addEventListener('click', async () => {
 
 function showAuth() {
     authPanel.classList.remove('hidden'); dashboardPanel.classList.add('hidden');
-    loginUser.value = ''; loginPass.value = ''; registerUser.value = ''; registerPass.value = '';
+    loginEmail.value = '';
+    loginPass.value = '';
+    registerUser.value = '';
+    registerEmail.value = '';
+    registerPass.value = '';
 }
 
 function resetWeeklyState() {
