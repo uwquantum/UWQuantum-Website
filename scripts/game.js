@@ -788,7 +788,7 @@ async function renderLeaderboard() {
         .from('profiles')
         .select('username, total_points')
         .order('total_points', { ascending: false })
-        .limit(50);
+        .limit(3);
     if (error) {
         leaderboardList.innerHTML = `<li><span>Leaderboard unavailable</span><span></span></li>`;
         return;
