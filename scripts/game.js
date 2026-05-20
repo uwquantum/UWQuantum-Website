@@ -45,20 +45,18 @@ const LOCKOUT_HOUR = 9;
 const RESOLVE_HOUR = 19;
 const RESOLVE_DAY = 3;  // Wednesday
 
-// Epoch: the first Wednesday 7 PM at or before now is week 0 anchor.
-// We compute the week number from elapsed weeks since this anchor.
+// Epoch: the first Wednesday 7 PM at or before the current server time is the
+// week 0 anchor. We derive it on demand from getNow() so a wrong device clock
+// at first visit can't permanently poison the cached value. (Pre-sync, this
+// falls back to the device clock; once syncServerTime() lands, every subsequent
+// call uses the corrected time.)
 function getWeekAnchor() {
-    const stored = localStorage.getItem('qc_WeekAnchor');
-    if (stored) return new Date(stored);
-    // Find the Wednesday 7 PM at or before now
-    const now = new Date();
-    const day = now.getDay();
-    const offset = (day - RESOLVE_DAY + 7) % 7;
+    const now = getNow();
+    const offset = (now.getDay() - RESOLVE_DAY + 7) % 7;
     const anchor = new Date(now);
     anchor.setDate(anchor.getDate() - offset);
     anchor.setHours(RESOLVE_HOUR, 0, 0, 0);
     if (anchor > now) anchor.setDate(anchor.getDate() - 7);
-    localStorage.setItem('qc_WeekAnchor', anchor.toISOString());
     return anchor;
 }
 
@@ -99,22 +97,70 @@ let currentUser = null;
 let amplitudes = new Array(N).fill(0);
 let superposedIndex = -1;
 let hasSubmittedThisWeek = false;
-let simulatedTime = new Date();
 let timeInterval;
 let lastSeenWeek = -1;
 
-// ---- Time simulation ----
-function getNow() { return simulatedTime; }
+// ---- Time source ----
+// We anchor against a trusted server clock instead of the OS clock, so changing
+// the device's date/time can't let a player submit during lockout or skip weeks.
+// On page load we fetch the real time from a public time API and store the
+// offset (in ms) between server time and the local clock. From then on, getNow()
+// returns Date.now() + serverOffsetMs — immune to the user editing their system
+// clock at runtime. The debug panel can layer an additional preview offset on
+// top for UI testing only; once Supabase is wired up the real schedule will be
+// enforced by the server-side Edge Function regardless of what the client shows.
+let serverOffsetMs = 0;
+let debugOffsetMs = 0;
+let serverTimeSynced = false;
+
+async function syncServerTime() {
+    const sources = [
+        async () => {
+            const r = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC', { cache: 'no-store' });
+            const j = await r.json();
+            return new Date(j.utc_datetime).getTime();
+        },
+        async () => {
+            // Fallback: take the Date response header from any reliable CORS-friendly origin.
+            const r = await fetch('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/package.json',
+                { cache: 'no-store', method: 'HEAD' });
+            return new Date(r.headers.get('date')).getTime();
+        },
+    ];
+    for (const fetcher of sources) {
+        try {
+            const t0 = Date.now();
+            const serverNow = await fetcher();
+            const elapsed = Date.now() - t0;
+            serverOffsetMs = serverNow - Date.now() + Math.floor(elapsed / 2);
+            serverTimeSynced = true;
+            return;
+        } catch (_) { /* try next */ }
+    }
+    console.warn('[QC] Could not sync server time; using device clock as fallback.');
+}
+
+function getNow() {
+    return new Date(Date.now() + serverOffsetMs + debugOffsetMs);
+}
+
 function startClock() {
     if (timeInterval) clearInterval(timeInterval);
     timeInterval = setInterval(() => {
-        simulatedTime = new Date(simulatedTime.getTime() + 1000);
+        const now = getNow();
         const disp = $('current-time-display');
-        if (disp) disp.textContent = simulatedTime.toLocaleString();
+        if (disp) {
+            const prefix = debugOffsetMs !== 0 ? 'simulated' : (serverTimeSynced ? 'server' : 'local');
+            disp.textContent = `${prefix} · ${now.toLocaleString()}`;
+        }
         checkGameState();
     }, 1000);
 }
-startClock();
+
+(async () => {
+    await syncServerTime();
+    startClock();
+})();
 
 function getWeekNumber() {
     const anchor = getWeekAnchor().getTime();
@@ -148,21 +194,52 @@ function getNextLockout() {
     return d;
 }
 
-// Debug buttons
+// ---- Debug panel ----
 const safeBind = (id, fn) => { const el = $(id); if (el) el.addEventListener('click', fn); };
-safeBind('btn-monday', () => {
-    let d = new Date(); d.setDate(d.getDate() + (1 + 7 - d.getDay()) % 7); d.setHours(10, 0, 0, 0);
-    simulatedTime = d; checkGameState();
+
+function setDebugTo(target) {
+    debugOffsetMs = target.getTime() - (Date.now() + serverOffsetMs);
+    checkGameState();
+}
+function clearDebug() {
+    debugOffsetMs = 0;
+    checkGameState();
+}
+
+safeBind('debug-apply', () => {
+    const input = $('debug-datetime');
+    if (!input || !input.value) return;
+    setDebugTo(new Date(input.value));
 });
-safeBind('btn-wed-lock', () => {
-    let d = new Date(); d.setDate(d.getDate() + (3 + 7 - d.getDay()) % 7); d.setHours(9, 5, 0, 0);
-    simulatedTime = d; checkGameState();
+safeBind('debug-wed-lock', () => {
+    const d = getNow();
+    d.setDate(d.getDate() + (3 + 7 - d.getDay()) % 7);
+    d.setHours(9, 5, 0, 0);
+    setDebugTo(d);
 });
-safeBind('btn-wed-resolve', () => {
-    let d = new Date(); d.setDate(d.getDate() + (3 + 7 - d.getDay()) % 7); d.setHours(19, 5, 0, 0);
-    simulatedTime = d; checkGameState();
+safeBind('debug-wed-resolve', () => {
+    const d = getNow();
+    d.setDate(d.getDate() + (3 + 7 - d.getDay()) % 7);
+    d.setHours(19, 5, 0, 0);
+    setDebugTo(d);
 });
-safeBind('btn-reset-time', () => { simulatedTime = new Date(); checkGameState(); });
+safeBind('debug-reset', clearDebug);
+safeBind('debug-close', () => {
+    const panel = $('debug-panel');
+    if (panel) panel.style.display = 'none';
+});
+
+// Pre-fill the debug datetime input with the current effective time so the user
+// can tweak it directly instead of typing the whole timestamp from scratch.
+function refreshDebugInput() {
+    const input = $('debug-datetime');
+    if (!input) return;
+    const d = getNow();
+    const pad = (n) => String(n).padStart(2, '0');
+    input.value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+setInterval(refreshDebugInput, 5000);
+setTimeout(refreshDebugInput, 200);
 
 // ---- Storage ----
 function initDB() {
@@ -173,7 +250,27 @@ function initDB() {
     if (!localStorage.getItem('qc_LastResult'))  localStorage.setItem('qc_LastResult', JSON.stringify({}));
 }
 initDB();
-getWeekAnchor();
+// Clean up the legacy locally-cached week anchor (we now derive it dynamically
+// from server-anchored time, so a wrong device clock at first visit can't
+// permanently poison the week numbers).
+localStorage.removeItem('qc_WeekAnchor');
+
+// ---- Login persistence (cookie + localStorage redundancy) ----
+const SESSION_COOKIE = 'qc_user';
+const SESSION_MAX_AGE = 365 * 24 * 60 * 60; // one year
+function rememberUser(username) {
+    localStorage.setItem('qc_CurrentUser', username);
+    document.cookie = `${SESSION_COOKIE}=${encodeURIComponent(username)}; max-age=${SESSION_MAX_AGE}; path=/; samesite=lax`;
+}
+function forgetUser() {
+    localStorage.removeItem('qc_CurrentUser');
+    document.cookie = `${SESSION_COOKIE}=; max-age=0; path=/`;
+}
+function recallUser() {
+    const m = document.cookie.match(new RegExp('(?:^|; )' + SESSION_COOKIE + '=([^;]*)'));
+    if (m) return decodeURIComponent(m[1]);
+    return localStorage.getItem('qc_CurrentUser');
+}
 
 // ---- Heatmap ----
 function colorForAmplitude(a) {
@@ -557,7 +654,7 @@ loginBtn.addEventListener('click', () => {
     if (!user || !pass) { loginError.textContent = 'Please enter both fields.'; loginError.classList.remove('hidden'); return; }
     const auth = JSON.parse(localStorage.getItem('qc_Auth'));
     if (user in auth && auth[user] === pass) {
-        currentUser = user; localStorage.setItem('qc_CurrentUser', user); showDashboard();
+        currentUser = user; rememberUser(user); showDashboard();
     } else {
         loginError.textContent = 'Incorrect username or password.'; loginError.classList.remove('hidden');
     }
@@ -577,11 +674,11 @@ registerBtn.addEventListener('click', () => {
     auth[user] = pass; lb[user] = 0;
     localStorage.setItem('qc_Auth', JSON.stringify(auth));
     localStorage.setItem('qc_Leaderboard', JSON.stringify(lb));
-    currentUser = user; localStorage.setItem('qc_CurrentUser', user); showDashboard();
+    currentUser = user; rememberUser(user); showDashboard();
 });
 
 logoutBtn.addEventListener('click', () => {
-    currentUser = null; localStorage.removeItem('qc_CurrentUser'); showAuth();
+    currentUser = null; forgetUser(); showAuth();
 });
 
 function showAuth() {
@@ -707,5 +804,5 @@ function renderLeaderboard() {
 }
 
 // ---- Init ----
-const savedUser = localStorage.getItem('qc_CurrentUser');
+const savedUser = recallUser();
 if (savedUser) { currentUser = savedUser; showDashboard(); } else { showAuth(); renderLeaderboard(); }

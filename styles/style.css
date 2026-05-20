@@ -1252,26 +1252,69 @@ h1, h2, h3 {
     font-size: 0.88rem;
 }
 
-/* Debug panel (game page) — keep minimal, dark, unobtrusive */
+/* Debug panel (game page) — UI-only preview, never affects server-side scoring */
 .debug-panel {
     position: fixed;
     bottom: 0; left: 0; width: 100%;
-    background: rgba(20, 20, 18, 0.92);
+    background: rgba(20, 20, 18, 0.95);
     color: #f0eee6;
-    padding: 0.6rem 1rem;
-    text-align: center;
+    padding: 0.65rem 1rem;
     z-index: 9999;
     font-family: 'Anthropic Sans', 'Inter', sans-serif;
     font-size: 0.82rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
-.debug-panel button {
-    margin: 0 0.3rem;
-    padding: 0.3rem 0.7rem;
+.debug-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.debug-row + .debug-row { margin-top: 0.4rem; }
+.debug-row strong {
+    background: #f3c97a;
+    color: #1a1a18;
+    padding: 0.12rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+}
+.debug-status {
+    font-variant-numeric: tabular-nums;
+    color: rgba(245, 241, 227, 0.85);
+}
+.debug-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: rgba(245, 241, 227, 0.8);
+}
+.debug-panel input[type="datetime-local"] {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f0eee6;
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color-scheme: dark;
+}
+.debug-btn {
+    padding: 0.32rem 0.75rem;
     border: 1px solid rgba(255,255,255,0.2);
     background: transparent;
     color: #f0eee6;
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.78rem;
+    font-family: inherit;
+    transition: background 0.15s ease;
 }
-.debug-panel button:hover { background: rgba(255,255,255,0.08); }
+.debug-btn:hover { background: rgba(255,255,255,0.1); }
+.debug-close {
+    margin-left: auto;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0.05rem 0.5rem;
+}

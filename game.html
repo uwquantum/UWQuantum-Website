@@ -144,7 +144,7 @@
             </div>
 
             <div id="lockout-message" class="hidden lockout-note">
-                This week's submissions are locked. Wave functions resolve Wednesday at 8 PM.
+                This week's submissions are locked. Wave functions resolve Wednesday at 7 PM.
             </div>
 
             <div id="active-game-area">
@@ -183,14 +183,23 @@
         </div>
     </section>
 
-    <!-- Debug Time Panel -->
-    <div class="debug-panel">
-        <strong>DEBUG TIME TRAVEL:</strong>
-        <span id="current-time-display"></span>
-        <button id="btn-monday">Mon 10 AM (Submission)</button>
-        <button id="btn-wed-lock">Wed 9:05 AM (Locked / Reveal Opponent)</button>
-        <button id="btn-wed-resolve">Wed 7:05 PM (Score Revealed / Reset)</button>
-        <button id="btn-reset-time">Reset to Real Time</button>
+    <!-- Debug Time Panel (UI-only — production schedule is enforced server-side) -->
+    <div class="debug-panel" id="debug-panel">
+        <div class="debug-row">
+            <strong>DEBUG</strong>
+            <span class="debug-status" id="current-time-display"></span>
+        </div>
+        <div class="debug-row">
+            <label class="debug-label">
+                Jump to
+                <input type="datetime-local" id="debug-datetime">
+            </label>
+            <button class="debug-btn" id="debug-apply">Apply</button>
+            <button class="debug-btn" id="debug-wed-lock">Wed 9:05 AM</button>
+            <button class="debug-btn" id="debug-wed-resolve">Wed 7:05 PM</button>
+            <button class="debug-btn" id="debug-reset">Use real time</button>
+            <button class="debug-btn debug-close" id="debug-close" aria-label="Hide debug">×</button>
+        </div>
     </div>
 
     <script src="scripts/script.js"></script>

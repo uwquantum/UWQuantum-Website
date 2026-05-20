@@ -382,14 +382,33 @@
     box-shadow: 0 1px 2px rgba(0,0,0,0.25);
 }
 
-/* Superposed channel state */
+/* Superposed channel state — bright yellow halo so it's hard to miss */
 .qc-channel.qc-superposed {
-    box-shadow: 0 0 0 2px var(--qc-glow), 0 0 18px rgba(243, 201, 122, 0.45);
-    animation: qc-pulse 1.6s ease-in-out infinite;
+    background: linear-gradient(180deg, #ffe08a 0%, #ffd35c 100%) !important;
+    box-shadow:
+        0 0 0 3px #f7b500,
+        0 0 24px 4px rgba(255, 211, 92, 0.85),
+        0 0 48px 12px rgba(255, 196, 0, 0.45);
+    animation: qc-pulse 1.4s ease-in-out infinite;
+    z-index: 1;
+}
+.qc-channel.qc-superposed .qc-channel-label,
+.qc-channel.qc-superposed .qc-channel-value {
+    color: #5b3e00 !important;
 }
 @keyframes qc-pulse {
-    0%, 100% { box-shadow: 0 0 0 2px var(--qc-glow), 0 0 12px rgba(243, 201, 122, 0.35); }
-    50%      { box-shadow: 0 0 0 2px var(--qc-glow), 0 0 24px rgba(243, 201, 122, 0.7); }
+    0%, 100% {
+        box-shadow:
+            0 0 0 3px #f7b500,
+            0 0 20px 3px rgba(255, 211, 92, 0.7),
+            0 0 40px 10px rgba(255, 196, 0, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 0 0 3px #ffcd2a,
+            0 0 32px 8px rgba(255, 221, 92, 1),
+            0 0 64px 18px rgba(255, 196, 0, 0.6);
+    }
 }
 
 /* Collapsing animation */
@@ -455,27 +474,33 @@
 
 .qc-bar-stack {
     display: flex;
-    flex-direction: column-reverse;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
     height: 140px;
-    gap: 1px;
-    justify-content: flex-end;
+    gap: 3px;
 }
 
 .qc-bar {
+    flex: 1 1 0;
+    max-width: 14px;
     transition: height 0.5s ease;
-    border-radius: 4px 4px 0 0;
+    border-radius: 3px 3px 0 0;
     min-height: 2px;
+    align-self: flex-end;
 }
 .qc-bar.you {
     background: var(--qc-amp);
 }
 .qc-bar.opp {
     background: var(--qc-coral);
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 .qc-int-col[data-winner="you"] .qc-bar.you {
+    box-shadow: 0 0 0 2px var(--qc-glow);
+}
+.qc-int-col[data-winner="opp"] .qc-bar.opp {
     box-shadow: 0 0 0 2px var(--qc-glow);
 }
 
