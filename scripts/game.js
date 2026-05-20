@@ -4,6 +4,17 @@
 
 const $ = (id) => document.getElementById(id);
 
+// Escape user-supplied strings before splicing them into innerHTML. Username,
+// opponent name, and any other DB-sourced text MUST go through this — even
+// though we validate on signup, a determined attacker could call the Supabase
+// API directly with a malicious username, and that string would later land in
+// every other player's leaderboard.
+function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+}
+
 // ---- DOM ----
 // Auth UI lives on join.html now; on game.html we only have the sign-in CTA
 // card (shown when no session) and the dashboard (shown when there is one).
@@ -748,10 +759,10 @@ async function renderLastResult() {
 
     resolutionPanel.innerHTML = `
         <div class="qc-resolution-head">
-            <h4 class="qc-resolution-title">Last week vs ${r.opponent}</h4>
-            <div class="qc-resolution-score">You ${r.youWins} — ${r.oppWins} ${r.opponent}</div>
+            <h4 class="qc-resolution-title">Last week vs ${esc(r.opponent)}</h4>
+            <div class="qc-resolution-score">You ${Number(r.youWins) | 0} — ${Number(r.oppWins) | 0} ${esc(r.opponent)}</div>
         </div>
-        <p class="qc-resolution-rule">Rule applied: <strong>${ruleName}</strong></p>
+        <p class="qc-resolution-rule">Rule applied: <strong>${esc(ruleName)}</strong></p>
         <p class="qc-resolution-rule">${tokenLine}</p>
         <div class="qc-standings">
             <div class="qc-standing you">
@@ -763,7 +774,7 @@ async function renderLastResult() {
                 <span class="qc-standing-value">${ties}</span>
             </div>
             <div class="qc-standing opp">
-                <span class="qc-standing-label">${r.opponent} won</span>
+                <span class="qc-standing-label">${esc(r.opponent)} won</span>
                 <span class="qc-standing-value">${oppCh}</span>
             </div>
         </div>
@@ -790,7 +801,7 @@ async function renderLeaderboard() {
     data.forEach((row, index) => {
         const li = document.createElement('li');
         if (row.username === currentUser) li.classList.add('is-me');
-        li.innerHTML = `<span>${index + 1}. ${row.username}</span><span>${row.total_points} pts</span>`;
+        li.innerHTML = `<span>${index + 1}. ${esc(row.username)}</span><span>${Number(row.total_points) | 0} pts</span>`;
         leaderboardList.appendChild(li);
     });
 }

@@ -9,6 +9,13 @@
 
 const $ = (id) => document.getElementById(id);
 
+// Escape DB-sourced strings before splicing them into innerHTML.
+function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+}
+
 const UW_EMAIL_RE = /^[a-z0-9._%+-]+@(?:[a-z0-9-]+\.)?uwaterloo\.ca$/i;
 
 (async () => {
@@ -30,7 +37,7 @@ async function showSignedIn(session) {
         .maybeSingle();
     const username = profile?.username || session.user.email?.split('@')[0] || 'member';
     card.innerHTML = `
-        <h3 class="game-card-title">You're signed in as ${username}</h3>
+        <h3 class="game-card-title">You're signed in as ${esc(username)}</h3>
         <p class="qc-signin-blurb">Head to the game to submit your wavefunction, or log out to switch accounts.</p>
         <div class="qc-signin-actions">
             <a href="game.html" class="hero-btn primary">Go to game <span aria-hidden="true">→</span></a>

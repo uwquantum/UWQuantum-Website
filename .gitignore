@@ -1,3 +1,15 @@
+# Secrets — never commit anything matching these
+.env
+.env.*
+*.local
+secrets.*
+*.pem
+*.key
+*service-role*
+*service_role*
+.supabase/
+supabase/.env
+
 # LaTeX build artifacts
 *.aux
 *.log
@@ -13,11 +25,12 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+*~
 
 # Node / build (if you add tooling later)
 node_modules/
-.env
-.env.local
+dist/
+.cache/
 
 # Claude Code project metadata
 .claude/
