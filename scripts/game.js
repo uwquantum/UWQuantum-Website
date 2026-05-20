@@ -285,6 +285,13 @@ function buildHeatmap() {
         slider.addEventListener('input', (e) => onAmpChange(i, parseInt(e.target.value, 10)));
         valueInput.addEventListener('input', (e) => onAmpChange(i, parseInt(e.target.value, 10) || 0));
         valueInput.addEventListener('focus', (e) => e.target.select());
+        // On blur, snap the visible value to the actual stored amplitude, so
+        // out-of-range typing (e.g. "999", "-5", "abc") gets corrected.
+        valueInput.addEventListener('blur',  (e) => { e.target.value = String(amplitudes[i]); });
+        // Enter key = commit (acts like blur)
+        valueInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); }
+        });
         // Treat the number input as a click target that doesn't open the token toggle.
         cell.addEventListener('click', (e) => {
             if (e.target === slider || e.target === valueInput) return;
