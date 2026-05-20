@@ -9,8 +9,8 @@
 // Replace the two values below with the URL + anon public key from
 // Supabase dashboard → Project Settings → Data API.
 
-const SUPABASE_URL      = 'https://YOUR-PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+const SUPABASE_URL      = 'https://qqtkjpihpudzhkcqhvoo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_u8gwUsBWMKHmb80K8iDixg_wRZhlq1x';
 
 window.sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
