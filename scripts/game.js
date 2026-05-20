@@ -46,20 +46,10 @@ const LOCKOUT_HOUR = 9;
 const RESOLVE_HOUR = 19;
 const RESOLVE_DAY = 3;  // Wednesday
 
-// Epoch: the first Wednesday 7 PM at or before the current server time is the
-// week 0 anchor. We derive it on demand from getNow() so a wrong device clock
-// at first visit can't permanently poison the cached value. (Pre-sync, this
-// falls back to the device clock; once syncServerTime() lands, every subsequent
-// call uses the corrected time.)
-function getWeekAnchor() {
-    const now = getNow();
-    const offset = (now.getDay() - RESOLVE_DAY + 7) % 7;
-    const anchor = new Date(now);
-    anchor.setDate(anchor.getDate() - offset);
-    anchor.setHours(RESOLVE_HOUR, 0, 0, 0);
-    if (anchor > now) anchor.setDate(anchor.getDate() - 7);
-    return anchor;
-}
+// FIXED week-0 anchor: Wednesday 2026-05-13 23:00:00 UTC (= 7 PM EDT).
+// Must stay in sync with the SQL constant inside qc_current_week() so the
+// client and the database agree on which week is active.
+const WEEK_ANCHOR_MS = Date.UTC(2026, 4, 13, 23, 0, 0);  // months are 0-indexed
 
 // ---- Weekly rules ----
 const RULES = [
@@ -164,9 +154,7 @@ function startClock() {
 })();
 
 function getWeekNumber() {
-    const anchor = getWeekAnchor().getTime();
-    const now = getNow().getTime();
-    const elapsed = now - anchor;
+    const elapsed = getNow().getTime() - WEEK_ANCHOR_MS;
     return Math.max(0, Math.floor(elapsed / (7 * 24 * 60 * 60 * 1000)));
 }
 
@@ -228,6 +216,23 @@ safeBind('debug-reset', clearDebug);
 safeBind('debug-close', () => {
     const panel = $('debug-panel');
     if (panel) panel.style.display = 'none';
+});
+safeBind('debug-force-resolve', async () => {
+    if (!currentUser) { alert('Log in first.'); return; }
+    submissionMessage.textContent = 'Resolving on the server...';
+    submissionMessage.classList.remove('hidden');
+    const { data, error } = await sb.rpc('qc_resolve_latest');
+    if (error) {
+        submissionMessage.textContent = 'Resolve error: ' + error.message;
+        return;
+    }
+    if (data && data.error) {
+        submissionMessage.textContent = 'Server: ' + data.error;
+        return;
+    }
+    submissionMessage.textContent = `Resolved week ${data.week} (rule: ${data.rule}, pairs: ${data.pairs}).`;
+    await renderLeaderboard();
+    await renderLastResult();
 });
 
 // Pre-fill the debug datetime input with the current effective time so the user
