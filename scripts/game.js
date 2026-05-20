@@ -765,18 +765,45 @@ async function renderLastResult() {
 
     const ruleName = (RULES.find(x => x.id === r.ruleId) || {}).name || 'standard';
     const maxVal = Math.max(...r.youAmps, ...r.oppAmps, 1);
-    const cols = [];
+
+    // Tally for the standings header (channel wins only — token bonus is shown separately)
+    let youCh = 0, oppCh = 0, ties = 0;
     for (let i = 0; i < N; i++) {
-        const yh = (r.youAmps[i] / maxVal) * 130;
-        const oh = (r.oppAmps[i] / maxVal) * 130;
-        const winner = r.youAmps[i] > r.oppAmps[i] ? 'you' : (r.oppAmps[i] > r.youAmps[i] ? 'opp' : 'tie');
-        cols.push(`
-            <div class="qc-int-col" data-winner="${winner}">
-                <div class="qc-bar-stack">
-                    <div class="qc-bar you" style="height:${yh}px" title="You: ${r.youAmps[i]}"></div>
-                    <div class="qc-bar opp" style="height:${oh}px" title="Opp: ${r.oppAmps[i]}"></div>
+        if (r.youAmps[i] > r.oppAmps[i]) youCh++;
+        else if (r.oppAmps[i] > r.youAmps[i]) oppCh++;
+        else ties++;
+    }
+
+    // Per-channel tiles
+    const tiles = [];
+    for (let i = 0; i < N; i++) {
+        const yv = r.youAmps[i] || 0;
+        const ov = r.oppAmps[i] || 0;
+        const yp = (yv / maxVal) * 100;
+        const op = (ov / maxVal) * 100;
+        let cls, statusLabel;
+        if (yv > ov)      { cls = 'qc-win';  statusLabel = 'WIN'; }
+        else if (ov > yv) { cls = 'qc-loss'; statusLabel = 'LOSS'; }
+        else              { cls = 'qc-tie';  statusLabel = 'TIE'; }
+        const youDim = yv < ov ? 'dim' : '';
+        const oppDim = ov < yv ? 'dim' : '';
+
+        tiles.push(`
+            <div class="qc-result-tile ${cls}">
+                <div class="qc-result-channel">
+                    <span>CH${i + 1}</span>
+                    <span class="qc-result-status">${statusLabel}</span>
                 </div>
-                <div>CH${i + 1}</div>
+                <div class="qc-result-row you ${youDim}">
+                    <span class="qc-result-label">YOU</span>
+                    <span class="qc-result-bar"><span class="qc-result-bar-fill" style="width:${yp}%"></span></span>
+                    <span class="qc-result-value">${yv}</span>
+                </div>
+                <div class="qc-result-row opp ${oppDim}">
+                    <span class="qc-result-label">OPP</span>
+                    <span class="qc-result-bar"><span class="qc-result-bar-fill" style="width:${op}%"></span></span>
+                    <span class="qc-result-value">${ov}</span>
+                </div>
             </div>
         `);
     }
@@ -794,11 +821,21 @@ async function renderLastResult() {
         </div>
         <p class="qc-resolution-rule">Rule applied: <strong>${ruleName}</strong></p>
         <p class="qc-resolution-rule">${tokenLine}</p>
-        <div class="qc-interference">${cols.join('')}</div>
-        <div class="qc-resolution-legend">
-            <span class="you">You</span>
-            <span class="opp">${r.opponent}</span>
+        <div class="qc-standings">
+            <div class="qc-standing you">
+                <span class="qc-standing-label">Channels won</span>
+                <span class="qc-standing-value">${youCh}</span>
+            </div>
+            <div class="qc-standing tie">
+                <span class="qc-standing-label">Tied</span>
+                <span class="qc-standing-value">${ties}</span>
+            </div>
+            <div class="qc-standing opp">
+                <span class="qc-standing-label">${r.opponent} won</span>
+                <span class="qc-standing-value">${oppCh}</span>
+            </div>
         </div>
+        <div class="qc-result-grid">${tiles.join('')}</div>
     `;
     resolutionPanel.classList.remove('hidden');
 }

@@ -259,7 +259,7 @@
 }
 
 .qc-points-pill {
-    background: #fff;
+    background: #e4e2da;
     border: 1px solid var(--border-color);
     border-radius: 999px;
     padding: 0.4rem 0.9rem;
@@ -283,7 +283,7 @@
     padding: 0.45rem 0.9rem;
     border-radius: 999px;
     border: 1px solid var(--border-color);
-    background: #fff;
+    background: #e4e2da;
     cursor: pointer;
     font-family: 'Anthropic Sans', 'Inter', sans-serif;
     font-size: 0.85rem;
@@ -311,7 +311,7 @@
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     gap: 0.5rem;
-    background: #fff;
+    background: #e4e2da;
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 0.9rem;
@@ -424,7 +424,7 @@
 /* Resolution panel — interference visualization */
 .qc-resolution {
     margin-top: 1.4rem;
-    background: #fff;
+    background: #e4e2da;
     border: 1px solid var(--border-color);
     border-radius: 14px;
     padding: 1.4rem;
@@ -454,71 +454,135 @@
     color: var(--qc-amp);
 }
 
-.qc-interference {
+/* Channel-by-channel standings tiles */
+.qc-result-grid {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 0.4rem;
-    align-items: end;
-    min-height: 160px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.6rem;
+}
+@media (max-width: 720px) {
+    .qc-result-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-.qc-int-col {
+.qc-result-tile {
+    position: relative;
+    border-radius: 12px;
+    padding: 0.7rem 0.7rem 0.65rem;
+    background: #e4e2da;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    overflow: hidden;
+}
+.qc-result-tile:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.06); }
+
+.qc-result-tile.qc-win {
+    background: linear-gradient(180deg, rgba(47,125,112,0.18) 0%, rgba(47,125,112,0.05) 100%);
+    border-color: rgba(47,125,112,0.35);
+}
+.qc-result-tile.qc-loss {
+    background: linear-gradient(180deg, rgba(217,119,87,0.18) 0%, rgba(217,119,87,0.05) 100%);
+    border-color: rgba(217,119,87,0.35);
+}
+
+.qc-result-channel {
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.qc-result-status {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+}
+.qc-win  .qc-result-status { color: #14503e; background: rgba(47,125,112,0.22); }
+.qc-loss .qc-result-status { color: #6b2b1b; background: rgba(217,119,87,0.22); }
+.qc-tie  .qc-result-status { color: var(--text-secondary); background: var(--border-color); }
+
+.qc-result-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+}
+.qc-result-row + .qc-result-row { margin-top: 0.2rem; }
+
+.qc-result-row .qc-result-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+.qc-result-row .qc-result-bar {
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+.qc-result-row .qc-result-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.5s ease;
+}
+.qc-result-row.you .qc-result-bar-fill { background: var(--qc-amp); }
+.qc-result-row.opp .qc-result-bar-fill { background: var(--qc-coral); }
+.qc-result-row .qc-result-value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    min-width: 1.4em;
+    text-align: right;
+}
+.qc-result-row.dim .qc-result-bar-fill { opacity: 0.35; }
+.qc-result-row.dim .qc-result-value { color: var(--text-secondary); font-weight: 500; }
+
+/* Quick standings summary row at top of resolution panel */
+.qc-standings {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin: 0.4rem 0 0.2rem;
+}
+.qc-standing {
+    background: #e4e2da;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.7rem 0.9rem;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 2px;
-    text-align: center;
+    gap: 0.15rem;
+}
+.qc-standing-label {
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
     font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--text-secondary);
+    font-weight: 600;
 }
-
-.qc-bar-stack {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: center;
-    height: 140px;
-    gap: 3px;
+.qc-standing-value {
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    line-height: 1.1;
 }
-
-.qc-bar {
-    flex: 1 1 0;
-    max-width: 14px;
-    transition: height 0.5s ease;
-    border-radius: 3px 3px 0 0;
-    min-height: 2px;
-    align-self: flex-end;
-}
-.qc-bar.you {
-    background: var(--qc-amp);
-}
-.qc-bar.opp {
-    background: var(--qc-coral);
-    opacity: 0.9;
-}
-
-.qc-int-col[data-winner="you"] .qc-bar.you {
-    box-shadow: 0 0 0 2px var(--qc-glow);
-}
-.qc-int-col[data-winner="opp"] .qc-bar.opp {
-    box-shadow: 0 0 0 2px var(--qc-glow);
-}
-
-.qc-resolution-legend {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-}
-.qc-resolution-legend span::before {
-    content: '';
-    display: inline-block;
-    width: 10px; height: 10px; border-radius: 2px;
-    margin-right: 6px; vertical-align: middle;
-}
-.qc-resolution-legend .you::before { background: var(--qc-amp); }
-.qc-resolution-legend .opp::before { background: var(--qc-coral); }
+.qc-standing.you   .qc-standing-value { color: var(--qc-amp); }
+.qc-standing.opp   .qc-standing-value { color: var(--qc-coral); }
+.qc-standing.tie   .qc-standing-value { color: var(--text-secondary); }
 
 .qc-leaderboard-wrap { margin-top: 2rem; }
 
@@ -529,7 +593,7 @@
     gap: 0.5rem;
 }
 #leaderboard-list li {
-    background: #fff;
+    background: #e4e2da;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 0.55rem 0.85rem;
