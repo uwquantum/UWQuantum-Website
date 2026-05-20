@@ -598,7 +598,7 @@ registerBtn.addEventListener('click', async () => {
         registerError.textContent = 'Password: at least 6 characters with one letter and one number.';
         registerError.classList.remove('hidden'); return;
     }
-    const { error } = await sb.auth.signUp({
+    const { data, error } = await sb.auth.signUp({
         email,
         password: pass,
         options: { data: { username: user } },
@@ -607,6 +607,16 @@ registerBtn.addEventListener('click', async () => {
         registerError.textContent = /registered|already/i.test(error.message)
             ? 'An account with this email already exists. Try logging in.'
             : error.message;
+        registerError.classList.remove('hidden');
+        return;
+    }
+    // If Supabase has "Confirm email" enabled, signUp returns success but no
+    // session. The user must click the link in their email before they can
+    // submit anything. Tell them explicitly so they don't end up stuck on a
+    // dashboard with a null session.
+    if (!data.session) {
+        registerError.textContent =
+            `Account created. Check your ${email} inbox for a confirmation link, then return here to log in.`;
         registerError.classList.remove('hidden');
         return;
     }
@@ -640,8 +650,11 @@ function resetWeeklyState() {
 }
 
 async function getCurrentUserId() {
-    const { data } = await sb.auth.getUser();
-    return data?.user?.id || null;
+    // getSession() reads the persisted token straight from localStorage with
+    // no network call — much more reliable than getUser(), which makes an
+    // HTTP request and can spuriously return null on a slow/flaky network.
+    const { data } = await sb.auth.getSession();
+    return data?.session?.user?.id || null;
 }
 
 async function loadMyExistingSubmission() {
