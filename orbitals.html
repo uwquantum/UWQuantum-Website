@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hydrogen Orbitals — Waterloo Quantum Club</title>
+<meta name="description" content="Interactive 3D hydrogen orbital simulation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .orbital-page {
+    background: var(--bg-color);
+    min-height: 100vh;
+    padding-top: 9rem;
+    padding-bottom: 5rem;
+  }
+  .orbital-wrap {
+    max-width: 1260px;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .orbital-intro { margin-bottom: 2.5rem; }
+  .orbital-intro h1 {
+    font-family: 'Anthropic Serif', 'Georgia', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .orbital-intro p {
+    color: var(--text-secondary);
+    margin-top: 0.6rem;
+    font-size: 1.05rem;
+    max-width: 560px;
+  }
+  .orbital-stage {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (max-width: 800px) { .orbital-stage { grid-template-columns: 1fr; } }
+  .orbital-canvas-box {
+    background: #000;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    border: 1px solid var(--border-color);
+  }
+  #orbitalCanvas { width: 100%; height: 100%; display: block; cursor: grab; }
+  #orbitalCanvas:active { cursor: grabbing; }
+  .orbital-axes {
+    position: absolute; top: 12px; right: 14px;
+    color: #fff; font-size: 0.75rem; opacity: 0.65;
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    letter-spacing: 0.01em;
+  }
+  .orbital-controls {
+    background: #f5f4ed;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .orbital-controls label {
+    display: block;
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+    color: var(--text-primary);
+  }
+  .orbital-controls select,
+  .orbital-controls input[type="range"] {
+    width: 100%;
+  }
+  .orbital-controls select {
+    padding: 0.55rem 0.7rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #fff;
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .orbital-controls input[type="range"] {
+    accent-color: var(--text-primary);
+  }
+  .orbital-controls .row {
+    display: flex; gap: 0.5rem; align-items: center;
+  }
+  .orbital-controls .btn-soft {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .orbital-controls .btn-soft:hover {
+    background: rgba(0,0,0,0.04);
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+  }
+  .orbital-controls .check {
+    display: flex; align-items: center; gap: 0.55rem;
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text-primary);
+  }
+  .orbital-controls .check input[type="checkbox"] {
+    width: 1rem; height: 1rem;
+    accent-color: var(--text-primary);
+  }
+  .orbital-info {
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+  }
+</style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo">
+        <span class="logo-text">Waterloo Quantum Club</span>
+    </div>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#events">Events</a></li>
+        <li><a href="game.html">Games</a></li>
+        <li><a href="team.html">Team</a></li>
+        <li><a href="https://discord.gg/QxpWC4Hx" target="_blank" rel="noopener noreferrer">Join</a></li>
+    </ul>
+    <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+</nav>
+
+<main class="orbital-page">
+  <div class="orbital-wrap">
+    <div class="orbital-intro">
+      <h1>Hydrogen Orbitals</h1>
+      <p>Real wave functions of the hydrogenic atom. Drag to rotate, or let it spin.</p>
+    </div>
+    <div class="orbital-stage">
+      <div class="orbital-canvas-box">
+        <canvas id="orbitalCanvas"></canvas>
+        <div class="orbital-axes">red = ψ &lt; 0 &nbsp; cyan = ψ &gt; 0</div>
+      </div>
+      <div class="orbital-controls">
+        <div>
+          <label for="orbitalSelect">Orbital</label>
+          <select id="orbitalSelect"></select>
+        </div>
+        <div>
+          <label>Brightness</label>
+          <input id="brightness" type="range" min="0.05" max="3" step="0.01" value="1">
+        </div>
+        <div>
+          <label>Zoom</label>
+          <input id="zoom" type="range" min="0.3" max="3" step="0.01" value="1">
+        </div>
+        <div>
+          <label>Auto-rotate speed</label>
+          <input id="spinSpeed" type="range" min="0" max="1.5" step="0.01" value="0.3">
+        </div>
+        <div class="check">
+          <input id="autoRotate" type="checkbox" checked>
+          <label for="autoRotate" style="margin:0;">Auto-rotate</label>
+        </div>
+        <button id="resetView" class="btn-soft" type="button">Reset view</button>
+        <div class="orbital-info">
+          Brightness ∝ |ψ|². Color shows the sign of ψ (real orbitals as used in chemistry). Built with WebGL volume ray-marching.
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="script.js"></script>
+<script src="orbitals.js"></script>
+</body>
+</html>

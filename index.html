@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waterloo Quantum Club</title>
+    <meta name="description" content="The University of Waterloo's #1 club for all things quantum.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Georgia:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-text">Waterloo Quantum Club</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#events">Events</a></li>
+            <li><a href="game.html">Games</a></li>
+            <li><a href="team.html">Team</a></li>
+            <li><a href="https://discord.gg/QxpWC4Hx" target="_blank" rel="noopener noreferrer">Join</a></li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <header class="hero-anth" id="home">
+        <h1 class="hero-headline scroll-reveal">
+            A <a href="#about" class="ul">community</a> exploring the<br>
+            <a href="orbitals.html" class="ul">quantum</a> world at Waterloo
+        </h1>
+        <div class="hero-summary scroll-reveal">
+            <p>
+                The University of Waterloo's #1 club for all things quantum. We host talks, run workshops, and build interactive experiments — open to everyone curious about the field.
+            </p>
+            <div class="hero-actions">
+                <a href="https://discord.gg/QxpWC4Hx" target="_blank" rel="noopener noreferrer" class="hero-btn primary">
+                    Join Us <span aria-hidden="true">→</span>
+                </a>
+                <a href="#about" class="hero-btn outline">Learn More</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="feature-panel scroll-reveal" aria-labelledby="featTitle">
+        <div class="feature-panel-content">
+            <h2 id="featTitle" class="feature-panel-title">Hydrogen Orbitals</h2>
+            <p class="feature-panel-sub">An interactive 3D look at the real wave functions of the hydrogenic atom — drag to rotate, or watch them spin.</p>
+            <a href="orbitals.html" class="feature-panel-cta">Open the simulator →</a>
+        </div>
+        <div class="feature-panel-visual">
+            <canvas
+                data-orbital="3d_yz"
+                data-spin="0.35"
+                data-zoom="0.65"
+                data-brightness="1.6"
+                data-bg="000000"></canvas>
+        </div>
+    </section>
+
+    <section id="events" class="anth-section scroll-reveal">
+        <div class="anth-section-head">
+            <h2 class="anth-section-title">Next event</h2>
+            <p class="anth-section-sub">Drop in for talks, demos, and discussions about quantum computing and physics. Newcomers welcome.</p>
+        </div>
+        <div class="anth-card-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 380px));">
+            <article class="anth-card">
+                <h3>First Meeting of Spring 2026</h3>
+                <p>Kick off the term with us — meet the executive team, hear what's on the calendar this semester, and find out about upcoming workshops and guest talks.</p>
+                <dl class="meta">
+                    <dt>Date</dt><dd>May 20, 2026</dd>
+                    <dt>Day</dt><dd>Wednesday</dd>
+                    <dt>Location</dt><dd>See Discord</dd>
+                </dl>
+                <a href="https://discord.gg/QxpWC4Hx" target="_blank" rel="noopener noreferrer" class="card-btn">Join Discord →</a>
+            </article>
+        </div>
+    </section>
+
+    <section id="about" class="anth-section scroll-reveal">
+        <div class="anth-section-head">
+            <h2 class="anth-section-title">What we do</h2>
+            <p class="anth-section-sub">A student community at the University of Waterloo exploring quantum computing, physics, and emerging technology together.</p>
+        </div>
+        <div class="anth-card-grid">
+            <article class="anth-card">
+                <h3>Our mission</h3>
+                <p>We discuss quantum topics, emerging technologies, and host guest speakers. Explore the future of computing and physics with us.</p>
+                <dl class="meta">
+                    <dt>Format</dt><dd>Talks, workshops, demos</dd>
+                    <dt>Open to</dt><dd>All students</dd>
+                </dl>
+            </article>
+            <article class="anth-card">
+                <h3>Meetings</h3>
+                <p>We meet biweekly on Wednesday evenings. Drop in for engaging discussions, hands-on workshops, and time to chat with other members.</p>
+                <dl class="meta">
+                    <dt>Schedule</dt><dd>Biweekly Wednesdays</dd>
+                    <dt>Time</dt><dd>7:00 PM</dd>
+                </dl>
+            </article>
+            <article class="anth-card">
+                <h3>Build & explore</h3>
+                <p>Interactive experiments and simulations — like the hydrogen orbital visualizer — alongside our semester-long Quantum Channels game.</p>
+                <dl class="meta">
+                    <dt>Try</dt><dd><a href="orbitals.html" style="color:inherit;text-decoration:underline;">Orbital simulator</a></dd>
+                    <dt>Play</dt><dd><a href="game.html" style="color:inherit;text-decoration:underline;">Quantum Channels</a></dd>
+                </dl>
+            </article>
+        </div>
+    </section>
+
+    <section id="hiring" class="anth-section scroll-reveal">
+        <div class="anth-section-head">
+            <h2 class="anth-section-title">We're hiring</h2>
+            <p class="anth-section-sub">We're looking for two new executive team members. Applications are due <strong>Thursday 21 May at 11:59 PM</strong>.</p>
+        </div>
+        <div class="anth-card-grid">
+            <article class="anth-card">
+                <h3>Content Coordinator</h3>
+                <p>Help coordinate events (excluding guest-speaker events), prepare slides and Instagram posts, and support other members when needed.</p>
+                <dl class="meta">
+                    <dt>Role type</dt><dd>Executive</dd>
+                    <dt>Deadline</dt><dd>May 21, 2026</dd>
+                </dl>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfIJbRc2Z5UPvWTCwYpPx0WYdWl9ri4rZU8jgk1g3CMRwh3qQ/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="card-btn">Apply →</a>
+            </article>
+            <article class="anth-card">
+                <h3>Outreach Coordinator</h3>
+                <p>Help the club build new connections and strengthen existing ones, arrange guest speakers, promote the club through lecture visits, and help with the upcoming semester-long Quantum Channels game.</p>
+                <dl class="meta">
+                    <dt>Role type</dt><dd>Executive</dd>
+                    <dt>Deadline</dt><dd>May 21, 2026</dd>
+                </dl>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfIJbRc2Z5UPvWTCwYpPx0WYdWl9ri4rZU8jgk1g3CMRwh3qQ/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="card-btn">Apply →</a>
+            </article>
+        </div>
+    </section>
+
+
+
+    <footer class="site-footer">
+        <div class="footer-top">
+            <p class="footer-tagline">A community exploring the quantum world at the University of Waterloo.</p>
+            <ul class="footer-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#events">Events</a></li>
+                <li><a href="game.html">Games</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="https://discord.gg/QxpWC4Hx" target="_blank" rel="noopener noreferrer">Join</a></li>
+            </ul>
+        </div>
+        <h2 class="footer-wordmark">Quantum&nbsp;Club</h2>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="orbitals.js"></script>
+</body>
+</html>
