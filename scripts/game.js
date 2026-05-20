@@ -347,7 +347,7 @@ superposeBtn.addEventListener('click', () => {
             hint.textContent = 'Tap any channel cell to place your token there.';
             hint.style.color = 'var(--qc-amp)';
             setTimeout(() => {
-                hint.textContent = 'Drag a slider to assign quanta. Tap a channel to place your superposition token — at resolution it gambles between +0 and +3 bonus points (50/50).';
+                hint.textContent = 'Drag a slider to assign quanta. Tap a channel to place your superposition token — if you win that channel, it gambles +0 or +3 bonus points (50/50). Lose the channel and the token does nothing.';
                 hint.style.color = '';
             }, 4000);
         }
@@ -522,7 +522,7 @@ function renderSchedulePanel(isLockout) {
         <div class="qc-sched-item">
             <span class="qc-sched-label">Resubmit anytime</span>
             <span class="qc-sched-value">until Wed 9 AM</span>
-            <span class="qc-sched-hint">${hasSubmittedThisWeek ? 'submitted ✓' : 'not yet submitted'}</span>
+            <span class="qc-sched-hint">${currentUser ? (hasSubmittedThisWeek ? 'submitted ✓' : 'not yet submitted') : 'log in to play'}</span>
         </div>
     `;
 }
@@ -709,11 +709,20 @@ async function renderLastResult() {
         `);
     }
 
-    const tokenLine = (r.youToken >= 0)
-        ? (r.youTokenBonus > 0
-            ? `Your superposition token paid out: <strong>+${r.youTokenBonus} bonus points</strong>.`
-            : `Your superposition token rolled <strong>+0</strong> — no bonus this week.`)
-        : 'You did not use your superposition token.';
+    let tokenLine;
+    if (r.youToken < 0) {
+        tokenLine = 'You did not use your superposition token.';
+    } else {
+        const tch = `CH${r.youToken + 1}`;
+        const wonChannel = (r.youAmps[r.youToken] ?? 0) > (r.oppAmps[r.youToken] ?? 0);
+        if (!wonChannel) {
+            tokenLine = `Your superposition token was on ${tch}: you didn't win that channel, so no token bonus.`;
+        } else if (r.youTokenBonus > 0) {
+            tokenLine = `Your superposition token on ${tch} paid out: <strong>+${r.youTokenBonus} bonus points</strong>!`;
+        } else {
+            tokenLine = `You won ${tch}, but the token gamble rolled <strong>+0</strong> — no bonus this week.`;
+        }
+    }
 
     resolutionPanel.innerHTML = `
         <div class="qc-resolution-head">
@@ -765,11 +774,15 @@ async function renderLeaderboard() {
 }
 
 // ---- Init ----
-// Restore session via Supabase (it persists in localStorage with key qc-supabase-auth)
+// The rule + schedule panels are informational — populate them immediately so
+// they're visible even before the auth check completes (and for logged-out users).
+renderRulePanel();
+renderSchedulePanel(isLockoutNow());
+
+// Restore session via Supabase (it persists in localStorage with key qc-supabase-auth).
 (async () => {
     const { data } = await sb.auth.getSession();
     if (data.session) {
-        // Look up the username from the profile
         const { data: profile } = await sb
             .from('profiles')
             .select('username')
