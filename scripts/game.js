@@ -277,13 +277,17 @@ function buildHeatmap() {
         cell.dataset.idx = String(i);
         cell.innerHTML = `
             <div class="qc-channel-label">CH${i + 1}</div>
-            <div class="qc-channel-value">0</div>
-            <input type="range" min="0" max="100" value="0" class="qc-channel-slider" aria-label="Channel ${i + 1}">
+            <input type="number" min="0" max="100" value="0" class="qc-channel-value" aria-label="Channel ${i + 1} quanta">
+            <input type="range" min="0" max="100" value="0" class="qc-channel-slider" aria-label="Channel ${i + 1} slider">
         `;
         const slider = cell.querySelector('.qc-channel-slider');
-        slider.addEventListener('input', (e) => onSliderChange(i, parseInt(e.target.value, 10)));
+        const valueInput = cell.querySelector('.qc-channel-value');
+        slider.addEventListener('input', (e) => onAmpChange(i, parseInt(e.target.value, 10)));
+        valueInput.addEventListener('input', (e) => onAmpChange(i, parseInt(e.target.value, 10) || 0));
+        valueInput.addEventListener('focus', (e) => e.target.select());
+        // Treat the number input as a click target that doesn't open the token toggle.
         cell.addEventListener('click', (e) => {
-            if (e.target === slider) return;
+            if (e.target === slider || e.target === valueInput) return;
             toggleSuperposition(i);
         });
         heatmap.appendChild(cell);
@@ -291,21 +295,26 @@ function buildHeatmap() {
     paintHeatmap();
 }
 
-function onSliderChange(idx, newVal) {
+function onAmpChange(idx, newVal) {
     const others = amplitudes.reduce((s, v, j) => s + (j === idx ? 0 : v), 0);
     const maxAllowed = Math.max(0, TOTAL - others);
-    amplitudes[idx] = Math.min(newVal, maxAllowed);
-    paintHeatmap();
+    amplitudes[idx] = Math.min(Math.max(0, newVal), maxAllowed);
+    paintHeatmap({ skip: idx });   // skip the input you're actively typing in
     updatePointsCounter();
 }
 
-function paintHeatmap() {
+function paintHeatmap(opts) {
+    const skip = opts && typeof opts.skip === 'number' ? opts.skip : -1;
     const cells = heatmap.querySelectorAll('.qc-channel');
     cells.forEach((cell, i) => {
         const v = amplitudes[i];
         cell.style.background = colorForAmplitude(v);
-        cell.querySelector('.qc-channel-value').textContent = v;
-        cell.querySelector('.qc-channel-value').style.color = textColorForAmplitude(v);
+        const valueInput = cell.querySelector('.qc-channel-value');
+        // Don't overwrite the input the user is currently typing in (would jump the caret).
+        if (i !== skip || document.activeElement !== valueInput) {
+            valueInput.value = String(v);
+        }
+        valueInput.style.color = textColorForAmplitude(v);
         cell.querySelector('.qc-channel-label').style.color = v >= 35 ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.7)';
         cell.querySelector('.qc-channel-slider').value = String(v);
         cell.classList.toggle('qc-superposed', i === superposedIndex);
