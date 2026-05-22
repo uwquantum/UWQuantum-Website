@@ -393,9 +393,9 @@ a { color: inherit; }
 .card .art rect, .card .art path, .card .art circle { fill: currentColor; }
 .card .art path { fill: none; stroke: currentColor; stroke-width: 2; }
 
-.c-coral { background: #d97757; color: #2a1410; }
-.c-blue  { background: #6d8db5; color: #0e1a2b; }
-.c-green { background: #6b9c7c; color: #102017; }
+.c-coral { background: #da7757; color: #2a1410; }
+.c-blue  { background: #4f8bbe; color: #0e1a2b; }
+.c-green { background: #369074; color: #0a1f17; }
 .c-cream { background: #ece4d2; color: #2b2a24; }
 
 .c-blue .art circle { fill: none; stroke: currentColor; stroke-width: 2; }
@@ -434,11 +434,11 @@ a { color: inherit; }
   z-index: 5;
   animation: qgift-bob 2s ease-in-out infinite;
 }
-/* Scattered along the empty left and right margins */
-.qgift.g1 { left: 40px;   top: 540px;  width: 58px; height: 66px; --tilt: -8deg;  animation-delay: 0s;    }
-.qgift.g2 { left: 960px;  top: 600px;  width: 70px; height: 78px; --tilt: 6deg;   animation-delay: 0.35s; }
-.qgift.g3 { left: 30px;   top: 1190px; width: 64px; height: 72px; --tilt: 10deg;  animation-delay: 0.7s;  }
-.qgift.g4 { left: 990px;  top: 1220px; width: 54px; height: 60px; --tilt: -12deg; animation-delay: 1.05s; }
+/* Floating above coral (left) and green (right) cards */
+.qgift.g1 { left: 110px; top: 770px; width: 60px; height: 68px; --tilt: -8deg;  animation-delay: 0s;    }
+.qgift.g2 { left: 195px; top: 760px; width: 66px; height: 74px; --tilt: 7deg;   animation-delay: 0.35s; }
+.qgift.g3 { left: 858px; top: 910px; width: 58px; height: 65px; --tilt: 10deg;  animation-delay: 0.7s;  }
+.qgift.g4 { left: 938px; top: 895px; width: 68px; height: 76px; --tilt: -12deg; animation-delay: 1.05s; }
 @keyframes qgift-bob {
   0%, 100% { transform: translateY(0)   rotate(calc(var(--tilt, 0deg) - 4deg)); }
   50%      { transform: translateY(-7px) rotate(calc(var(--tilt, 0deg) + 4deg)); }
