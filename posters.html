@@ -218,7 +218,21 @@
     };
 
     const BASE_CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.prod.website-files.com/67ce28cfec624e2b733f8a52/69971a1551eb6cda0d656e8a_AnthropicSerif-Roman-Web.woff2') format('woff2');
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Anthropic Serif';
+  src: url('https://cdn.prod.website-files.com/67ce28cfec624e2b733f8a52/69971a15a9fb8c1107a3570e_AnthropicSerif-Italic-Web.woff2') format('woff2');
+  font-weight: 300 800;
+  font-style: italic;
+  font-display: swap;
+}
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; height: 100%; }
 body {
@@ -235,7 +249,7 @@ body {
   position: relative;
   overflow: hidden;
 }
-h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; line-height: 1.05; }
+h1, h2, h3 { font-family: 'Anthropic Serif', Georgia, serif; font-weight: 600; line-height: 1.05; }
 em { font-style: italic; }
 a { color: inherit; }
 `;
@@ -258,18 +272,17 @@ a { color: inherit; }
 }
 .kicker {
   text-align: center;
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 28px;
+  font-family: 'Anthropic Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: 30px;
   color: #e8e4d6;
-  margin-top: 18px;
+  margin-top: 24px;
 }
 .headline {
   text-align: center;
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 92px;
+  font-family: 'Anthropic Serif', Georgia, serif;
+  font-weight: 600;
+  font-size: 94px;
   line-height: 1.02;
   letter-spacing: -0.015em;
   margin-top: 28px;
@@ -277,33 +290,37 @@ a { color: inherit; }
 .headline em { font-style: italic; color: #d4a574; }
 .subtle {
   text-align: center;
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-size: 26px;
+  font-family: 'Anthropic Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: 28px;
   color: #cfcdc6;
-  margin-top: 26px;
+  margin-top: 28px;
 }
-.subtle b { font-weight: 700; font-style: normal; }
+.subtle b { font-weight: 700; }
 
 .cards {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -80px;
+  bottom: -120px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  padding: 0 40px;
+  align-items: end;
+  gap: 16px;
+  padding: 0 36px;
 }
 .card {
-  border-radius: 22px;
-  padding: 28px 24px 32px;
-  height: 460px;
+  border-radius: 24px;
+  padding: 28px 24px 36px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 -18px 48px rgba(0,0,0,0.55);
+  box-shadow: 0 -22px 56px rgba(0,0,0,0.55);
   font-family: 'Inter', sans-serif;
 }
+.card:nth-child(1) { height: 420px; }
+.card:nth-child(2) { height: 640px; }
+.card:nth-child(3) { height: 540px; }
+.card:nth-child(4) { height: 460px; }
 .card .num {
   font-size: 13px;
   letter-spacing: 0.04em;
@@ -311,9 +328,9 @@ a { color: inherit; }
   margin-bottom: 14px;
 }
 .card h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Anthropic Serif', Georgia, serif;
   font-weight: 700;
-  font-size: 26px;
+  font-size: 28px;
   line-height: 1.08;
   margin-bottom: 14px;
 }
