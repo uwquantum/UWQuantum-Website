@@ -267,7 +267,7 @@ a { color: inherit; }
     radial-gradient(circle, rgba(240,238,230,0.18) 1px, transparent 1.4px) 0 0 / 22px 22px,
     #0f0e0c;
   color: #f0eee6;
-  padding: 70px 60px 0;
+  padding: 150px 60px 0;
   overflow: hidden;
   font-family: 'Anthropic Serif', Georgia, serif;
   font-weight: 400;
@@ -285,7 +285,7 @@ a { color: inherit; }
   font-size: 94px;
   line-height: 1.02;
   letter-spacing: -0.015em;
-  margin-top: 28px;
+  margin-top: 32px;
 }
 .headline em { font-style: normal; font-weight: 400; font-size: 1.25em; }
 .subtle {
@@ -293,49 +293,70 @@ a { color: inherit; }
   font-weight: 400;
   font-size: 28px;
   color: #cfcdc6;
-  margin-top: 28px;
+  margin-top: 32px;
 }
 .subtle b { font-weight: 400; }
 
 .cards {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -120px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  align-items: end;
-  gap: 16px;
-  padding: 0 36px;
+  inset: 0;
+  pointer-events: none;
 }
 .card {
-  border-radius: 24px;
-  padding: 28px 24px 36px;
+  position: absolute;
+  border-radius: 26px;
+  padding: 34px 30px 36px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 -22px 56px rgba(0,0,0,0.55);
+  box-shadow: 0 -24px 60px rgba(0,0,0,0.55);
   font-family: 'Anthropic Serif', Georgia, serif;
   font-weight: 400;
 }
-.card:nth-child(1) { height: 420px; }
-.card:nth-child(2) { height: 640px; }
-.card:nth-child(3) { height: 540px; }
-.card:nth-child(4) { height: 460px; }
+.card.center {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -100px;
+  width: 400px;
+  height: 760px;
+  z-index: 3;
+}
+.card.left {
+  left: -70px;
+  bottom: -180px;
+  width: 360px;
+  height: 600px;
+  z-index: 2;
+}
+.card.right {
+  right: -70px;
+  bottom: -180px;
+  width: 360px;
+  height: 600px;
+  z-index: 2;
+}
+.card.below {
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -360px;
+  width: 480px;
+  height: 500px;
+  z-index: 1;
+}
 .card .num {
   font-size: 14px;
   letter-spacing: 0.04em;
   opacity: 0.75;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 .card h3 {
   font-weight: 400;
-  font-size: 28px;
+  font-size: 34px;
   line-height: 1.08;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 .card p strong { font-weight: 400; }
 .card p {
-  font-size: 14.5px;
+  font-size: 17px;
   line-height: 1.45;
   flex: 1;
 }
@@ -363,7 +384,18 @@ a { color: inherit; }
   <p class="subtle">based on rules of <b>quantum mechanics</b></p>
 
   <div class="cards">
-    <div class="card c-coral">
+    <div class="card c-cream center">
+      <h3>Outscore the wavefunction</h3>
+      <p>Out-bid your opponent in a channel? That's a point. Climb the global leaderboard, week by week.</p>
+      <div class="art">
+        <svg viewBox="0 0 120 60" preserveAspectRatio="xMidYMax meet">
+          <path d="M0 40 Q15 8 30 40 T60 40 T90 40 T120 40"/>
+          <path d="M0 30 Q15 50 30 30 T60 30 T90 30 T120 30" opacity="0.5"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="card c-coral left">
       <div class="num">01</div>
       <h3>Distribute your quanta</h3>
       <p>You get 100 quanta to spread across 10 channels. Pile them up to win channels, but the universe doesn't reward greed.</p>
@@ -383,20 +415,7 @@ a { color: inherit; }
       </div>
     </div>
 
-    <div class="card c-blue">
-      <div class="num">02</div>
-      <h3>Every week, a new quantum rule</h3>
-      <p>Each week introduces a different quantum effect, measurement, exclusion, tunneling, uncertainty. The rule revealed only when the week opens.</p>
-      <div class="art">
-        <svg viewBox="0 0 120 60" preserveAspectRatio="xMidYMax meet">
-          <circle cx="30" cy="30" r="14"/>
-          <circle cx="60" cy="30" r="14" opacity="0.6"/>
-          <circle cx="90" cy="30" r="14" opacity="0.3"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="card c-green">
+    <div class="card c-green right">
       <div class="num">03</div>
       <h3>Superposition token</h3>
       <p>Pick a channel you think you'll win. If you do, a coin flip grants you <strong>+0</strong> or <strong>+3</strong> bonus points. Lose the channel, no bonus.</p>
@@ -413,14 +432,15 @@ a { color: inherit; }
       </div>
     </div>
 
-    <div class="card c-cream">
-      <div class="num">04</div>
-      <h3>Outscore the wavefunction</h3>
-      <p>Out-bid your opponent in a channel? That's a point. Climb the global leaderboard, week by week.</p>
+    <div class="card c-blue below">
+      <div class="num">02</div>
+      <h3>Every week, a new quantum rule</h3>
+      <p>Each week introduces a different quantum effect, measurement, exclusion, tunneling, uncertainty. The rule revealed only when the week opens.</p>
       <div class="art">
         <svg viewBox="0 0 120 60" preserveAspectRatio="xMidYMax meet">
-          <path d="M0 40 Q15 8 30 40 T60 40 T90 40 T120 40"/>
-          <path d="M0 30 Q15 50 30 30 T60 30 T90 30 T120 30" opacity="0.5"/>
+          <circle cx="30" cy="30" r="14"/>
+          <circle cx="60" cy="30" r="14" opacity="0.6"/>
+          <circle cx="90" cy="30" r="14" opacity="0.3"/>
         </svg>
       </div>
     </div>
