@@ -400,11 +400,109 @@ a { color: inherit; }
 
 .c-blue .art circle { fill: none; stroke: currentColor; stroke-width: 2; }
 .c-green .art circle { fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+/* Pixel Schrödinger cat holding a Ψ sign */
+.qcat {
+  position: absolute;
+  left: 130px;
+  top: 660px;
+  width: 150px;
+  height: 175px;
+  image-rendering: pixelated;
+  animation: qcat-bob 1.6s ease-in-out infinite;
+  z-index: 4;
+}
+.qcat .sign-group {
+  transform-origin: 17px 11px;
+  animation: qcat-wave 1.4s ease-in-out infinite;
+}
+@keyframes qcat-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+@keyframes qcat-wave {
+  0%, 100% { transform: rotate(-5deg); }
+  50%      { transform: rotate(5deg); }
+}
+
+/* Pink pixel gift boxes perched on top of each card */
+.qgift {
+  position: absolute;
+  width: 64px;
+  height: 72px;
+  image-rendering: pixelated;
+  z-index: 5;
+  animation: qgift-bob 2s ease-in-out infinite;
+}
+.qgift.g1 { left: 136px;  top: 770px; animation-delay: 0s;    }
+.qgift.g2 { left: 516px;  top: 550px; animation-delay: 0.25s; }
+.qgift.g3 { left: 516px;  top: 954px; animation-delay: 0.5s;  }
+.qgift.g4 { left: 888px;  top: 900px; animation-delay: 0.75s; }
+@keyframes qgift-bob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-6px) rotate(3deg); }
+}
 `,
             html: `<div class="poster">
   <p class="kicker">Our newest game Quantum Channels</p>
   <h1 class="headline">A weekly <em>quantum</em><br>strategy game</h1>
   <p class="subtle">based on rules of <b>quantum mechanics</b></p>
+
+  <svg class="qcat" viewBox="0 0 28 32" shape-rendering="crispEdges">
+    <!-- ears -->
+    <g fill="#d97757">
+      <rect x="3" y="5" width="2" height="1"/>
+      <rect x="3" y="6" width="3" height="1"/>
+      <rect x="2" y="7" width="4" height="1"/>
+      <rect x="11" y="5" width="2" height="1"/>
+      <rect x="10" y="6" width="3" height="1"/>
+      <rect x="10" y="7" width="4" height="1"/>
+      <!-- head/body -->
+      <rect x="2" y="8" width="12" height="13"/>
+      <rect x="3" y="21" width="10" height="2"/>
+      <!-- legs -->
+      <rect x="3" y="23" width="2" height="3"/>
+      <rect x="7" y="23" width="2" height="3"/>
+      <rect x="11" y="23" width="2" height="3"/>
+      <!-- raised arm holding sign -->
+      <rect x="13" y="9" width="2" height="2"/>
+      <rect x="14" y="7" width="2" height="2"/>
+    </g>
+    <!-- inner ear -->
+    <g fill="#7a3a1f">
+      <rect x="4" y="6" width="1" height="1"/>
+      <rect x="11" y="6" width="1" height="1"/>
+    </g>
+    <!-- closed eyes ^ ^ -->
+    <g fill="#2a1410">
+      <rect x="4" y="12" width="1" height="1"/>
+      <rect x="6" y="12" width="1" height="1"/>
+      <rect x="5" y="13" width="1" height="1"/>
+      <rect x="9" y="12" width="1" height="1"/>
+      <rect x="11" y="12" width="1" height="1"/>
+      <rect x="10" y="13" width="1" height="1"/>
+      <!-- nose/mouth -->
+      <rect x="7" y="15" width="2" height="1"/>
+      <rect x="6" y="16" width="1" height="1"/>
+      <rect x="9" y="16" width="1" height="1"/>
+    </g>
+    <!-- sign group: pole + placard with Ψ -->
+    <g class="sign-group">
+      <rect x="15" y="3" width="1" height="6" fill="#1a1a1a"/>
+      <rect x="16" y="0" width="11" height="7" fill="#f0eee6"/>
+      <rect x="16" y="0" width="11" height="1" fill="#cfcdc6"/>
+      <rect x="16" y="6" width="11" height="1" fill="#cfcdc6"/>
+      <!-- Ψ glyph in pixels -->
+      <g fill="#0f0e0c">
+        <rect x="18" y="1" width="1" height="3"/>
+        <rect x="21" y="1" width="1" height="4"/>
+        <rect x="24" y="1" width="1" height="3"/>
+        <rect x="19" y="4" width="2" height="1"/>
+        <rect x="22" y="4" width="2" height="1"/>
+        <rect x="21" y="5" width="1" height="1"/>
+      </g>
+    </g>
+  </svg>
 
   <div class="cards">
     <div class="card c-cream center">
@@ -467,6 +565,35 @@ a { color: inherit; }
         </svg>
       </div>
     </div>
+
+    <svg class="qgift g1" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
+    <svg class="qgift g2" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
+    <svg class="qgift g3" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
+    <svg class="qgift g4" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
   </div>
 </div>`,
         },
