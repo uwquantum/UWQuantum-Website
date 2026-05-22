@@ -140,6 +140,45 @@
             border: 1px solid var(--border);
         }
 
+        .inspector {
+            position: fixed;
+            left: 16px;
+            bottom: 16px;
+            width: 280px;
+            background: rgba(20,19,16,0.96);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--fg);
+            z-index: 50;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+        }
+        .inspector header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 10px; border-bottom: 1px solid var(--border);
+            cursor: pointer; user-select: none;
+        }
+        .inspector header span { font-weight: 600; letter-spacing: 0.04em; }
+        .inspector .body { padding: 8px 10px 10px; max-height: 60vh; overflow: auto; }
+        .inspector.collapsed .body { display: none; }
+        .insp-card { margin-bottom: 10px; padding: 8px; border: 1px solid var(--border); border-radius: 4px; }
+        .insp-card .name { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-weight: 600; }
+        .insp-card .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+        .insp-row { display: grid; grid-template-columns: 18px 1fr 56px; gap: 6px; align-items: center; margin-top: 4px; }
+        .insp-row label { color: var(--muted); }
+        .insp-row input[type=range] { width: 100%; }
+        .insp-row input[type=number] {
+            background: #111; color: var(--fg); border: 1px solid var(--border);
+            border-radius: 3px; padding: 2px 4px; font: inherit; width: 100%;
+        }
+        .insp-actions { display: flex; gap: 6px; margin-top: 4px; }
+        .insp-actions button {
+            flex: 1; background: #222; color: var(--fg); border: 1px solid var(--border);
+            border-radius: 3px; padding: 4px 6px; font: inherit; cursor: pointer;
+        }
+        .insp-actions button:hover { background: #2c2b27; }
+
         @media (max-width: 900px) {
             .app { grid-template-columns: 1fr; grid-template-rows: 48px 40vh 1fr; }
             .editor { border-right: none; border-bottom: 1px solid var(--border); }
@@ -204,6 +243,11 @@
         </section>
     </div>
     <div class="status" id="status">ready</div>
+
+    <aside class="inspector" id="inspector" hidden>
+        <header id="inspToggle"><span>Card Inspector</span><span id="inspChevron">▾</span></header>
+        <div class="body" id="inspBody"></div>
+    </aside>
 
 <script>
 (() => {
@@ -684,6 +728,116 @@ h1 em { color: #d4a574; }
 </head><body>${htmlEl.value}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script></body></html>`);
         w.document.close();
     });
+
+    // ---- Card Inspector ----
+    const INSPECTOR_CARDS = [
+        { sel: 'center', label: 'Cream — Outscore', color: '#ece4d2' },
+        { sel: 'left',   label: 'Coral — 01 Distribute', color: '#d97757' },
+        { sel: 'below',  label: 'Blue — 02 Every week', color: '#6d8db5' },
+        { sel: 'right',  label: 'Green — 03 Superposition', color: '#6b9c7c' },
+    ];
+    const DEFAULT_CARDS = {
+        center: { x: 60,  y: 560, w: 464, h: 340 },
+        left:   { x: 556, y: 560, w: 464, h: 340 },
+        below:  { x: 60,  y: 932, w: 464, h: 340 },
+        right:  { x: 556, y: 932, w: 464, h: 340 },
+    };
+    const CARD_KEY = 'qc.poster.cards.v1';
+    let cardState = (() => {
+        try { return Object.assign({}, DEFAULT_CARDS, JSON.parse(localStorage.getItem(CARD_KEY) || '{}')); }
+        catch { return { ...DEFAULT_CARDS }; }
+    })();
+
+    const inspector = $('inspector');
+    const inspBody  = $('inspBody');
+    const inspToggle = $('inspToggle');
+    const inspChevron = $('inspChevron');
+
+    function cardOverrideCss() {
+        return Object.entries(cardState).map(([k, v]) =>
+            `.card.${k}{left:${v.x}px!important;right:auto!important;top:${v.y}px!important;width:${v.w}px!important;height:${v.h}px!important;transform:none!important;}`
+        ).join('\n');
+    }
+
+    function saveCards() {
+        try { localStorage.setItem(CARD_KEY, JSON.stringify(cardState)); } catch {}
+    }
+
+    function buildInspector() {
+        inspBody.innerHTML = '';
+        INSPECTOR_CARDS.forEach(({ sel, label, color }) => {
+            const v = cardState[sel];
+            const wrap = document.createElement('div');
+            wrap.className = 'insp-card';
+            wrap.innerHTML = `
+                <div class="name"><span class="swatch" style="background:${color}"></span>${label}</div>
+                ${[
+                    ['x','X', 0, 1080],
+                    ['y','Y', 0, 1600],
+                    ['w','W', 80, 1080],
+                    ['h','H', 80, 1200],
+                ].map(([k, lbl, min, max]) => `
+                    <div class="insp-row" data-card="${sel}" data-prop="${k}">
+                        <label>${lbl}</label>
+                        <input type="range" min="${min}" max="${max}" value="${v[k]}">
+                        <input type="number" min="${min}" max="${max}" value="${v[k]}">
+                    </div>
+                `).join('')}
+            `;
+            inspBody.appendChild(wrap);
+        });
+        const actions = document.createElement('div');
+        actions.className = 'insp-actions';
+        actions.innerHTML = `<button id="inspReset">Reset</button><button id="inspCopy">Copy CSS</button>`;
+        inspBody.appendChild(actions);
+
+        inspBody.querySelectorAll('.insp-row').forEach(row => {
+            const card = row.dataset.card, prop = row.dataset.prop;
+            const range = row.querySelector('input[type=range]');
+            const num   = row.querySelector('input[type=number]');
+            const sync = (val) => {
+                val = Math.max(parseInt(range.min,10), Math.min(parseInt(range.max,10), parseInt(val,10) || 0));
+                range.value = val; num.value = val;
+                cardState[card][prop] = val;
+                saveCards(); render();
+            };
+            range.addEventListener('input', () => sync(range.value));
+            num.addEventListener('input',   () => sync(num.value));
+        });
+
+        $('inspReset').addEventListener('click', () => {
+            cardState = JSON.parse(JSON.stringify(DEFAULT_CARDS));
+            saveCards(); buildInspector(); render();
+        });
+        $('inspCopy').addEventListener('click', async () => {
+            try { await navigator.clipboard.writeText(cardOverrideCss()); setStatus('card CSS copied'); }
+            catch { setStatus('copy failed'); }
+        });
+    }
+
+    inspToggle.addEventListener('click', () => {
+        inspector.classList.toggle('collapsed');
+        inspChevron.textContent = inspector.classList.contains('collapsed') ? '▸' : '▾';
+    });
+
+    function syncInspectorVisibility() {
+        inspector.hidden = tplSel.value !== 'channels';
+    }
+    tplSel.addEventListener('change', syncInspectorVisibility);
+
+    // Inject overrides into the rendered iframe by wrapping render()
+    render = function() {
+        const s = currentSize();
+        const overrides = tplSel.value === 'channels' ? `\n${cardOverrideCss()}` : '';
+        const doc = `<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>@page { size: ${s.css}; margin: 0; }${BASE_CSS}${cssEl.value}${overrides}</style>
+</head><body>${htmlEl.value}</body></html>`;
+        preview.srcdoc = doc;
+        save();
+    };
+
+    buildInspector();
+    syncInspectorVisibility();
 
     // Init
     if (!load()) loadTemplate(tplSel.value);
