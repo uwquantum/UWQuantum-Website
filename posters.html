@@ -316,6 +316,14 @@ a { color: inherit; }
   font-family: 'Anthropic Serif', Georgia, serif;
   font-weight: 400;
 }
+.brand {
+  text-align: center;
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #b8b3a3;
+}
 .kicker {
   text-align: center;
   font-weight: 400;
@@ -440,15 +448,19 @@ a { color: inherit; }
   z-index: 5;
   animation: qgift-bob 2s ease-in-out infinite;
 }
-/* Two pixel gifts perched on the top edge of the green card */
-.qgift.g5 { left: 800px; top: 905px; width: 64px; height: 72px; --tilt: -8deg; animation-delay: 0s;   }
-.qgift.g6 { left: 985px; top: 900px; width: 58px; height: 66px; --tilt: 10deg; animation-delay: 0.4s; }
+/* Two pixel gifts perched on the top edge of the coral card (left) */
+.qgift.g1 { left: 60px;  top: 778px; width: 62px; height: 70px; --tilt: -10deg; animation-delay: 0s;   }
+.qgift.g2 { left: 215px; top: 770px; width: 58px; height: 66px; --tilt: 8deg;   animation-delay: 0.3s; }
+/* Two pixel gifts perched on the top edge of the green card (right) */
+.qgift.g5 { left: 800px; top: 905px; width: 64px; height: 72px; --tilt: -8deg;  animation-delay: 0.15s; }
+.qgift.g6 { left: 985px; top: 900px; width: 58px; height: 66px; --tilt: 10deg;  animation-delay: 0.45s; }
 @keyframes qgift-bob {
   0%, 100% { transform: translateY(0)   rotate(calc(var(--tilt, 0deg) - 4deg)); }
   50%      { transform: translateY(-7px) rotate(calc(var(--tilt, 0deg) + 4deg)); }
 }
 `,
             html: `<div class="poster">
+  <p class="brand">Waterloo Quantum Club</p>
   <p class="kicker">Our newest game Quantum Channels</p>
   <h1 class="headline">A weekly <em>quantum</em><br>strategy game</h1>
   <p class="subtle">Sign up today! <b>Link in bio</b> and win cool prizes</p>
@@ -543,7 +555,6 @@ a { color: inherit; }
     </div>
 
     <div class="card c-coral left">
-      <div class="num">01</div>
       <h3>Distribute your quanta</h3>
       <p>You get 100 quanta to spread across 10 channels. Pile them up to win channels, but the universe doesn't reward greed.</p>
       <div class="art">
@@ -592,7 +603,6 @@ a { color: inherit; }
     </div>
 
     <div class="card c-green right">
-      <div class="num">03</div>
       <h3>Superposition token</h3>
       <p>Pick a channel you think you'll win. If you do, a coin flip grants you <strong>+0</strong> or <strong>+3</strong> bonus points. Lose the channel, no bonus.</p>
       <div class="art">
@@ -629,7 +639,6 @@ a { color: inherit; }
     </div>
 
     <div class="card c-blue below">
-      <div class="num">02</div>
       <h3>Every week, a new quantum rule</h3>
       <p>Each week introduces a different quantum effect, measurement, exclusion, tunneling, uncertainty. The rule revealed only when the week opens.</p>
       <div class="art">
@@ -675,6 +684,20 @@ a { color: inherit; }
       </div>
     </div>
 
+    <svg class="qgift g1" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
+    <svg class="qgift g2" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
     <svg class="qgift g5" viewBox="0 0 16 18" shape-rendering="crispEdges">
       <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
       <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
