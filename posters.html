@@ -435,10 +435,13 @@ a { color: inherit; }
   animation: qgift-bob 2s ease-in-out infinite;
 }
 /* Floating above the coral card (cat occupies the green card) */
-.qgift.g1 { left: 20px;  top: 770px; width: 58px; height: 65px; --tilt: -10deg; animation-delay: 0s;    }
-.qgift.g2 { left: 100px; top: 758px; width: 66px; height: 74px; --tilt: 6deg;   animation-delay: 0.3s;  }
-.qgift.g3 { left: 188px; top: 762px; width: 60px; height: 68px; --tilt: -5deg;  animation-delay: 0.6s;  }
-.qgift.g4 { left: 270px; top: 772px; width: 64px; height: 72px; --tilt: 12deg;  animation-delay: 0.9s;  }
+.qgift.g1 { left: 20px;  top: 770px;  width: 58px; height: 65px; --tilt: -10deg; animation-delay: 0s;    }
+.qgift.g2 { left: 100px; top: 758px;  width: 66px; height: 74px; --tilt: 6deg;   animation-delay: 0.3s;  }
+.qgift.g3 { left: 188px; top: 762px;  width: 60px; height: 68px; --tilt: -5deg;  animation-delay: 0.6s;  }
+.qgift.g4 { left: 270px; top: 772px;  width: 64px; height: 72px; --tilt: 12deg;  animation-delay: 0.9s;  }
+/* Two more perched on the far right edge of the green card */
+.qgift.g5 { left: 1010px; top: 920px;  width: 62px; height: 70px; --tilt: 8deg;   animation-delay: 0.45s; }
+.qgift.g6 { left: 1020px; top: 1090px; width: 56px; height: 64px; --tilt: -10deg; animation-delay: 0.75s; }
 @keyframes qgift-bob {
   0%, 100% { transform: translateY(0)   rotate(calc(var(--tilt, 0deg) - 4deg)); }
   50%      { transform: translateY(-7px) rotate(calc(var(--tilt, 0deg) + 4deg)); }
@@ -447,7 +450,7 @@ a { color: inherit; }
             html: `<div class="poster">
   <p class="kicker">Our newest game Quantum Channels</p>
   <h1 class="headline">A weekly <em>quantum</em><br>strategy game</h1>
-  <p class="subtle">based on rules of <b>quantum mechanics</b></p>
+  <p class="subtle">Sign up today! <b>Link in bio</b> and win cool prizes</p>
 
   <svg class="qcat" viewBox="0 0 28 32" shape-rendering="crispEdges">
     <!-- ears -->
@@ -543,19 +546,37 @@ a { color: inherit; }
       <h3>Distribute your quanta</h3>
       <p>You get 100 quanta to spread across 10 channels. Pile them up to win channels, but the universe doesn't reward greed.</p>
       <div class="art">
-        <svg viewBox="0 0 32 14" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet">
+        <!-- pixel chip stacks: 5 stacks of varying heights with ring highlights -->
+        <svg viewBox="0 0 36 14" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet">
           <g fill="currentColor">
-            <rect x="0"  y="10" width="2" height="4"/>
-            <rect x="3"  y="7"  width="2" height="7"/>
-            <rect x="6"  y="9"  width="2" height="5"/>
-            <rect x="9"  y="3"  width="2" height="11"/>
-            <rect x="12" y="6"  width="2" height="8"/>
-            <rect x="15" y="0"  width="2" height="14"/>
-            <rect x="18" y="8"  width="2" height="6"/>
-            <rect x="21" y="11" width="2" height="3"/>
-            <rect x="24" y="5"  width="2" height="9"/>
-            <rect x="27" y="9"  width="2" height="5"/>
-            <rect x="30" y="11" width="2" height="3"/>
+            <rect x="1"  y="10" width="6" height="2"/>
+            <rect x="1"  y="12" width="6" height="2"/>
+            <rect x="8"  y="6"  width="6" height="2"/>
+            <rect x="8"  y="8"  width="6" height="2"/>
+            <rect x="8"  y="10" width="6" height="2"/>
+            <rect x="8"  y="12" width="6" height="2"/>
+            <rect x="15" y="2"  width="6" height="2"/>
+            <rect x="15" y="4"  width="6" height="2"/>
+            <rect x="15" y="6"  width="6" height="2"/>
+            <rect x="15" y="8"  width="6" height="2"/>
+            <rect x="15" y="10" width="6" height="2"/>
+            <rect x="15" y="12" width="6" height="2"/>
+            <rect x="22" y="8"  width="6" height="2"/>
+            <rect x="22" y="10" width="6" height="2"/>
+            <rect x="22" y="12" width="6" height="2"/>
+            <rect x="29" y="12" width="6" height="2"/>
+          </g>
+          <!-- ring highlights -->
+          <g fill="#da7757">
+            <rect x="2"  y="11" width="4" height="1"/>
+            <rect x="9"  y="7"  width="4" height="1"/>
+            <rect x="9"  y="11" width="4" height="1"/>
+            <rect x="16" y="3"  width="4" height="1"/>
+            <rect x="16" y="7"  width="4" height="1"/>
+            <rect x="16" y="11" width="4" height="1"/>
+            <rect x="23" y="9"  width="4" height="1"/>
+            <rect x="23" y="13" width="4" height="1"/>
+            <rect x="30" y="13" width="4" height="1"/>
           </g>
         </svg>
       </div>
@@ -603,26 +624,43 @@ a { color: inherit; }
       <h3>Every week, a new quantum rule</h3>
       <p>Each week introduces a different quantum effect, measurement, exclusion, tunneling, uncertainty. The rule revealed only when the week opens.</p>
       <div class="art">
-        <svg viewBox="0 0 16 14" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet">
-          <!-- die body -->
-          <rect x="2" y="1" width="12" height="12" fill="currentColor"/>
-          <!-- top/left highlight -->
+        <!-- pixel calendar with a starred day -->
+        <svg viewBox="0 0 22 16" shape-rendering="crispEdges" preserveAspectRatio="xMidYMax meet">
+          <!-- top tabs -->
+          <g fill="currentColor">
+            <rect x="3" y="0" width="2" height="3"/>
+            <rect x="17" y="0" width="2" height="3"/>
+          </g>
+          <!-- calendar body -->
+          <rect x="1" y="2" width="20" height="13" fill="currentColor"/>
+          <!-- header band -->
+          <rect x="1" y="2" width="20" height="3" fill="#9bc1de"/>
+          <!-- day grid (light squares on dark calendar) -->
           <g fill="#9bc1de">
-            <rect x="2" y="1" width="12" height="1"/>
-            <rect x="2" y="1" width="1" height="12"/>
+            <!-- row 1 -->
+            <rect x="3"  y="6"  width="2" height="2"/>
+            <rect x="6"  y="6"  width="2" height="2"/>
+            <rect x="9"  y="6"  width="2" height="2"/>
+            <rect x="12" y="6"  width="2" height="2"/>
+            <rect x="15" y="6"  width="2" height="2"/>
+            <rect x="18" y="6"  width="2" height="2"/>
+            <!-- row 2 -->
+            <rect x="3"  y="9"  width="2" height="2"/>
+            <rect x="6"  y="9"  width="2" height="2"/>
+            <rect x="12" y="9"  width="2" height="2"/>
+            <rect x="15" y="9"  width="2" height="2"/>
+            <rect x="18" y="9"  width="2" height="2"/>
+            <!-- row 3 -->
+            <rect x="3"  y="12" width="2" height="2"/>
+            <rect x="6"  y="12" width="2" height="2"/>
+            <rect x="9"  y="12" width="2" height="2"/>
+            <rect x="12" y="12" width="2" height="2"/>
+            <rect x="15" y="12" width="2" height="2"/>
+            <rect x="18" y="12" width="2" height="2"/>
           </g>
-          <!-- bottom/right shadow -->
-          <g fill="#0a1a2b" opacity="0.5">
-            <rect x="2" y="12" width="12" height="1"/>
-            <rect x="13" y="1" width="1" height="12"/>
-          </g>
-          <!-- 5 pips -->
-          <g fill="#4f8bbe">
-            <rect x="4"  y="3"  width="2" height="2"/>
-            <rect x="10" y="3"  width="2" height="2"/>
-            <rect x="7"  y="6"  width="2" height="2"/>
-            <rect x="4"  y="9"  width="2" height="2"/>
-            <rect x="10" y="9"  width="2" height="2"/>
+          <!-- highlighted "today" -->
+          <g fill="#ffd966">
+            <rect x="9" y="9" width="2" height="2"/>
           </g>
         </svg>
       </div>
@@ -650,6 +688,20 @@ a { color: inherit; }
       <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
     </svg>
     <svg class="qgift g4" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
+    <svg class="qgift g5" viewBox="0 0 16 18" shape-rendering="crispEdges">
+      <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
+      <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
+      <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
+      <rect x="7" y="4" width="2" height="12" fill="#ffd0e4"/>
+      <rect x="2" y="9" width="12" height="2" fill="#ffd0e4"/>
+    </svg>
+    <svg class="qgift g6" viewBox="0 0 16 18" shape-rendering="crispEdges">
       <g fill="#ff5fa2"><rect x="4" y="0" width="2" height="2"/><rect x="3" y="1" width="3" height="2"/><rect x="10" y="0" width="2" height="2"/><rect x="10" y="1" width="3" height="2"/><rect x="6" y="2" width="4" height="2"/></g>
       <rect x="1" y="4" width="14" height="3" fill="#e64a8c"/>
       <rect x="2" y="7" width="12" height="9" fill="#ff7eb6"/>
