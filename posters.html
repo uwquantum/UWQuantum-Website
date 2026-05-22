@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poster Studio · WQC</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="assets/quantumclublogo-modified.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1a1915;
+            --panel: #232220;
+            --panel-2: #2c2b28;
+            --border: #3a3935;
+            --text: #f0eee6;
+            --muted: #9a9893;
+            --accent: #d4a574;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+        }
+        .app {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            grid-template-rows: 48px 1fr;
+            height: 100vh;
+        }
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 0 16px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+        header .title { font-weight: 600; letter-spacing: 0.02em; }
+        header .muted { color: var(--muted); font-size: 12px; }
+        header .spacer { flex: 1; }
+        header select, header button {
+            background: var(--panel-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        header button:hover, header select:hover { border-color: var(--accent); }
+        header button.primary { background: var(--accent); color: #1a1915; border-color: var(--accent); font-weight: 600; }
+
+        .editor {
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .editor-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: var(--panel-2);
+        }
+        .editor-tabs button {
+            background: transparent;
+            color: var(--muted);
+            border: none;
+            border-right: 1px solid var(--border);
+            padding: 8px 14px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+        }
+        .editor-tabs button.active { color: var(--text); background: var(--panel); }
+        .editor-tabs .right { margin-left: auto; display: flex; }
+        .editor-tabs .right button { border-right: none; border-left: 1px solid var(--border); }
+        .editor textarea {
+            flex: 1;
+            background: var(--panel);
+            color: var(--text);
+            border: none;
+            outline: none;
+            padding: 14px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            line-height: 1.55;
+            resize: none;
+            tab-size: 2;
+        }
+        .editor textarea[hidden] { display: none; }
+
+        .stage {
+            background:
+                linear-gradient(45deg, #1f1e1b 25%, transparent 25%),
+                linear-gradient(-45deg, #1f1e1b 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #1f1e1b 75%),
+                linear-gradient(-45deg, transparent 75%, #1f1e1b 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+            background-color: #181714;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .frame-wrap {
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px var(--border);
+            background: #fff;
+            transform-origin: center center;
+        }
+        iframe.preview {
+            border: none;
+            display: block;
+            background: #fff;
+        }
+
+        .status {
+            position: fixed;
+            bottom: 12px;
+            right: 16px;
+            font-size: 11px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(26,25,21,0.85);
+            padding: 4px 10px;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 900px) {
+            .app { grid-template-columns: 1fr; grid-template-rows: 48px 40vh 1fr; }
+            .editor { border-right: none; border-bottom: 1px solid var(--border); }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <span class="title">Poster Studio</span>
+            <span class="muted">Waterloo Quantum Club · internal</span>
+            <span class="spacer"></span>
+            <label class="muted" for="template">Template</label>
+            <select id="template">
+                <option value="blank">Blank</option>
+                <option value="channels" selected>Quantum Channels (IG)</option>
+                <option value="event">Event — Dark</option>
+                <option value="event-light">Event — Light</option>
+                <option value="talk">Talk / Speaker</option>
+                <option value="workshop">Workshop</option>
+                <option value="recruit">Recruitment</option>
+            </select>
+            <label class="muted" for="size">Size</label>
+            <select id="size">
+                <option value="igportrait" selected>IG Portrait 1080×1350</option>
+                <option value="letter">Letter 8.5×11"</option>
+                <option value="tabloid">Tabloid 11×17"</option>
+                <option value="a4">A4 210×297mm</option>
+                <option value="a3">A3 297×420mm</option>
+                <option value="square">Square 1080×1080</option>
+                <option value="igportrait">IG Portrait 1080×1350</option>
+                <option value="story">Story 1080×1920</option>
+            </select>
+            <label class="muted" for="zoom">Zoom</label>
+            <select id="zoom">
+                <option value="fit" selected>Fit</option>
+                <option value="0.25">25%</option>
+                <option value="0.5">50%</option>
+                <option value="0.75">75%</option>
+                <option value="1">100%</option>
+            </select>
+            <button id="copyBtn" title="Copy HTML to clipboard">Copy HTML</button>
+            <button id="printBtn" class="primary" title="Print or Save as PDF">Print / PDF</button>
+        </header>
+
+        <section class="editor">
+            <div class="editor-tabs">
+                <button data-tab="html" class="active">HTML</button>
+                <button data-tab="css">CSS</button>
+                <div class="right">
+                    <button id="resetBtn" title="Reload current template">Reset</button>
+                </div>
+            </div>
+            <textarea id="html" spellcheck="false"></textarea>
+            <textarea id="css" spellcheck="false" hidden></textarea>
+        </section>
+
+        <section class="stage" id="stage">
+            <div class="frame-wrap" id="frameWrap">
+                <iframe class="preview" id="preview" title="Poster preview"></iframe>
+            </div>
+        </section>
+    </div>
+    <div class="status" id="status">ready</div>
+
+<script>
+(() => {
+    const SIZES = {
+        letter:  { w:  816, h: 1056, css: '8.5in 11in'    },
+        tabloid: { w: 1056, h: 1632, css: '11in 17in'     },
+        a4:      { w:  794, h: 1123, css: '210mm 297mm'   },
+        a3:      { w: 1123, h: 1587, css: '297mm 420mm'   },
+        square:     { w: 1080, h: 1080, css: '1080px 1080px' },
+        igportrait: { w: 1080, h: 1350, css: '1080px 1350px' },
+        story:      { w: 1080, h: 1920, css: '1080px 1920px' },
+    };
+
+    const BASE_CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+body {
+  font-family: 'Inter', sans-serif;
+  color: #191919;
+  background: #f0eee6;
+}
+.poster {
+  width: 100%;
+  height: 100%;
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; line-height: 1.05; }
+em { font-style: italic; }
+a { color: inherit; }
+`;
+
+    const TEMPLATES = {
+        blank: {
+            css: '',
+            html: `<div class="poster">\n  <h1>Your poster</h1>\n  <p>Start editing on the left.</p>\n</div>`,
+        },
+        channels: {
+            css: `
+.poster {
+  background:
+    radial-gradient(circle, rgba(240,238,230,0.18) 1px, transparent 1.4px) 0 0 / 22px 22px,
+    #0f0e0c;
+  color: #f0eee6;
+  padding: 70px 60px 0;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+.kicker {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 28px;
+  color: #e8e4d6;
+  margin-top: 18px;
+}
+.headline {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 92px;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  margin-top: 28px;
+}
+.headline em { font-style: italic; color: #d4a574; }
+.subtle {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 26px;
+  color: #cfcdc6;
+  margin-top: 26px;
+}
+.subtle b { font-weight: 700; font-style: normal; }
+
+.cards {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -80px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  padding: 0 40px;
+}
+.card {
+  border-radius: 22px;
+  padding: 28px 24px 32px;
+  height: 460px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -18px 48px rgba(0,0,0,0.55);
+  font-family: 'Inter', sans-serif;
+}
+.card .num {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  margin-bottom: 14px;
+}
+.card h3 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.08;
+  margin-bottom: 14px;
+}
+.card p {
+  font-size: 14.5px;
+  line-height: 1.45;
+  flex: 1;
+}
+.card .art {
+  margin-top: 14px;
+  height: 44px;
+  display: flex;
+  align-items: flex-end;
+}
+.card .art svg { width: 100%; height: 100%; }
+.card .art rect, .card .art path, .card .art circle { fill: currentColor; }
+.card .art path { fill: none; stroke: currentColor; stroke-width: 2; }
+
+.c-coral { background: #d97757; color: #2a1410; }
+.c-blue  { background: #6d8db5; color: #0e1a2b; }
+.c-green { background: #6b9c7c; color: #102017; }
+.c-cream { background: #ece4d2; color: #2b2a24; }
+
+.c-blue .art circle { fill: none; stroke: currentColor; stroke-width: 2; }
+.c-green .art circle { fill: none; stroke: currentColor; stroke-width: 1.5; }
+`,
+            html: `<div class="poster">
+  <p class="kicker">Our newest game Quantum Channels</p>
+  <h1 class="headline">A weekly <em>quantum</em><br>strategy game</h1>
+  <p class="subtle">based on rules of <b>quantum mechanics</b></p>
+
+  <div class="cards">
+    <div class="card c-coral">
+      <div class="num">01</div>
+      <h3>Distribute your quanta</h3>
+      <p>You get 100 quanta to spread across 10 channels. Pile them up to win channels, but the universe doesn't reward greed.</p>
+      <div class="art">
+        <svg viewBox="0 0 120 60" preserveAspectRatio="xMidYMax meet">
+          <rect x="2"   y="40" width="8" height="18" rx="2"/>
+          <rect x="14"  y="28" width="8" height="30" rx="2"/>
+          <rect x="26"  y="34" width="8" height="24" rx="2"/>
+          <rect x="38"  y="12" width="8" height="46" rx="2"/>
+          <rect x="50"  y="22" width="8" height="36" rx="2"/>
+          <rect x="62"  y="6"  width="8" height="52" rx="2"/>
+          <rect x="74"  y="30" width="8" height="28" rx="2"/>
+          <rect x="86"  y="42" width="8" height="16" rx="2"/>
+          <rect x="98"  y="36" width="8" height="22" rx="2"/>
+          <rect x="110" y="44" width="8" height="14" rx="2"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="card c-blue">
+      <div class="num">02</div>
+      <h3>Every week, a new quantum rule</h3>
+      <p>Each week introduces a different quantum effect, measurement, exclusion, tunneling, uncertainty. The rule revealed only when the week opens.</p>
+      <div class="art">
+        <svg viewBox="0 0 120 60" preserveAspectRatio="xMidYMax meet">
+          <circle cx="30" cy="30" r="14"/>
+          <circle cx="60" cy="30" r="14" opacity="0.6"/>
+          <circle cx="90" cy="30" r="14" opacity="0.3"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="card c-green">
+      <div class="num">03</div>
+      <h3>Superposition token</h3>
+      <p>Pick a channel you think you'll win. If you do, a coin flip grants you <strong>+0</strong> or <strong>+3</strong> bonus points. Lose the channel, no bonus.</p>
+      <div class="art">
+        <svg viewBox="0 0 120 60" preserveAspectRatio="xMidYMax meet">
+          <rect x="26" y="34" width="8" height="24" rx="2"/>
+          <rect x="38" y="20" width="8" height="38" rx="2"/>
+          <rect x="50" y="20" width="8" height="38" rx="2" opacity="0.45"/>
+          <circle cx="42" cy="14" r="6"/>
+          <circle cx="54" cy="14" r="6" opacity="0.45"/>
+          <rect x="62" y="28" width="8" height="30" rx="2"/>
+          <rect x="74" y="32" width="8" height="26" rx="2"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="card c-cream">
+      <div class="num">04</div>
+      <h3>Outscore the wavefunction</h3>
+      <p>Out-bid your opponent in a channel? That's a point. Climb the global leaderboard, week by week.</p>
+      <div class="art">
+        <svg viewBox="0 0 120 60" preserveAspectRatio="xMidYMax meet">
+          <path d="M0 40 Q15 8 30 40 T60 40 T90 40 T120 40"/>
+          <path d="M0 30 Q15 50 30 30 T60 30 T90 30 T120 30" opacity="0.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>`,
+        },
+        event: {
+            css: `
+.poster { background: #1a1915; color: #f0eee6; }
+.kicker { font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; color: #d4a574; }
+h1 { font-size: 96px; margin: 24px 0 16px; }
+h1 em { color: #d4a574; }
+.lede { font-size: 22px; max-width: 80%; color: #cfcdc6; }
+.meta { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; font-size: 18px; }
+.meta div span { display: block; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #d4a574; margin-bottom: 6px; }
+.brand { position: absolute; bottom: 48px; right: 64px; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; }
+.glow { position: absolute; top: -120px; right: -120px; width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,165,116,0.35), transparent 65%); }
+`,
+            html: `<div class="poster">
+  <div class="glow"></div>
+  <div class="kicker">Waterloo Quantum Club presents</div>
+  <h1>An <em>evening</em><br>with the<br>quantum world</h1>
+  <p class="lede">A night of talks, demos, and conversations on the strange physics that shapes our future.</p>
+  <div class="meta">
+    <div><span>When</span>Thursday, March 12 · 7 PM</div>
+    <div><span>Where</span>QNC 1502, University of Waterloo</div>
+  </div>
+  <div class="brand">uwquantum.com</div>
+</div>`,
+        },
+        'event-light': {
+            css: `
+.poster { background: #f0eee6; color: #191919; padding: 72px; }
+.kicker { font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: #5a5955; }
+h1 { font-size: 110px; margin: 28px 0 20px; letter-spacing: -0.02em; }
+h1 em { color: #8b6a3f; }
+hr { border: none; border-top: 1px solid #191919; margin: 32px 0; }
+.lede { font-size: 22px; max-width: 70%; color: #3a3935; }
+.meta { margin-top: auto; font-size: 18px; }
+.meta div { margin-bottom: 12px; }
+.meta strong { display: inline-block; min-width: 110px; font-weight: 600; }
+.brand { position: absolute; bottom: 48px; right: 72px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; }
+`,
+            html: `<div class="poster">
+  <div class="kicker">Waterloo Quantum Club</div>
+  <h1>Quantum<br><em>night</em></h1>
+  <hr>
+  <p class="lede">Talks, demos, and conversations on the physics shaping our future.</p>
+  <div class="meta">
+    <div><strong>Date</strong> March 12, 7:00 PM</div>
+    <div><strong>Venue</strong> QNC 1502</div>
+    <div><strong>Admission</strong> Free</div>
+  </div>
+  <div class="brand">uwquantum.com</div>
+</div>`,
+        },
+        talk: {
+            css: `
+.poster { background: #f0eee6; color: #191919; padding: 64px; }
+.kicker { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: #8b6a3f; }
+h1 { font-size: 78px; margin: 16px 0 24px; font-style: italic; }
+.by { font-size: 20px; color: #3a3935; margin-bottom: 8px; }
+.by strong { font-weight: 700; }
+.aff { font-size: 16px; color: #5a5955; font-style: italic; }
+.abstract { margin-top: 36px; max-width: 78%; font-size: 17px; line-height: 1.55; color: #2a2925; }
+.meta { margin-top: auto; padding-top: 24px; border-top: 1px solid #191919; display: flex; gap: 48px; font-size: 15px; }
+.meta span { display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #8b6a3f; margin-bottom: 4px; }
+.brand { position: absolute; bottom: 32px; right: 64px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; }
+`,
+            html: `<div class="poster">
+  <div class="kicker">Speaker Series · 02</div>
+  <h1>Why information<br>is physical</h1>
+  <p class="by"><strong>Dr. Alice Renner</strong></p>
+  <p class="aff">Institute for Quantum Computing</p>
+  <p class="abstract">From Maxwell's demon to Landauer's principle, this talk traces the surprising thread connecting thermodynamics, computation, and the foundations of quantum mechanics.</p>
+  <div class="meta">
+    <div><span>Date</span>Wed, April 9 · 6:30 PM</div>
+    <div><span>Venue</span>QNC 0101</div>
+    <div><span>Free</span>All welcome</div>
+  </div>
+  <div class="brand">uwquantum.com</div>
+</div>`,
+        },
+        workshop: {
+            css: `
+.poster { background: #232220; color: #f0eee6; padding: 64px; }
+.tag { display: inline-block; padding: 6px 14px; border: 1px solid #d4a574; color: #d4a574; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 999px; }
+h1 { font-size: 88px; margin: 20px 0 16px; }
+h1 em { color: #d4a574; }
+.lede { font-size: 19px; color: #cfcdc6; max-width: 75%; }
+.list { margin-top: 36px; display: grid; grid-template-columns: auto 1fr; column-gap: 20px; row-gap: 14px; font-size: 16px; }
+.list b { color: #d4a574; font-weight: 600; }
+.meta { margin-top: auto; padding-top: 24px; border-top: 1px solid #3a3935; font-size: 16px; display: flex; gap: 40px; }
+.brand { position: absolute; bottom: 32px; right: 64px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #9a9893; }
+`,
+            html: `<div class="poster">
+  <span class="tag">Hands-on workshop</span>
+  <h1>Build your first<br><em>quantum circuit</em></h1>
+  <p class="lede">A two-hour intro to Qiskit. No background needed — just bring a laptop and curiosity.</p>
+  <div class="list">
+    <b>01</b><div>Qubits, gates, and what makes them weird</div>
+    <b>02</b><div>Writing your first circuit in Qiskit</div>
+    <b>03</b><div>Running it on a real IBM quantum computer</div>
+  </div>
+  <div class="meta">
+    <div>Saturday · Feb 22 · 2 PM</div>
+    <div>QNC 1501</div>
+    <div>RSVP at uwquantum.com</div>
+  </div>
+  <div class="brand">Waterloo Quantum Club</div>
+</div>`,
+        },
+        recruit: {
+            css: `
+.poster { background: #f0eee6; color: #191919; padding: 80px; align-items: flex-start; }
+.huge { font-size: 200px; line-height: 0.9; letter-spacing: -0.04em; font-family: 'Playfair Display', serif; font-weight: 700; }
+.huge em { color: #8b6a3f; }
+.tagline { font-size: 24px; margin-top: 24px; max-width: 70%; }
+.cta { margin-top: auto; display: flex; align-items: baseline; gap: 24px; }
+.cta .arrow { font-size: 48px; color: #8b6a3f; }
+.cta .url { font-size: 32px; font-weight: 600; }
+.brand { position: absolute; top: 48px; right: 80px; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; }
+`,
+            html: `<div class="poster">
+  <div class="brand">Waterloo Quantum Club</div>
+  <div class="huge">Get<br><em>weird.</em></div>
+  <p class="tagline">Talks, workshops, demos, and a community of people excited about the quantum world. Open to everyone at Waterloo.</p>
+  <div class="cta">
+    <span class="arrow">→</span>
+    <span class="url">uwquantum.com</span>
+  </div>
+</div>`,
+        },
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const htmlEl = $('html');
+    const cssEl = $('css');
+    const tplSel = $('template');
+    const sizeSel = $('size');
+    const zoomSel = $('zoom');
+    const preview = $('preview');
+    const frameWrap = $('frameWrap');
+    const stage = $('stage');
+    const status = $('status');
+    const STORAGE_KEY = 'wqc_poster_studio_v1';
+
+    function setStatus(msg) {
+        status.textContent = msg;
+        clearTimeout(setStatus._t);
+        setStatus._t = setTimeout(() => status.textContent = 'ready', 1500);
+    }
+
+    function currentSize() { return SIZES[sizeSel.value]; }
+
+    function applySize() {
+        const s = currentSize();
+        preview.style.width = s.w + 'px';
+        preview.style.height = s.h + 'px';
+        applyZoom();
+    }
+
+    function applyZoom() {
+        const s = currentSize();
+        let scale;
+        if (zoomSel.value === 'fit') {
+            const pad = 80;
+            const sx = (stage.clientWidth - pad) / s.w;
+            const sy = (stage.clientHeight - pad) / s.h;
+            scale = Math.min(sx, sy, 1);
+        } else {
+            scale = parseFloat(zoomSel.value);
+        }
+        frameWrap.style.transform = `scale(${scale})`;
+        frameWrap.style.width = s.w + 'px';
+        frameWrap.style.height = s.h + 'px';
+    }
+
+    function render() {
+        const s = currentSize();
+        const doc = `<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>@page { size: ${s.css}; margin: 0; }${BASE_CSS}${cssEl.value}</style>
+</head><body>${htmlEl.value}</body></html>`;
+        preview.srcdoc = doc;
+        save();
+    }
+
+    let renderTimer;
+    function scheduleRender() {
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(render, 180);
+    }
+
+    function loadTemplate(name) {
+        const t = TEMPLATES[name] || TEMPLATES.blank;
+        htmlEl.value = t.html;
+        cssEl.value = t.css.trim();
+        render();
+    }
+
+    function save() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                html: htmlEl.value, css: cssEl.value,
+                size: sizeSel.value, template: tplSel.value,
+            }));
+        } catch {}
+    }
+
+    function load() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+            const d = JSON.parse(raw);
+            if (d.size && SIZES[d.size]) sizeSel.value = d.size;
+            if (d.template) tplSel.value = d.template;
+            htmlEl.value = d.html || '';
+            cssEl.value = d.css || '';
+            return true;
+        } catch { return false; }
+    }
+
+    // Tabs
+    document.querySelectorAll('.editor-tabs button[data-tab]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.editor-tabs button[data-tab]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const which = btn.dataset.tab;
+            htmlEl.hidden = which !== 'html';
+            cssEl.hidden = which !== 'css';
+            (which === 'html' ? htmlEl : cssEl).focus();
+        });
+    });
+
+    htmlEl.addEventListener('input', scheduleRender);
+    cssEl.addEventListener('input', scheduleRender);
+    tplSel.addEventListener('change', () => { loadTemplate(tplSel.value); });
+    sizeSel.addEventListener('change', () => { applySize(); render(); });
+    zoomSel.addEventListener('change', applyZoom);
+    window.addEventListener('resize', () => { if (zoomSel.value === 'fit') applyZoom(); });
+
+    $('resetBtn').addEventListener('click', () => {
+        if (confirm('Reload current template? Your unsaved edits will be lost.')) {
+            loadTemplate(tplSel.value);
+        }
+    });
+
+    $('copyBtn').addEventListener('click', async () => {
+        const s = currentSize();
+        const full = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Poster</title>
+<style>@page { size: ${s.css}; margin: 0; }${BASE_CSS}${cssEl.value}</style>
+</head><body>${htmlEl.value}</body></html>`;
+        try {
+            await navigator.clipboard.writeText(full);
+            setStatus('copied full HTML');
+        } catch {
+            setStatus('copy failed');
+        }
+    });
+
+    $('printBtn').addEventListener('click', () => {
+        const s = currentSize();
+        const w = window.open('', '_blank');
+        w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Poster</title>
+<style>@page { size: ${s.css}; margin: 0; } html, body { margin: 0; padding: 0; } body { width: ${s.w}px; height: ${s.h}px; }${BASE_CSS}${cssEl.value}</style>
+</head><body>${htmlEl.value}<script>window.onload=()=>setTimeout(()=>window.print(),250);<\/script></body></html>`);
+        w.document.close();
+    });
+
+    // Init
+    if (!load()) loadTemplate(tplSel.value);
+    applySize();
+    render();
+})();
+</script>
+</body>
+</html>
