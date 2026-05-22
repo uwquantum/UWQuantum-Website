@@ -434,13 +434,14 @@ a { color: inherit; }
   z-index: 5;
   animation: qgift-bob 2s ease-in-out infinite;
 }
-.qgift.g1 { left: 136px;  top: 770px; animation-delay: 0s;    }
-.qgift.g2 { left: 516px;  top: 550px; animation-delay: 0.25s; }
-.qgift.g3 { left: 516px;  top: 954px; animation-delay: 0.5s;  }
-.qgift.g4 { left: 888px;  top: 900px; animation-delay: 0.75s; }
+/* Scattered along the empty left and right margins */
+.qgift.g1 { left: 40px;   top: 540px;  width: 58px; height: 66px; --tilt: -8deg;  animation-delay: 0s;    }
+.qgift.g2 { left: 960px;  top: 600px;  width: 70px; height: 78px; --tilt: 6deg;   animation-delay: 0.35s; }
+.qgift.g3 { left: 30px;   top: 1190px; width: 64px; height: 72px; --tilt: 10deg;  animation-delay: 0.7s;  }
+.qgift.g4 { left: 990px;  top: 1220px; width: 54px; height: 60px; --tilt: -12deg; animation-delay: 1.05s; }
 @keyframes qgift-bob {
-  0%, 100% { transform: translateY(0) rotate(-3deg); }
-  50%      { transform: translateY(-6px) rotate(3deg); }
+  0%, 100% { transform: translateY(0)   rotate(calc(var(--tilt, 0deg) - 4deg)); }
+  50%      { transform: translateY(-7px) rotate(calc(var(--tilt, 0deg) + 4deg)); }
 }
 `,
             html: `<div class="poster">
