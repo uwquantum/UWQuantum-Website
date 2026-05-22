@@ -356,12 +356,12 @@ a { color: inherit; }
   font-weight: 400;
   overflow: hidden;
 }
-/* 3-column staggered: 1080 wide, 60px side margin, 24px gap.
-   Tall left (coral) | stacked center (cream over blue) | tall right (green). */
-.card.left   { left: 60px;  top: 520px;  width: 300px; height: 770px; padding: 28px 26px; }
-.card.center { left: 384px; top: 520px;  width: 312px; height: 373px; padding: 28px 26px; }
-.card.below  { left: 384px; top: 917px;  width: 312px; height: 373px; padding: 28px 26px; }
-.card.right  { left: 720px; top: 520px;  width: 300px; height: 770px; padding: 28px 26px; }
+/* Staggered cascade: coral bleeds left, cream+blue stacked in middle,
+   green sits low-right. 24px gap between adjacent cards. */
+.card.left   { left: -10px; top: 820px;  width: 356px; height: 560px; padding: 28px 28px 28px 38px; }
+.card.center { left: 370px; top: 600px;  width: 356px; height: 380px; padding: 28px 28px; }
+.card.below  { left: 370px; top: 1004px; width: 356px; height: 380px; padding: 28px 28px; }
+.card.right  { left: 750px; top: 950px;  width: 340px; height: 430px; padding: 28px 28px; }
 .card .num {
   font-size: 13px;
   letter-spacing: 0.06em;
@@ -373,6 +373,7 @@ a { color: inherit; }
   font-size: 26px;
   line-height: 1.12;
   margin-bottom: 14px;
+  text-align: center;
 }
 .card p strong { font-weight: 400; }
 .card p {
@@ -385,7 +386,9 @@ a { color: inherit; }
   height: 56px;
   display: flex;
   align-items: flex-end;
+  justify-content: center;
 }
+.card .art svg { max-width: 60%; }
 .card .art svg { width: 100%; height: 100%; }
 .card .art rect, .card .art path, .card .art circle { fill: currentColor; }
 .card .art path { fill: none; stroke: currentColor; stroke-width: 2; }
@@ -739,12 +742,12 @@ h1 em { color: #d4a574; }
         { sel: 'right',  label: 'Green — 03 Superposition', color: '#6b9c7c' },
     ];
     const DEFAULT_CARDS = {
-        left:   { x: 60,  y: 520, w: 300, h: 770 },
-        center: { x: 384, y: 520, w: 312, h: 373 },
-        below:  { x: 384, y: 917, w: 312, h: 373 },
-        right:  { x: 720, y: 520, w: 300, h: 770 },
+        left:   { x: -10, y: 820,  w: 356, h: 560 },
+        center: { x: 370, y: 600,  w: 356, h: 380 },
+        below:  { x: 370, y: 1004, w: 356, h: 380 },
+        right:  { x: 750, y: 950,  w: 340, h: 430 },
     };
-    const CARD_KEY = 'qc.poster.cards.v2';
+    const CARD_KEY = 'qc.poster.cards.v3';
     let cardState = (() => {
         try { return Object.assign({}, DEFAULT_CARDS, JSON.parse(localStorage.getItem(CARD_KEY) || '{}')); }
         catch { return { ...DEFAULT_CARDS }; }
