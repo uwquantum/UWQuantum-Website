@@ -307,49 +307,16 @@ a { color: inherit; }
   border-radius: 26px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 -24px 60px rgba(0,0,0,0.55);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
   font-family: 'Anthropic Serif', Georgia, serif;
   font-weight: 400;
   overflow: hidden;
 }
-/* Center — tallest, sits in upper-middle so blue can show below it */
-.card.center {
-  left: 50%;
-  transform: translateX(-50%);
-  top: 540px;
-  width: 440px;
-  height: 640px;
-  padding: 36px 36px 36px;
-  z-index: 3;
-}
-/* Left — cut by left edge, second tallest */
-.card.left {
-  left: -60px;
-  top: 820px;
-  width: 420px;
-  height: 600px;
-  padding: 32px 32px 32px 90px;
-  z-index: 2;
-}
-/* Right — cut by right edge, third tallest */
-.card.right {
-  right: -60px;
-  top: 920px;
-  width: 420px;
-  height: 580px;
-  padding: 32px 90px 32px 32px;
-  z-index: 2;
-}
-/* Behind/below center — sits just under cream, title shows in the 170px slice */
-.card.below {
-  left: 50%;
-  transform: translateX(-50%);
-  top: 1180px;
-  width: 500px;
-  height: 460px;
-  padding: 30px 36px;
-  z-index: 1;
-}
+/* 2x2 grid: 1080 wide poster, 60px side padding, 32px gap → 464px cards */
+.card.center { left: 60px;  top: 560px;  width: 464px; height: 340px; padding: 28px 28px; }
+.card.left   { right: 60px; top: 560px;  width: 464px; height: 340px; padding: 28px 28px; }
+.card.right  { right: 60px; top: 932px;  width: 464px; height: 340px; padding: 28px 28px; }
+.card.below  { left: 60px;  top: 932px;  width: 464px; height: 340px; padding: 28px 28px; }
 .card .num {
   font-size: 14px;
   letter-spacing: 0.04em;
