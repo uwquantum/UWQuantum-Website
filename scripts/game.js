@@ -28,6 +28,7 @@ const pointsLeftDisplay = $('points-left');
 const submitPointsBtn = $('submit-points-btn');
 const submissionMessage = $('submission-message');
 const leaderboardList = $('leaderboard-list');
+const leaderboardWrap = document.querySelector('.qc-leaderboard-wrap');
 const lockoutMessage = $('lockout-message');
 const activeGameArea = $('active-game-area');
 const statusBanner = $('game-status-banner');
@@ -784,6 +785,16 @@ async function renderLastResult() {
 }
 
 async function renderLeaderboard() {
+    // Keep the leaderboard hidden until the first weekly rule has resolved.
+    // Week 0 = inaugural submission window; results come out at the first
+    // Wed 7 PM resolution, after which getWeekNumber() advances to >= 1.
+    if (leaderboardWrap) {
+        if (getWeekNumber() < 1) {
+            leaderboardWrap.classList.add('hidden');
+            return;
+        }
+        leaderboardWrap.classList.remove('hidden');
+    }
     const { data, error } = await sb
         .from('profiles')
         .select('username, total_points')
@@ -811,6 +822,8 @@ async function renderLeaderboard() {
 // they're visible even before the auth check completes (and for logged-out users).
 renderRulePanel();
 renderSchedulePanel(isLockoutNow());
+// Reveal the leaderboard for logged-out viewers once the first week has resolved.
+renderLeaderboard();
 
 // Only these emails see the debug time-travel panel.
 const ADMIN_EMAILS = ['a35kalra@uwaterloo.ca', 'mkjdesil@uwaterloo.ca'];
