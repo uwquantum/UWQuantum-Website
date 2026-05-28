@@ -795,26 +795,54 @@ async function renderLeaderboard() {
         }
         leaderboardWrap.classList.remove('hidden');
     }
+    // Pull the whole ordered list so we can render a 3-step podium AND look up
+    // the current player's rank if they're outside the top 3. Player counts are
+    // small (one row per signed-up member), so a single query is fine.
     const { data, error } = await sb
         .from('profiles')
         .select('username, total_points')
         .order('total_points', { ascending: false })
-        .limit(10);
+        .order('username', { ascending: true });
     if (error) {
-        leaderboardList.innerHTML = `<li><span>Leaderboard unavailable</span><span></span></li>`;
+        leaderboardList.innerHTML = `<div class="qc-podium-empty">Leaderboard unavailable</div>`;
         return;
     }
-    leaderboardList.innerHTML = '';
     if (!data || data.length === 0) {
-        leaderboardList.innerHTML = '<li><span>No players yet, register to be first!</span><span></span></li>';
+        leaderboardList.innerHTML = '<div class="qc-podium-empty">No players yet, register to be first!</div>';
         return;
     }
-    data.forEach((row, index) => {
-        const li = document.createElement('li');
-        if (row.username === currentUser) li.classList.add('is-me');
-        li.innerHTML = `<span>${index + 1}. ${esc(row.username)}</span><span>${Number(row.total_points) | 0} pts</span>`;
-        leaderboardList.appendChild(li);
-    });
+
+    const top3 = data.slice(0, 3);
+    // Visual order on the podium: 2nd, 1st, 3rd, so #1 sits in the middle.
+    const slots = [top3[1], top3[0], top3[2]].map((row, i) => {
+        const rank = [2, 1, 3][i];
+        if (!row) return `<div class="qc-podium-step qc-podium-${rank} qc-podium-empty-step"></div>`;
+        const isMe = row.username === currentUser;
+        return `
+            <div class="qc-podium-step qc-podium-${rank}${isMe ? ' is-me' : ''}">
+                <div class="qc-podium-rank-badge">${rank}</div>
+                <div class="qc-podium-name">${esc(row.username)}${isMe ? ' (you)' : ''}</div>
+                <div class="qc-podium-points">${Number(row.total_points) | 0} <span>pts</span></div>
+            </div>
+        `;
+    }).join('');
+
+    let youLine = '';
+    if (currentUser) {
+        const meIdx = data.findIndex(r => r.username === currentUser);
+        if (meIdx >= 3) {
+            const me = data[meIdx];
+            youLine = `
+                <div class="qc-podium-you">
+                    <span class="qc-podium-you-rank">#${meIdx + 1}</span>
+                    <span class="qc-podium-you-name">${esc(me.username)} (you)</span>
+                    <span class="qc-podium-you-points">${Number(me.total_points) | 0} pts</span>
+                </div>
+            `;
+        }
+    }
+
+    leaderboardList.innerHTML = `<div class="qc-podium">${slots}</div>${youLine}`;
 }
 
 // ---- Init ----
