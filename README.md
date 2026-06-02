@@ -58,8 +58,8 @@ players with more quanta in a channel wins it (1 point per channel won).
 Then one quantum-mechanics rule kicks in:
 
 1. **Quantum measurement** — the tallest channel collapses to 0
-2. **Pauli exclusion** — any channel where both players placed quanta is
-   wiped for both
+2. **Pauli exclusion** — any channel where both players placed ≥15 quanta
+   is wiped for both (smaller placements don't count as submissions)
 3. **Quantum tunneling** — each channel has a 25 percent chance to shift
    its quanta one step to the right
 4. **Heisenberg uncertainty** — one random channel per player is shifted

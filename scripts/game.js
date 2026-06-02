@@ -64,8 +64,8 @@ const RULES = [
     {
         id: 'pauli_exclusion',
         name: 'Pauli exclusion',
-        short: 'If both players land on the same channel, both stacks vanish.',
-        long: 'Two identical fermions can\'t share a quantum state. If you AND your opponent both put quanta in the same channel, BOTH of your stacks in that channel are set to 0, the channel rejects you both. Predict where your opponent will bet and avoid them.',
+        short: 'If both players land on the same channel with ≥15 quanta, both stacks vanish.',
+        long: 'Two identical fermions can\'t share a quantum state. A channel only counts as a real submission if it holds at least 15 quanta, anything less is noise and is ignored by this rule. If you AND your opponent both submit ≥15 quanta in the same channel, BOTH of your stacks in that channel are set to 0, the channel rejects you both. Predict where your opponent will bet and avoid them.',
         physics: 'Pauli\'s exclusion principle, no two identical fermions can occupy the same quantum state.',
     },
     {
@@ -392,9 +392,11 @@ function collapseTallest(amps) {
 
 function pauliExclusion(my, opp) {
     const m = my.slice(), o = opp.slice();
+    // Channels below 15 quanta don't count as real submissions, so they can't
+    // trigger eviction. This prevents grief-sprinkling 1 quantum everywhere.
+    const THRESHOLD = 15;
     for (let i = 0; i < N; i++) {
-        if (m[i] > 0 && o[i] > 0) {
-            // Both fermions get evicted, channel can't hold either of them.
+        if (m[i] >= THRESHOLD && o[i] >= THRESHOLD) {
             m[i] = 0;
             o[i] = 0;
         }
