@@ -64,8 +64,8 @@ const RULES = [
     {
         id: 'pauli_exclusion',
         name: 'Pauli exclusion',
-        short: 'If both players land on the same channel with ≥15 quanta, both stacks vanish.',
-        long: 'Two identical fermions can\'t share a quantum state. A channel only counts as a real submission if it holds at least 15 quanta, anything less is noise and is ignored by this rule. If you AND your opponent both submit ≥15 quanta in the same channel, BOTH of your stacks in that channel are set to 0, the channel rejects you both. Predict where your opponent will bet and avoid them.',
+        short: 'Channels under 15 quanta don\'t count this week. If you AND your opponent both submit ≥15 in the same channel, both stacks vanish.',
+        long: 'Two identical fermions can\'t share a quantum state. This week, a channel only counts as a real submission if it holds at least 15 quanta, anything less is noise: it earns you no points (even if your opponent put nothing there) and it can\'t trigger this rule. If both you AND your opponent submit ≥15 quanta in the same channel, BOTH of your stacks there are set to 0, the channel rejects you both. So: don\'t sprinkle 1\'s as a grief play, they do nothing. Pick channels you\'re willing to commit ≥15 to, and try to avoid colliding with your opponent.',
         physics: 'Pauli\'s exclusion principle, no two identical fermions can occupy the same quantum state.',
     },
     {
@@ -392,14 +392,13 @@ function collapseTallest(amps) {
 
 function pauliExclusion(my, opp) {
     const m = my.slice(), o = opp.slice();
-    // Channels below 15 quanta don't count as real submissions, so they can't
-    // trigger eviction. This prevents grief-sprinkling 1 quantum everywhere.
+    // Channels below 15 quanta don't count as submissions this week: they earn
+    // nothing and can't trigger eviction. Stops grief-sprinkling 1 everywhere.
     const THRESHOLD = 15;
     for (let i = 0; i < N; i++) {
-        if (m[i] >= THRESHOLD && o[i] >= THRESHOLD) {
-            m[i] = 0;
-            o[i] = 0;
-        }
+        if (m[i] < THRESHOLD) m[i] = 0;
+        if (o[i] < THRESHOLD) o[i] = 0;
+        if (m[i] > 0 && o[i] > 0) { m[i] = 0; o[i] = 0; }
     }
     return { my: m, opp: o };
 }
