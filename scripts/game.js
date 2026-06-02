@@ -798,7 +798,7 @@ async function renderLeaderboard() {
     // Pull the whole ordered list so we can render a 3-step podium AND look up
     // the current player's rank if they're outside the top 3. Player counts are
     // small (one row per signed-up member), so a single query is fine.
-    const { data, error } = await sb
+    const { data: rawData, error } = await sb
         .from('profiles')
         .select('username, total_points')
         .order('total_points', { ascending: false })
@@ -807,6 +807,8 @@ async function renderLeaderboard() {
         leaderboardList.innerHTML = `<div class="qc-podium-empty">Leaderboard unavailable</div>`;
         return;
     }
+    const EXEC_USERNAMES = new Set(['Aairav']);
+    const data = (rawData || []).filter(r => !EXEC_USERNAMES.has(r.username));
     if (!data || data.length === 0) {
         leaderboardList.innerHTML = '<div class="qc-podium-empty">No players yet, register to be first!</div>';
         return;
