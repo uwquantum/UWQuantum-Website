@@ -589,6 +589,14 @@ input.qc-channel-value:focus {
 .qc-loss .qc-result-status { color: #6b2b1b; background: rgba(217,119,87,0.22); }
 .qc-tie  .qc-result-status { color: var(--text-secondary); background: var(--border-color); }
 
+.qc-result-reason {
+    margin-top: 0.5rem;
+    font-size: 0.72rem;
+    line-height: 1.3;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
 .qc-result-row {
     display: grid;
     grid-template-columns: auto 1fr auto;

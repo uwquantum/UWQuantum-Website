@@ -707,6 +707,8 @@ function renderHistoryView(uid, totalPoints) {
         opponent: youAreA ? data.player_b_name : data.player_a_name,
         youAmps: youAreA ? (data.amps_a || []) : (data.amps_b || []),
         oppAmps: youAreA ? (data.amps_b || []) : (data.amps_a || []),
+        youRaw: youAreA ? (data.raw_amps_a || data.amps_a || []) : (data.raw_amps_b || data.amps_b || []),
+        oppRaw: youAreA ? (data.raw_amps_b || data.amps_b || []) : (data.raw_amps_a || data.amps_a || []),
         youWins: youAreA ? data.player_a_score : data.player_b_score,
         oppWins: youAreA ? data.player_b_score : data.player_a_score,
         youToken: youAreA ? (data.token_a ?? -1) : (data.token_b ?? -1),
@@ -720,57 +722,89 @@ function renderHistoryView(uid, totalPoints) {
     }
 
     const ruleName = (RULES.find(x => x.id === r.ruleId) || {}).name || 'standard';
-    const maxVal = Math.max(...r.youAmps, ...r.oppAmps, 1);
+    const isPauli = r.ruleId === 'pauli_exclusion';
+    const PAULI_FLOOR = 15;
 
-    // Tally for the standings header (channel wins only, token bonus is shown separately)
+    // Resolve each channel into its outcome from this player's POV. For Pauli
+    // we use raw submissions: <15 quanta is noise (no points either side), and
+    // ≥15 vs ≥15 collides (both zeroed). For other rules we compare the
+    // post-rule amps the same way the server scores them.
+    const channels = [];
     let youCh = 0, oppCh = 0, ties = 0;
     for (let i = 0; i < N; i++) {
-        if (r.youAmps[i] > r.oppAmps[i]) youCh++;
-        else if (r.oppAmps[i] > r.youAmps[i]) oppCh++;
-        else ties++;
+        const yRaw = r.youRaw[i] || 0;
+        const oRaw = r.oppRaw[i] || 0;
+        const yFinal = r.youAmps[i] || 0;
+        const oFinal = r.oppAmps[i] || 0;
+
+        let cls, statusLabel, reason = '';
+        if (isPauli) {
+            const yOk = yRaw >= PAULI_FLOOR;
+            const oOk = oRaw >= PAULI_FLOOR;
+            if (yOk && oOk) {
+                cls = 'qc-tie'; statusLabel = 'COLLISION';
+                reason = `Both ≥ ${PAULI_FLOOR}: Pauli zeroed both stacks, no points awarded.`;
+                ties++;
+            } else if (yOk && !oOk) {
+                cls = 'qc-win'; statusLabel = 'WIN';
+                reason = `Opponent had ${oRaw} (< ${PAULI_FLOOR}, noise). You scored.`;
+                youCh++;
+            } else if (!yOk && oOk) {
+                cls = 'qc-loss'; statusLabel = 'LOSS';
+                reason = `You had ${yRaw} (< ${PAULI_FLOOR}, noise). Opponent scored.`;
+                oppCh++;
+            } else {
+                cls = 'qc-tie'; statusLabel = 'NOISE';
+                reason = `Both below ${PAULI_FLOOR}: noise, no points either side.`;
+                ties++;
+            }
+        } else {
+            if (yFinal > oFinal)      { cls = 'qc-win';  statusLabel = 'WIN';  youCh++; }
+            else if (oFinal > yFinal) { cls = 'qc-loss'; statusLabel = 'LOSS'; oppCh++; }
+            else                      { cls = 'qc-tie';  statusLabel = 'TIE';  ties++; }
+        }
+        channels.push({ yRaw, oRaw, cls, statusLabel, reason });
     }
 
-    // Per-channel tiles
-    const tiles = [];
-    for (let i = 0; i < N; i++) {
-        const yv = r.youAmps[i] || 0;
-        const ov = r.oppAmps[i] || 0;
-        const yp = (yv / maxVal) * 100;
-        const op = (ov / maxVal) * 100;
-        let cls, statusLabel;
-        if (yv > ov)      { cls = 'qc-win';  statusLabel = 'WIN'; }
-        else if (ov > yv) { cls = 'qc-loss'; statusLabel = 'LOSS'; }
-        else              { cls = 'qc-tie';  statusLabel = 'TIE'; }
-        const youDim = yv < ov ? 'dim' : '';
-        const oppDim = ov < yv ? 'dim' : '';
+    const maxVal = Math.max(...channels.flatMap(c => [c.yRaw, c.oRaw]), 1);
 
-        tiles.push(`
-            <div class="qc-result-tile ${cls}">
+    const tiles = channels.map((c, i) => {
+        const yp = (c.yRaw / maxVal) * 100;
+        const op = (c.oRaw / maxVal) * 100;
+        const youDim = c.yRaw < c.oRaw ? 'dim' : '';
+        const oppDim = c.oRaw < c.yRaw ? 'dim' : '';
+        const reasonHtml = c.reason ? `<div class="qc-result-reason">${esc(c.reason)}</div>` : '';
+        return `
+            <div class="qc-result-tile ${c.cls}">
                 <div class="qc-result-channel">
                     <span>CH${i + 1}</span>
-                    <span class="qc-result-status">${statusLabel}</span>
+                    <span class="qc-result-status">${c.statusLabel}</span>
                 </div>
                 <div class="qc-result-row you ${youDim}">
                     <span class="qc-result-label">YOU</span>
                     <span class="qc-result-bar"><span class="qc-result-bar-fill" style="width:${yp}%"></span></span>
-                    <span class="qc-result-value">${yv}</span>
+                    <span class="qc-result-value">${c.yRaw}</span>
                 </div>
                 <div class="qc-result-row opp ${oppDim}">
                     <span class="qc-result-label">OPP</span>
                     <span class="qc-result-bar"><span class="qc-result-bar-fill" style="width:${op}%"></span></span>
-                    <span class="qc-result-value">${ov}</span>
+                    <span class="qc-result-value">${c.oRaw}</span>
                 </div>
+                ${reasonHtml}
             </div>
-        `);
-    }
+        `;
+    });
 
     let tokenLine;
     if (r.youToken < 0) {
         tokenLine = 'You did not use your superposition token.';
     } else {
         const tch = `CH${r.youToken + 1}`;
-        const wonChannel = (r.youAmps[r.youToken] ?? 0) > (r.oppAmps[r.youToken] ?? 0);
-        if (!wonChannel) {
+        const tokenChannel = channels[r.youToken];
+        const wonChannel = tokenChannel && tokenChannel.statusLabel === 'WIN';
+        if (isPauli && (r.youRaw[r.youToken] ?? 0) < PAULI_FLOOR) {
+            tokenLine = `Your superposition token was on ${tch}, but you had less than ${PAULI_FLOOR} quanta there, so it didn't count, no token bonus.`;
+        } else if (!wonChannel) {
             tokenLine = `Your superposition token was on ${tch}: you didn't win that channel, so no token bonus.`;
         } else if (r.youTokenBonus > 0) {
             tokenLine = `Your superposition token on ${tch} paid out: <strong>+${r.youTokenBonus} bonus points</strong>!`;
