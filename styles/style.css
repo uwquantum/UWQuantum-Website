@@ -440,6 +440,21 @@ h1, h2, h3 {
     text-align: left;
 }
 
+.forgot-password-row {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.forgot-password-row a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+}
+
+.forgot-password-row a:hover {
+    color: inherit;
+}
+
 .opponent-info {
     font-size: 1.1rem;
     color: var(--text-secondary);

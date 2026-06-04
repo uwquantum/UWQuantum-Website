@@ -64,6 +64,8 @@ function wireFormHandlers() {
     const registerPass  = $('register-password');
     const loginError    = $('login-error');
     const registerError = $('register-error');
+    const forgotLink    = $('forgot-password-link');
+    const forgotMessage = $('forgot-message');
 
     if (window.location.hash === '#login') {
         tabLogin.classList.add('active');
@@ -104,6 +106,32 @@ function wireFormHandlers() {
             return;
         }
         window.location.assign('game.html');
+    });
+
+    forgotLink?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        loginError.classList.add('hidden');
+        forgotMessage.classList.remove('error');
+        forgotMessage.classList.add('hidden');
+        const email = loginEmail.value.trim().toLowerCase();
+        if (!email) {
+            forgotMessage.textContent = 'Enter your email above first, then click "Forgot password?" again.';
+            forgotMessage.classList.add('error');
+            forgotMessage.classList.remove('hidden');
+            return;
+        }
+        forgotLink.textContent = 'Sending…';
+        const { error } = await sb.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/reset-password.html`,
+        });
+        forgotLink.textContent = 'Forgot password?';
+        if (error) {
+            forgotMessage.textContent = error.message;
+            forgotMessage.classList.add('error');
+        } else {
+            forgotMessage.textContent = `If an account exists for ${email}, a password reset link is on its way. Check your inbox.`;
+        }
+        forgotMessage.classList.remove('hidden');
     });
 
     registerBtn.addEventListener('click', async () => {
