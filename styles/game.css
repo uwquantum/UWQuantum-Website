@@ -490,6 +490,30 @@ input.qc-channel-value:focus {
     gap: 1rem;
 }
 
+.qc-history-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.qc-week-tab {
+    font-family: 'Anthropic Sans', 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.qc-week-tab:hover { background: rgba(0, 0, 0, 0.05); }
+.qc-week-tab.active {
+    background: var(--text-primary);
+    color: #e9e8e1;
+    border-color: var(--text-primary);
+}
+
 .qc-resolution-head {
     display: flex;
     justify-content: space-between;

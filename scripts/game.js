@@ -462,8 +462,8 @@ function checkGameState() {
 
     // If the week incremented (we crossed Wed 7 PM), refresh the dashboard
     // so the new rule and a cleared wavefunction are displayed. The actual
-    // matchmaking + resolution happens on the server (Supabase Edge Function),
-    // so the client just re-fetches state.
+    // matchmaking + resolution happens server-side in the `qc_resolve_latest`
+    // Postgres function, so the client just re-fetches state.
     if (wk > lastSeenWeek) {
         hasSubmittedThisWeek = false;
         resetWeeklyState();
@@ -475,9 +475,9 @@ function checkGameState() {
     updateUI(isLockoutNow());
 }
 
-// NOTE: Matchmaking, weekly resolution, and bot generation now happen on the
-// server side via the Supabase Edge Function (`resolve-week`), scheduled by
-// pg_cron to run every Wednesday at 7 PM. The client no longer touches that
+// NOTE: Matchmaking, weekly resolution, and bot generation happen server-side
+// in the `qc_resolve_latest` Postgres function, scheduled by pg_cron to run
+// every Wednesday at 7 PM Toronto time. The client no longer touches that
 // logic, it only submits its own wavefunction and reads the resulting
 // `matches` + `profiles` tables to display history and leaderboard.
 
@@ -668,19 +668,38 @@ $('channels-form').addEventListener('submit', async (e) => {
 });
 
 // ---- Resolution rendering ----
+let historyMatches = [];
+let historySelectedWeek = null;
+
 async function renderLastResult() {
     if (!currentUser) return;
     const uid = await getCurrentUserId();
     if (!uid) return;
 
-    // Pull this player's most recent resolved match
-    const { data } = await sb
-        .from('matches')
-        .select('*')
-        .or(`player_a_id.eq.${uid},player_b_id.eq.${uid}`)
-        .order('resolved_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
+    const [{ data: matches }, { data: prof }] = await Promise.all([
+        sb.from('matches')
+            .select('*')
+            .or(`player_a_id.eq.${uid},player_b_id.eq.${uid}`)
+            .order('week_number', { ascending: true }),
+        sb.from('profiles').select('total_points').eq('id', uid).maybeSingle(),
+    ]);
+
+    historyMatches = matches || [];
+    if (!historyMatches.length) {
+        resolutionPanel.classList.add('hidden');
+        resolutionPanel.innerHTML = '';
+        return;
+    }
+
+    const weeks = historyMatches.map(m => m.week_number);
+    if (historySelectedWeek === null || !weeks.includes(historySelectedWeek)) {
+        historySelectedWeek = weeks[weeks.length - 1];
+    }
+    renderHistoryView(uid, prof?.total_points ?? 0);
+}
+
+function renderHistoryView(uid, totalPoints) {
+    const data = historyMatches.find(m => m.week_number === historySelectedWeek);
     if (!data) { resolutionPanel.classList.add('hidden'); resolutionPanel.innerHTML = ''; return; }
 
     const youAreA = data.player_a_id === uid;
@@ -693,6 +712,7 @@ async function renderLastResult() {
         youToken: youAreA ? (data.token_a ?? -1) : (data.token_b ?? -1),
         youTokenBonus: youAreA ? (data.token_bonus_a ?? 0) : (data.token_bonus_b ?? 0),
         ruleId: data.rule_id,
+        weekNumber: data.week_number,
     };
     // If the schema doesn't yet carry amps_a/amps_b (early version), bail gracefully
     if (!r.youAmps.length || !r.oppAmps.length) {
@@ -759,13 +779,24 @@ async function renderLastResult() {
         }
     }
 
+    const weekTabs = historyMatches.map(m => {
+        const active = m.week_number === historySelectedWeek ? ' active' : '';
+        return `<button type="button" class="qc-week-tab${active}" data-week="${m.week_number}">Week ${m.week_number + 1}</button>`;
+    }).join('');
+
+    // Breakdown: channels won * 1 + token bonus = score for the week
+    const breakdownBonus = r.youTokenBonus ? ` + <strong>${r.youTokenBonus}</strong> token bonus` : '';
+    const breakdown = `${youCh} channel${youCh === 1 ? '' : 's'} won${breakdownBonus} = <strong>${Number(r.youWins) | 0}</strong> pts this week`;
+
     resolutionPanel.innerHTML = `
+        <div class="qc-history-tabs">${weekTabs}</div>
         <div class="qc-resolution-head">
-            <h4 class="qc-resolution-title">Last week vs ${esc(r.opponent)}</h4>
-            <div class="qc-resolution-score">You ${Number(r.youWins) | 0}, ${Number(r.oppWins) | 0} ${esc(r.opponent)}</div>
+            <h4 class="qc-resolution-title">Week ${r.weekNumber + 1} vs ${esc(r.opponent)}</h4>
+            <div class="qc-resolution-score">You ${Number(r.youWins) | 0} — ${Number(r.oppWins) | 0} ${esc(r.opponent)}</div>
         </div>
         <p class="qc-resolution-rule">Rule applied: <strong>${esc(ruleName)}</strong></p>
         <p class="qc-resolution-rule">${tokenLine}</p>
+        <p class="qc-resolution-rule">Points this week: ${breakdown}. Your total: <strong>${Number(totalPoints) | 0}</strong> pts.</p>
         <div class="qc-standings">
             <div class="qc-standing you">
                 <span class="qc-standing-label">Channels won</span>
@@ -783,6 +814,15 @@ async function renderLastResult() {
         <div class="qc-result-grid">${tiles.join('')}</div>
     `;
     resolutionPanel.classList.remove('hidden');
+
+    resolutionPanel.querySelectorAll('.qc-week-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const wk = Number(btn.dataset.week);
+            if (wk === historySelectedWeek) return;
+            historySelectedWeek = wk;
+            renderHistoryView(uid, totalPoints);
+        });
+    });
 }
 
 async function renderLeaderboard() {
