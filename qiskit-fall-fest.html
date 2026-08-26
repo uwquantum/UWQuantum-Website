@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Waterloo Quantum Club</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/quantumclublogo-modified.png"
+    />
+    <link rel="apple-touch-icon" href="assets/quantumclublogo-modified.png" />
+    <meta
+      name="description"
+      content="Become a member of the Waterloo Quantum Club. Open to all University of Waterloo students, no prior experience required."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/game.css" />
+    <link rel="stylesheet" href="styles/qiskit-style.css" />
+  </head>
+  <body class="qiskit-page">
+    <nav class="navbar">
+      <site-navbar></site-navbar>
+    </nav>
+
+    <!-- <nav class="qiskit-subnav" aria-label="Qiskit Fall Fest sections">
+      <div class="qiskit-subnav-inner">
+        <a href="#about">About</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#speakers">Speakers</a>
+        <a href="#speakers">Organizers</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </nav> -->
+    <!-- <header class="page-hero qiskit-hero">
+      <h1 class="page-hero-title">Qiskit Fall Fest 2026</h1>
+      <p class="page-hero-sub">
+        Open to all university students interested in quantum computing,
+        physics, and emerging technology. No prior experience required. In
+        person presentations only.
+      </p>
+      <div class="qc-hero-actions">
+        <a
+          href="https://discord.gg/uFwvsk52T"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hero-btn primary"
+          >Sign up</a
+        >
+        <a
+          href="https://discord.gg/uFwvsk52T"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hero-btn"
+          >Join Discord</a
+        >
+        <a
+          href="https://www.instagram.com/uwquantum/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hero-btn outline"
+          >Follow Instagram</a
+        >
+      </div>
+    </header> -->
+
+    <div class="qiskit-hero-bg">
+      <header class="page-hero qiskit-hero">
+        <h1 class="page-hero-title">Qiskit Fall Fest 2026</h1>
+        <p class="page-hero-sub">
+          Open to all university students interested in quantum computing,
+          physics, and emerging technology. No prior experience required. In
+          person presentations only.
+        </p>
+        <div class="qc-hero-actions">
+          <a
+            href="https://discord.gg/uFwvsk52T"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hero-btn primary"
+            >Sign up</a
+          >
+          <a
+            href="https://discord.gg/uFwvsk52T"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hero-btn"
+            >Join Discord</a
+          >
+          <a
+            href="https://www.instagram.com/uwquantum/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hero-btn outline"
+            >Follow Instagram</a
+          >
+        </div>
+      </header>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about" class="anth-section scroll-reveal">
+      <h2 class="anth-section-title qiskit-section-title">About</h2>
+      <div class="section-body">
+        <div class="qiskit-about-body">
+          <p>
+            <span class="highlight">Qiskit Fall Fest</span> is a global series
+            of student-run quantum computing events, supported by IBM Quantum.
+            Each fall, campuses around the world run their own chapter, a mix of
+            talks, workshops, and hands-on projects built around Qiskit, IBM's
+            open-source framework for programming real quantum hardware.
+          </p>
+          <p>
+            This year's theme is
+            <span class="highlight">IBM Quantum's 10 Years on the Cloud</span>,
+            marking a decade since IBM first put quantum computers on the cloud
+            for anyone to use. The Waterloo Quantum Club is bringing that theme
+            to UW for the first time, looking back at how far quantum computing
+            has come and what's realistic to expect next.
+          </p>
+          <p>
+            No prior experience is required. The event is designed to take
+            anyone from their first qubit to writing and running real quantum
+            circuits.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEDULE -->
+    <section id="schedule" class="anth-section scroll-reveal">
+      <h2 class="anth-section-title qiskit-section-title">Schedule</h2>
+      <div
+        class="anth-card-grid"
+        style="grid-template-columns: repeat(auto-fit, minmax(300px, 380px))"
+      >
+        <article class="anth-card">
+          <h3>Day 1 — [Date]</h3>
+          <dl class="meta">
+            <dt>[9:00 AM]</dt>
+            <dd>[Check-in & breakfast]</dd>
+            <dt>[9:30 AM]</dt>
+            <dd>[Opening talk: Intro to Quantum Computing]</dd>
+            <dt>[10:30 AM]</dt>
+            <dd>[Workshop: Getting started with Qiskit]</dd>
+            <dt>[1:00 PM]</dt>
+            <dd>[Workshop: Quantum algorithms in practice]</dd>
+            <dt>[3:00 PM]</dt>
+            <dd>[Speaker talk]</dd>
+          </dl>
+        </article>
+        <article class="anth-card">
+          <h3>Day 2 — [Date]</h3>
+          <dl class="meta">
+            <dt>[9:00 AM]</dt>
+            <dd>[Check-in]</dd>
+            <dt>[9:30 AM]</dt>
+            <dd>[Project / mini-hackathon kickoff]</dd>
+            <dt>[1:00 PM]</dt>
+            <dd>[Project work time]</dd>
+            <dt>[3:30 PM]</dt>
+            <dd>[Project showcase]</dd>
+            <dt>[4:30 PM]</dt>
+            <dd>[Closing & prizes]</dd>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <!-- SPEAKERS -->
+    <section id="speakers" class="anth-section scroll-reveal">
+      <h2 class="anth-section-title qiskit-section-title">Speakers</h2>
+      <div
+        class="anth-card-grid"
+        style="grid-template-columns: repeat(auto-fit, minmax(300px, 380px))"
+      >
+        <article class="anth-card">
+          <h3>Sean Wagner</h3>
+          <p>
+            Sean works on quantum computing at IBM Canada, with a research
+            background in high-performance computing and applied quantum
+            algorithms.
+          </p>
+          <dl class="meta">
+            <dt>Role</dt>
+            <dd>Keynote Speaker</dd>
+            <dt>Affiliation</dt>
+            <dd>IBM</dd>
+          </dl>
+          <div class="team-member-socials">
+            <a
+              href="https://www.linkedin.com/in/seanjwagner/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 24 24" fill="#0A66C2">
+                <path
+                  d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.36 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://example.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#333"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z" />
+              </svg>
+            </a>
+          </div>
+        </article>
+        <article class="anth-card">
+          <h3>Aggie Branczyk</h3>
+          <p>
+            Aggie is a physicist and quantum tech entrepreneur, formerly a
+            senior research scientist at IBM Quantum, now founder of Quantum
+            Salon.
+          </p>
+          <dl class="meta">
+            <dt>Role</dt>
+            <dd>Advisory Board Member</dd>
+            <dt>Affiliation</dt>
+            <dd>CMC</dd>
+          </dl>
+          <div class="team-member-socials">
+            <a
+              href="https://www.linkedin.com/in/aggie-branczyk/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg viewBox="0 0 24 24" fill="#0A66C2">
+                <path
+                  d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.36 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://aggiebranczyk.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#333"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z" />
+              </svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ORGANIZERS -->
+    <section id="organizers" class="anth-section scroll-reveal">
+      <h2 class="anth-section-title qiskit-section-title">Organizers</h2>
+      <div
+        class="anth-card-grid"
+        style="grid-template-columns: repeat(auto-fit, minmax(300px, 380px))"
+      >
+        <article class="anth-card">
+          <h3>Alice in Quantumland</h3>
+          <p>Error correction</p>
+          <dl class="meta">
+            <dt>Role</dt>
+            <dd>Lead Volunteer</dd>
+            <!-- <dt>Affiliation</dt>
+            <dd>UW</dd> -->
+          </dl>
+        </article>
+        <article class="anth-card">
+          <h3>Bob</h3>
+          <p>Error correction</p>
+          <dl class="meta">
+            <dt>Role</dt>
+            <dd>Volunteer</dd>
+          </dl>
+        </article>
+        <article class="anth-card">
+          <h3>Eve</h3>
+          <p>Error correction</p>
+          <dl class="meta">
+            <dt>Role</dt>
+            <dd>Volunteer</dd>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="anth-section">
+      <div class="anth-section-head">
+        <h2 class="anth-section-title">FAQ</h2>
+        <p class="anth-section-sub">
+          <!-- A few questions students usually ask before signing up. -->
+        </p>
+      </div>
+
+      <div class="anth-card-grid">
+        <article class="anth-card">
+          <h3>Who can join?</h3>
+          <p>
+            Any University of Waterloo student. No quantum computing or
+            programming background needed, we'll cover the Qiskit basics
+            together.
+          </p>
+          <dl class="meta">
+            <dt>Open to</dt>
+            <dd>All UW students</dd>
+          </dl>
+        </article>
+        <article class="anth-card">
+          <h3>Do I need prior experience?</h3>
+          <p>
+            No. We welcome students of every level, from "I've never seen a
+            wavefunction" all the way to graduate researchers. Talks and
+            workshops are designed to bring everyone along.
+          </p>
+          <dl class="meta">
+            <dt>Open to</dt>
+            <dd>All UW students</dd>
+          </dl>
+        </article>
+        <article class="anth-card">
+          <h3>What's the format?</h3>
+          <p>Week long hackathon.</p>
+          <!-- <dl class="meta">
+            <dt>Play</dt>
+            <dd>
+              <a
+                href="game.html"
+                style="color: inherit; text-decoration: underline"
+                >Quantum Channels</a
+              >
+            </dd>
+          </dl> -->
+        </article>
+        <article class="anth-card">
+          <h3>Is particpation free?</h3>
+          <p>
+            Yes. All events, the hackathon, the Discord, and the sessions are
+            free for any registered student.
+          </p>
+          <dl class="meta">
+            <dt>Cost</dt>
+            <dd>Free</dd>
+          </dl>
+        </article>
+        <article class="anth-card">
+          <h3>What do I need?</h3>
+          <p>
+            Just a laptop. Setup instructions for Qiskit will be posted on
+            Discord ahead of the event.
+          </p>
+          <dl class="meta">
+            <dt>What to bring</dt>
+            <dd>Laptop</dd>
+          </dl>
+        </article>
+        <article class="anth-card">
+          <h3>Why sign up?</h3>
+          <p>Learn Qiskit and quantum circuits, meet industry experts.</p>
+          <dl class="meta">
+            <dt>Includes</dt>
+            <dd>Qiskit tutorials and challenges, networking opportunities</dd>
+          </dl>
+        </article>
+        <!-- <article class="anth-card">
+          <h3>How do I stay updated?</h3>
+          <p>
+            Events are announced on our Discord and Instagram. Most weekly
+            reminders go out on Discord, so dropping in there is the easiest way
+            to keep up.
+          </p>
+          <dl class="meta">
+            <dt>Discord</dt>
+            <dd>
+              <a
+                href="https://discord.gg/QxpWC4Hx"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="color: inherit; text-decoration: underline"
+                >Join here</a
+              >
+            </dd>
+            <dt>Instagram</dt>
+            <dd>
+              <a
+                href="https://www.instagram.com/uwquantum/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="color: inherit; text-decoration: underline"
+                >@uwquantum</a
+              >
+            </dd>
+          </dl>
+        </article> -->
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <site-footer-no-word-mark></site-footer-no-word-mark>
+    </footer>
+
+    <script src="scripts/site-components.js"></script>
+
+    <script src="scripts/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/supabase-config.js"></script>
+    <script src="scripts/auth.js"></script>
+  </body>
+</html>
