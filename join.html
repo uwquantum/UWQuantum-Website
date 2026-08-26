@@ -15,21 +15,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">
-            <a href="index.html" style="text-decoration: none; color: inherit;">
-                <span class="logo-text">Waterloo Quantum Club</span>
-            </a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="index.html#events">Events</a></li>
-            <li><a href="game.html">Games</a></li>
-            <li><a href="team.html">Team</a></li>
-            <li><a href="join.html">Join</a></li>
-        </ul>
-        <div class="hamburger">
-            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-        </div>
+      <site-navbar></site-navbar>
     </nav>
 
     <header class="page-hero">
@@ -129,20 +115,10 @@
     </section>
 
     <footer class="site-footer">
-        <div class="footer-top">
-            <p class="footer-tagline">A community exploring the quantum world at the University of Waterloo.</p>
-            <ul class="footer-nav">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="index.html#events">Events</a></li>
-                <li><a href="game.html">Games</a></li>
-                <li><a href="team.html">Team</a></li>
-                <li><a href="join.html">Join</a></li>
-                <li><a href="mailto:uwquantumclub@outlook.com">uwquantumclub@outlook.com</a></li>
-            </ul>
-        </div>
-        <h2 class="footer-wordmark">Quantum&nbsp;Club</h2>
+      <site-footer></site-footer>
     </footer>
 
+    <script src="scripts/site-components.js"></script>
     <script src="scripts/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="scripts/supabase-config.js"></script>

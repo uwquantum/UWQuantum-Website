@@ -130,6 +130,7 @@ class SiteFooterNoWordMark extends HTMLElement {
           <li><a href="game.html">Games</a></li>
           <li><a href="team.html">Team</a></li>
           <li><a href="join.html">Join</a></li>
+          <li><a href="qiskit-fall-fest.html">Qiskit Fall Fest</a></li>
           <li>
             <a href="mailto:uwquantumclub@outlook.com">uwquantumclub@outlook.com</a>
           </li>
