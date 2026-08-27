@@ -210,3 +210,129 @@
   width: 16px;
   height: 16px;
 }
+
+.qiskit-card-schedule {
+  /* background: linear-gradient(to right, #7992ea 0%, var(--qff-branch) 100%); */
+  background: #b9c3e7;
+}
+
+.qiskit-card-schedule .meta {
+  grid-template-columns: auto 1fr;
+  gap: 0.03rem 0.5rem;
+}
+
+.qiskit-card-schedule:hover {
+  background: #b9c3e7;
+  cursor: pointer;
+}
+
+.qiskit-page-hero-title {
+  color: var(--qff-indigo);
+}
+
+.qiskit-btn.primary {
+  background: var(--qff-indigo);
+  color: var(--qff-offwhite);
+}
+.hero-btn.primary:hover {
+  background: #2a53e8;
+  color: var(--qff-offwhite);
+  border-color: #2a53e8;
+}
+
+.qiskit-btn.outline {
+  background: transparent;
+  color: var(--qff-indigo);
+}
+.qiskit-btn.outline:hover {
+  background: #2a53e8;
+  color: var(--qff-offwhite);
+  border-color: #2a53e8;
+}
+
+/* INTRO */
+.qiskit-hero-intro {
+  padding-top: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  max-width: 480px;
+  margin: 0 0 1.25rem;
+}
+
+.qiskit-hero h2 {
+  color: var(--qff-indigo);
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.qiskit-hero-highlights {
+  list-style: none;
+  padding: 0;
+  padding-left: 0rem;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 480px;
+}
+
+.qiskit-hero-highlights li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  /* color: var(--qff-indigo); */
+}
+
+.qiskit-hero-highlights li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 8px;
+  height: 8px;
+  /* border-radius: 50%; */
+  background: var(--qff-indigo);
+}
+
+.qiskit-hero-meta {
+  display: flex;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 2rem;
+}
+
+.qiskit-hero-tags {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+}
+
+/* SPEAKERS CARDS */
+.qiskit-card-speaker {
+  /* background: linear-gradient(to right, #e2d1f3 0%, #b98ce2 100%); */
+  background: #e2d1f3;
+}
+
+.qiskit-card-speaker:hover {
+  background: #e2d1f3;
+  cursor: pointer;
+}
+
+.qiskit-page-hero-title {
+  color: var(--qff-indigo);
+}
+
+/* ORGANIZERS CARDS */
+.qiskit-card-organizer {
+  /* background: linear-gradient(to right, #efd6e3 0%, #f3b8d7 100%); */
+  background: #efd6e3;
+}
+
+.qiskit-card-organizer:hover {
+  cursor: pointer;
+  background: #efd6e3;
+}
