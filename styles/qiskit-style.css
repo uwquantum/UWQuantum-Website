@@ -336,3 +336,62 @@
   cursor: pointer;
   background: #efd6e3;
 }
+
+.disabled {
+  background-color: rgb(155, 145, 145);
+}
+
+.qiskit-btn.disabled {
+  background: grey;
+  color: var(--qff-offwhite);
+  border: none;
+}
+.hero-btn.disabled:hover {
+  cursor: not-allowed;
+}
+
+/* TO BE REMOVED WHEN REGISTRATION OPENS */
+.has-tooltip {
+  position: relative;
+}
+
+.has-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #1a1a1a;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+  z-index: 10;
+}
+
+/* little arrow */
+.has-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: 118%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1a1a1a;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+
+.has-tooltip:hover::after,
+.has-tooltip:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

@@ -52,6 +52,7 @@ class SiteNavbar extends HTMLElement {
              <li><a href="#schedule">Schedule</a></li>
              <li><a href="#speakers">Speakers</a></li>
              <li><a href="#organizers">Organizers</a></li>
+             <li><a href="#code-conduct">Code of Conduct</a></li>
              <li><a href="#faq">FAQ</a></li>
            </ul>
          </li>`
