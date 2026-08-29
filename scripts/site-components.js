@@ -1,35 +1,3 @@
-// Shared navbar and footer, defined once and reused across every page.
-// No shadow DOM on purpose: these rely on the site's existing global
-// classes in styles/style.css (.navbar, .nav-links, .site-footer, etc.).
-
-// class SiteNavbar extends HTMLElement {
-//   connectedCallback() {
-//     // display: contents makes this element invisible to layout (flexbox,
-//     // grid, etc. treat its children as if they were direct children of
-//     // .navbar), while keeping it in the DOM so CSS like ".navbar .logo"
-//     // still matches normally.
-//     this.style.display = "contents";
-//     this.innerHTML = `
-//       <div class="logo">
-//         <a href="index.html" style="text-decoration: none; color: inherit">
-//           <span class="logo-text">Waterloo Quantum Club</span>
-//         </a>
-//       </div>
-//       <ul class="nav-links">
-//         <li><a href="index.html">Home</a></li>
-//         <li><a href="index.html#events">Events</a></li>
-//         <li><a href="game.html">Games</a></li>
-//         <li><a href="team.html">Team</a></li>
-//         <li><a href="join.html">Join</a></li>
-//         <li><a href="qiskit-fall-fest.html">Qiskit Fall Fest</a></li>
-//       </ul>
-//       <div class="hamburger">
-//         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-//       </div>
-//     `;
-//   }
-// }
-
 class SiteNavbar extends HTMLElement {
   connectedCallback() {
     // display: contents makes this element invisible to layout (flexbox,
