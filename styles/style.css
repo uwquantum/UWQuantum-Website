@@ -1370,4 +1370,5 @@ h1, h2, h3 {
 
 .term-group > summary:hover { opacity: 0.7; }
 
-.term-group > .anth-card-grid { margin-top: 1.5rem; }
+.term-group > .anth-card-grid,
+.term-group > .team-card-grid { margin-top: 1.5rem; }
