@@ -94,7 +94,7 @@ rm rules.aux rules.log rules.out
 
 ## Deployment
 
-The site is deployed via Cloudflare Pages, auto-building from the `main`
+The site is deployed as a Cloudflare Worker (static assets), auto-building from the `main`
 branch. No build step is required.
 
 ## Credits
