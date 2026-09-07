@@ -14,9 +14,12 @@
 }
 
 .qiskit-page .navbar {
-  background: color-mix(in srgb, var(--nav-bg) 85%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* Flat fill in the artwork's own sky colour: reads as part of the
+     background rather than a separate bar, but is opaque so the art
+     scrolling underneath never collides with the nav links. */
+  background: var(--qff-bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-bottom: none;
 }
 .qiskit-hero-bg {
@@ -28,23 +31,48 @@
   overflow: hidden;
 }
 
-.qiskit-hero-bg::before {
+body.qiskit-page {
+  background-color: var(--qff-bg);
+}
+
+/* Artwork is a fixed layer behind all content so it persists for the whole
+   scroll. It is anchored to the right and masked so it fades out well before
+   the text column, which keeps the left-hand copy on flat colour. */
+body.qiskit-page::before {
   content: "";
-  position: absolute;
+  position: fixed;
   inset: 0;
+  z-index: -1;
   background-image: url("../assets/qiskit-hero2-no-title.png");
-  background-size: cover;
-  background-position: center;
+  background-size: contain;
+  background-position: top right;
   background-repeat: no-repeat;
-  transform: scaleX(-1);
-  z-index: 0;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 52%,
+    rgba(0, 0, 0, 0.5) 68%,
+    #000 82%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 52%,
+    rgba(0, 0, 0, 0.5) 68%,
+    #000 82%
+  );
 }
 
 .qiskit-hero-bg::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, #7992ea 0%, var(--qff-branch) 105%);
+  background: linear-gradient(
+    to right,
+    rgba(214, 224, 250, 0.92) 0%,
+    rgba(214, 224, 250, 0.6) 45%,
+    transparent 72%
+  );
   z-index: 1;
 }
 
@@ -52,9 +80,9 @@
   .qiskit-hero-bg::after {
     background: linear-gradient(
       to right,
-      #7992ea 0%,
-      var(--qff-branch) 45%,
-      transparent 60%
+      rgba(214, 224, 250, 0.92) 0%,
+      rgba(214, 224, 250, 0.6) 45%,
+      transparent 70%
     );
     z-index: 1;
   }
@@ -73,18 +101,23 @@
   padding-bottom: 2.5rem;
 }
 
+/* Full width so the block's left edge lines up with the section heading;
+   the paragraphs themselves are what get capped. */
 .qiskit-about-body {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  max-width: 1000px;
+  max-width: none;
 }
 
+/* Wrap the copy well before the artwork fades in on the right, so long
+   passages run downward rather than sliding under the birds. */
 .qiskit-about-body p {
   font-size: 1.05rem;
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   margin: 0;
+  max-width: clamp(300px, 44vw, 660px);
 }
 
 .qiskit-about-body .highlight {
@@ -120,9 +153,9 @@
   min-width: 200px;
   list-style: none;
   padding: 0.6rem 0;
-  background: #141422;
+  background: #d6e0fa;
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 30px rgba(31, 17, 71, 0.22);
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
@@ -140,14 +173,14 @@
 .nav-dropdown-menu a {
   display: block;
   padding: 0.55rem 1.25rem;
-  color: #e5e5ea;
+  color: #31135e;
   font-size: 0.9rem;
   text-decoration: none;
 }
 
 .nav-dropdown-menu a:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: rgba(49, 19, 94, 0.1);
+  color: #31135e;
   text-decoration: none;
 }
 
@@ -216,7 +249,13 @@
   cursor: pointer;
 }
 
+/* Matches .hero-headline on the home page. game.css overrides
+   .page-hero-title to serif, so the sans has to be restated here. */
 .qiskit-page-hero-title {
+  font-family: "Anthropic Sans", "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.02em;
   color: var(--qff-indigo);
 }
 
@@ -308,9 +347,6 @@
   cursor: pointer;
 }
 
-.qiskit-page-hero-title {
-  color: var(--qff-indigo);
-}
 
 /* ORGANIZERS CARDS */
 .qiskit-card-organizer {
@@ -323,11 +359,11 @@
 }
 
 .disabled {
-  background-color: rgb(155, 145, 145);
+  background-color: #31135e;
 }
 
 .qiskit-btn.disabled {
-  background: grey;
+  background: #31135e;
   color: var(--qff-offwhite);
   border: none;
 }
@@ -425,4 +461,35 @@
 
 .scroll-top-btn:hover {
   background: #333;
+}
+
+/* Match the home page: content sits in a centred 1260px column rather than
+   running the full width of the viewport. */
+.qiskit-page .anth-section > * {
+  max-width: 1260px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Cards default to the site's cream (#e7e3d4), which fights the blue
+   artwork on this page. Use a pale periwinkle drawn from the same palette.
+   Excludes the schedule/speaker/organizer cards, which set their own
+   colours via single-class rules this would otherwise outrank. */
+.qiskit-page .anth-card:not([class*="qiskit-card-"]) {
+  background: #e9eefc;
+}
+
+/* Footer matches the page background instead of the site black. The shared
+   footer styles all its text cream (#f0eee6), which is unreadable on this
+   light fill, so the type flips to the deep purple accent. */
+.qiskit-page .site-footer {
+  background: #d6e0fa;
+  color: #31135e;
+}
+
+.qiskit-page .site-footer .footer-tagline,
+.qiskit-page .site-footer .footer-nav a,
+.qiskit-page .site-footer .footer-wordmark {
+  color: #31135e;
 }
