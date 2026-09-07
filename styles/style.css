@@ -1099,23 +1099,6 @@ h1, h2, h3 {
     margin: 0;
 }
 
-.team-card-socials {
-    margin-top: 0.6rem;
-    display: flex;
-    gap: 0.85rem;
-}
-
-.team-card-socials a {
-    color: var(--text-secondary);
-    display: inline-flex;
-    align-items: center;
-    transition: color 0.2s ease;
-}
-
-.team-card-socials a:hover {
-    color: var(--text-primary);
-}
-
 /* Game cards (game page) */
 .game-status {
     text-align: center;
