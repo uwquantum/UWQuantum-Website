@@ -493,3 +493,34 @@ body.qiskit-page::before {
 .qiskit-page .site-footer .footer-wordmark {
   color: #31135e;
 }
+
+/* Speaker details and optional organizer portraits. No image element means
+   no reserved photo space; each organizer card has its own ID for overrides. */
+.qiskit-people-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 380px));
+}
+.qiskit-section-intro {
+  margin-bottom: 24px;
+}
+.qiskit-placeholder-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--qff-indigo);
+}
+.qiskit-talk-title {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 0.75rem;
+}
+.qiskit-organizer-photo {
+  display: block;
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 0 1rem;
+}
+.qiskit-organizer-photo:not([src]),
+.qiskit-organizer-photo[src=""] {
+  display: none;
+}
