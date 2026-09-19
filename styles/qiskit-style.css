@@ -529,3 +529,18 @@ body.qiskit-page::before {
   width: 60%;
   margin: 20%;
 }
+
+@media (max-width: 768px) {
+  body.qiskit-page::before {
+    background-size: cover; /* fill the whole screen instead of a small strip */
+    background-position: 75% center;
+    -webkit-mask-image: none; /* remove the fade that hid the left side */
+    mask-image: none;
+    opacity: 0.15; /* keeps it faint so text stays readable */
+  }
+
+  /* Light wash over the hero so the text sits on near-flat colour */
+  .qiskit-hero-bg::after {
+    background: rgba(214, 224, 250, 0.5);
+  }
+}
