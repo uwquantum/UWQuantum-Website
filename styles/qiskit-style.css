@@ -530,7 +530,7 @@ body.qiskit-page::before {
   margin: 20%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   body.qiskit-page::before {
     background-size: cover; /* fill the whole screen instead of a small strip */
     background-position: 75% center;
