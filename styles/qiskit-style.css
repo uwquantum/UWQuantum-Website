@@ -346,8 +346,6 @@ body.qiskit-page::before {
   background: #e2d1f3;
   cursor: pointer;
 }
-
-
 /* ORGANIZERS CARDS */
 .qiskit-card-organizer {
   background: #efd6e3;
@@ -471,7 +469,6 @@ body.qiskit-page::before {
   margin-right: auto;
 }
 
-
 /* Cards default to the site's cream (#e7e3d4), which fights the blue
    artwork on this page. Use a pale periwinkle drawn from the same palette.
    Excludes the schedule/speaker/organizer cards, which set their own
@@ -523,4 +520,12 @@ body.qiskit-page::before {
 .qiskit-organizer-photo:not([src]),
 .qiskit-organizer-photo[src=""] {
   display: none;
+}
+
+.qff-team-card-bio {
+  text-align: justify;
+}
+.team-card-photo-placeholder {
+  width: 60%;
+  margin: 20%;
 }
