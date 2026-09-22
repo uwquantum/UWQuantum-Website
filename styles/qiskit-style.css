@@ -544,3 +544,21 @@ body.qiskit-page::before {
     background: rgba(214, 224, 250, 0.5);
   }
 }
+
+.team-card-role {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  color: #b8387f; /* soft fuchsia */
+  text-align: center;
+  margin: 0.25rem 0 0rem;
+}
+
+.team-card-profession {
+  font-size: 0.8rem;
+  color: #19188c; /* soft fuchsia */
+  text-align: center;
+  margin: 0;
+}
