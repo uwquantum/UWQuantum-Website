@@ -346,8 +346,6 @@ body.qiskit-page::before {
   background: #e2d1f3;
   cursor: pointer;
 }
-
-
 /* ORGANIZERS CARDS */
 .qiskit-card-organizer {
   background: #efd6e3;
@@ -471,7 +469,6 @@ body.qiskit-page::before {
   margin-right: auto;
 }
 
-
 /* Cards default to the site's cream (#e7e3d4), which fights the blue
    artwork on this page. Use a pale periwinkle drawn from the same palette.
    Excludes the schedule/speaker/organizer cards, which set their own
@@ -523,4 +520,45 @@ body.qiskit-page::before {
 .qiskit-organizer-photo:not([src]),
 .qiskit-organizer-photo[src=""] {
   display: none;
+}
+
+.qff-team-card-bio {
+  text-align: justify;
+}
+.team-card-photo-placeholder {
+  width: 60%;
+  margin: 20%;
+}
+
+@media (max-width: 1000px) {
+  body.qiskit-page::before {
+    background-size: cover; /* fill the whole screen instead of a small strip */
+    background-position: 75% center;
+    -webkit-mask-image: none; /* remove the fade that hid the left side */
+    mask-image: none;
+    opacity: 0.15; /* keeps it faint so text stays readable */
+  }
+
+  /* Light wash over the hero so the text sits on near-flat colour */
+  .qiskit-hero-bg::after {
+    background: rgba(214, 224, 250, 0.5);
+  }
+}
+
+.team-card-role {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+  color: #b8387f; /* soft fuchsia */
+  text-align: center;
+  margin: 0.25rem 0 0rem;
+}
+
+.team-card-profession {
+  font-size: 0.8rem;
+  color: #19188c; /* soft fuchsia */
+  text-align: center;
+  margin: 0;
 }
