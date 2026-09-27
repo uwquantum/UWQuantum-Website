@@ -289,6 +289,20 @@ h1, h2, h3 {
     font-size: 0.95rem;
 }
 
+/* Sign up form */
+.form-frame {
+    display: flex;
+    justify-content: center;
+}
+
+.form-div {
+    border-radius: 18px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    height: 1200px;
+}
+
 /* Hiring Section */
 .hiring-section {
     padding: 6rem 0;
