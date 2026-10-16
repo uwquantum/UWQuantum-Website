@@ -1,0 +1,258 @@
+/* ============================================================
+   Qiskit Fall Fest hackathon registration form
+   (fall-fest-signup.html). Builds on style.css + qiskit-style.css
+   and reuses the --qff-* palette defined there.
+   ============================================================ */
+
+.ffs-hero {
+  padding-bottom: 1.5rem;
+}
+
+.ffs-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--qff-violet);
+  margin: 0 0 0.75rem;
+}
+
+.ffs-intro {
+  max-width: 720px;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.ffs-intro p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.ffs-intro a,
+.ffs-section-sub a,
+.ffs-success a {
+  color: var(--qff-violet);
+  text-decoration: underline;
+}
+
+.ffs-main {
+  max-width: 1260px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 1rem 0 6rem;
+}
+
+.ffs-form,
+.ffs-success {
+  max-width: 760px;
+}
+
+.ffs-required-note {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem;
+}
+.ffs-req {
+  color: #c0265e;
+  font-weight: 600;
+}
+
+/* Reset browser fieldset chrome; sections become cards. */
+.ffs-form fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.ffs-form legend {
+  padding: 0;
+}
+
+.ffs-section {
+  background: rgba(245, 247, 255, 0.94);
+  border: 1px solid #c7d3ee;
+  border-radius: 18px;
+  padding: 2rem 1.75rem 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.ffs-section-title {
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.2;
+  color: var(--qff-indigo);
+  margin-bottom: 0.75rem;
+  float: left; /* lets the legend sit inside the padded card */
+  width: 100%;
+}
+.ffs-section-title + * {
+  clear: both;
+}
+
+.ffs-section-sub {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin: 0 0 0.5rem;
+}
+
+.ffs-field {
+  margin-top: 1.5rem !important;
+}
+
+.ffs-q {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+}
+.ffs-num {
+  color: var(--qff-violet);
+  margin-right: 0.15rem;
+}
+
+.ffs-hint {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: -0.25rem 0 0.6rem;
+}
+
+.ffs-input {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #b9c4e2;
+  background: #ffffff;
+  border-radius: 6px;
+  font-family: 'Anthropic Sans', 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.ffs-input:focus {
+  border-color: var(--qff-blue);
+  box-shadow: 0 0 0 3px rgba(59, 95, 224, 0.18);
+}
+.ffs-input-short {
+  max-width: 160px;
+}
+.ffs-textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.5;
+}
+
+.ffs-other {
+  margin: 0.4rem 0 0 2rem;
+  width: calc(100% - 2rem);
+}
+
+/* Radio / checkbox rows */
+.ffs-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.55rem 0.75rem;
+  margin: 0 -0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  line-height: 1.45;
+  font-size: 0.98rem;
+  transition: background-color 0.12s ease;
+}
+.ffs-opt:hover {
+  background: rgba(75, 46, 131, 0.06);
+}
+.ffs-opt input {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.15rem;
+  accent-color: var(--qff-violet);
+  cursor: pointer;
+}
+.ffs-opt-detail {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+}
+
+/* Validation */
+.ffs-field.ffs-invalid .ffs-input,
+.ffs-input.ffs-invalid {
+  border-color: #c0265e;
+}
+.ffs-error {
+  color: #c0265e;
+  font-size: 0.88rem;
+  margin: 0.4rem 0 0;
+}
+
+/* Honeypot: off-screen rather than display:none so naive bots still fill it */
+.ffs-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.ffs-submit-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+  margin-top: 0.5rem;
+}
+.ffs-submit-row .hero-btn {
+  cursor: pointer;
+  font-size: 1rem;
+}
+.ffs-submit-row .hero-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.ffs-status {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+.ffs-status.error {
+  color: #c0265e;
+}
+
+.ffs-success {
+  background: rgba(245, 247, 255, 0.96);
+  border: 1px solid #c7d3ee;
+  border-radius: 18px;
+  padding: 2.25rem 1.75rem;
+  outline: none;
+}
+.ffs-success h2 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  color: var(--qff-indigo);
+  margin: 0 0 0.75rem;
+}
+.ffs-success p {
+  margin: 0 0 0.75rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .ffs-section {
+    padding: 1.5rem 1.15rem 1.25rem !important;
+    border-radius: 14px;
+  }
+  .ffs-other {
+    margin-left: 0;
+    width: 100%;
+  }
+}

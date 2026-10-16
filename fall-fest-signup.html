@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register, Qiskit Fall Fest Hackathon, Waterloo Quantum Club</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/quantumclublogo-modified.png"
+    />
+    <link rel="apple-touch-icon" href="assets/quantumclublogo-modified.png" />
+    <meta
+      name="description"
+      content="Register for the UW Quantum Qiskit Fall Fest Hackathon, a free week-long Qiskit hackathon at the University of Waterloo, November 1-7, 2026."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/qiskit-style.css" />
+    <link rel="stylesheet" href="styles/fall-fest-signup.css" />
+  </head>
+  <body class="qiskit-page">
+    <nav class="navbar">
+      <site-navbar></site-navbar>
+    </nav>
+
+    <header class="page-hero ffs-hero">
+      <p class="ffs-eyebrow">Qiskit Fall Fest 2026</p>
+      <h1 class="page-hero-title">Hackathon registration</h1>
+      <div class="ffs-intro">
+        <p>
+          Join UW Quantum for a free, week-long Qiskit hackathon at the
+          University of Waterloo. The hackathon runs
+          <strong>November 1&ndash;7, 2026</strong>, with Qiskit teaching
+          sessions, technical talks, project support, and team development.
+          Project presentations and judging take place on Friday, November 6,
+          and winners will be announced during the Quantum Symposium on
+          Saturday, November 7.
+        </p>
+        <p>
+          Please register individually, even if you already have teammates. Teams
+          will form at the beginning of the hackathon. Please submit one
+          response per person using your institutional email where available.
+          All session times are Waterloo local time.
+        </p>
+        <p>
+          For questions, corrections, or private support requests, contact
+          <a href="mailto:uwquantumclub@outlook.com">uwquantumclub@outlook.com</a>.
+        </p>
+      </div>
+    </header>
+
+    <main class="ffs-main">
+      <form id="ffs-form" class="ffs-form" novalidate>
+        <p class="ffs-required-note"><span class="ffs-req">*</span> Required</p>
+
+        <!-- CONTACT -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Contact</legend>
+
+          <div class="ffs-field">
+            <label class="ffs-q" for="full_name">
+              <span class="ffs-num">1.</span> Full name <span class="ffs-req">*</span>
+            </label>
+            <input class="ffs-input" type="text" id="full_name" name="full_name"
+                   autocomplete="name" maxlength="200" required />
+          </div>
+
+          <div class="ffs-field">
+            <label class="ffs-q" for="email">
+              <span class="ffs-num">2.</span> Institutional email <span class="ffs-req">*</span>
+            </label>
+            <input class="ffs-input" type="email" id="email" name="email"
+                   autocomplete="email" maxlength="254" required />
+          </div>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">3.</span> Which university or college are you currently enrolled at? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="institution" value="uwaterloo" required /> University of Waterloo</label>
+            <label class="ffs-opt"><input type="radio" name="institution" value="not_enrolled" /> Not currently enrolled at a university or college</label>
+            <label class="ffs-opt"><input type="radio" name="institution" value="other" data-other="institution_other" /> Other</label>
+            <input class="ffs-input ffs-other" type="text" id="institution_other" name="institution_other"
+                   placeholder="Your university or college" maxlength="200" aria-label="Other university or college" hidden />
+          </fieldset>
+        </fieldset>
+
+        <!-- WATERLOO / EDUCATION -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Waterloo and education details</legend>
+          <p class="ffs-section-sub">If not applicable, enter N/A.</p>
+
+          <div class="ffs-field">
+            <label class="ffs-q" for="watiam">
+              <span class="ffs-num">4.</span> WatIAM username <span class="ffs-req">*</span>
+            </label>
+            <input class="ffs-input" type="text" id="watiam" name="watiam"
+                   autocomplete="off" maxlength="50" required />
+          </div>
+
+          <div class="ffs-field">
+            <label class="ffs-q" for="student_id">
+              <span class="ffs-num">5.</span> (Waterloo) Student ID <span class="ffs-req">*</span>
+            </label>
+            <input class="ffs-input" type="text" id="student_id" name="student_id"
+                   inputmode="numeric" autocomplete="off" maxlength="20" required />
+          </div>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">6.</span> Current level of study <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="study_level" value="undergraduate" required /> Undergraduate degree</label>
+            <label class="ffs-opt"><input type="radio" name="study_level" value="masters" /> Master's degree</label>
+            <label class="ffs-opt"><input type="radio" name="study_level" value="doctoral" /> Doctoral degree</label>
+            <label class="ffs-opt"><input type="radio" name="study_level" value="college" /> College diploma or certificate</label>
+            <label class="ffs-opt"><input type="radio" name="study_level" value="other_or_not_student" /> Other or not currently a student</label>
+          </fieldset>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">7.</span> Which faculty or joint program are you enrolled in at your current institution? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="mathematics" required /> Mathematics, including Computer Science</label>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="software_engineering" /> Software Engineering, jointly Mathematics and Engineering</label>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="engineering" /> Engineering, excluding Software Engineering</label>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="arts" /> Arts</label>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="environment" /> Environment</label>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="health" /> Health</label>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="science" /> Science</label>
+            <label class="ffs-opt"><input type="radio" name="faculty" value="other" data-other="faculty_other" /> Other</label>
+            <input class="ffs-input ffs-other" type="text" id="faculty_other" name="faculty_other"
+                   placeholder="Your faculty or program" maxlength="200" aria-label="Other faculty or program" hidden />
+          </fieldset>
+
+          <div class="ffs-field">
+            <label class="ffs-q" for="program">
+              <span class="ffs-num">8.</span> Which program? <span class="ffs-req">*</span>
+            </label>
+            <input class="ffs-input" type="text" id="program" name="program"
+                   maxlength="200" required />
+          </div>
+        </fieldset>
+
+        <!-- TEAM -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Team</legend>
+          <p class="ffs-section-sub">
+            Team formation is planned for the opening session, and each team
+            member should complete their own registration. These questions
+            help us plan team formation before the hackathon.
+          </p>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">9.</span> What is your current team situation? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="team_status" value="have_team" required /> I already have a team</label>
+            <label class="ffs-opt"><input type="radio" name="team_status" value="partial_team" /> I have some teammates and we are looking for more</label>
+            <label class="ffs-opt"><input type="radio" name="team_status" value="not_sure" /> I am not sure yet</label>
+            <label class="ffs-opt"><input type="radio" name="team_status" value="no_team" /> I do not have a team</label>
+          </fieldset>
+
+          <div class="ffs-field">
+            <label class="ffs-q" for="team_size">
+              <span class="ffs-num">10.</span> Intended size of team. If you have not already formed a team, enter 0. <span class="ffs-req">*</span>
+            </label>
+            <input class="ffs-input ffs-input-short" type="number" id="team_size" name="team_size"
+                   min="0" max="20" step="1" inputmode="numeric" required />
+          </div>
+        </fieldset>
+
+        <!-- EXPERIENCE -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Experience</legend>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">11.</span> How much experience do you have with Python? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="python_experience" value="none" required /> I have not used Python</label>
+            <label class="ffs-opt"><input type="radio" name="python_experience" value="beginner" /> I am a beginner</label>
+            <label class="ffs-opt"><input type="radio" name="python_experience" value="comfortable" /> I am comfortable writing Python programs</label>
+            <label class="ffs-opt"><input type="radio" name="python_experience" value="substantial" /> I have substantial Python experience</label>
+          </fieldset>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">12.</span> How much experience do you have with quantum computing or Qiskit? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="quantum_experience" value="new" required /> I am new to quantum computing</label>
+            <label class="ffs-opt"><input type="radio" name="quantum_experience" value="concepts" /> I know some concepts but have not built quantum programs</label>
+            <label class="ffs-opt"><input type="radio" name="quantum_experience" value="tried_framework" /> I have tried Qiskit or another quantum programming framework</label>
+            <label class="ffs-opt"><input type="radio" name="quantum_experience" value="substantial" /> I have substantial quantum programming experience</label>
+          </fieldset>
+        </fieldset>
+
+        <!-- AVAILABILITY -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Availability</legend>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">13.</span> Can you attend the opening on Sunday, November 1, from 10:00 a.m. to noon? <span class="ffs-req">*</span>
+            </legend>
+            <p class="ffs-hint">
+              The planned opening includes the challenge launch, introductory
+              teaching, and team formation. All times are Waterloo local time.
+            </p>
+            <label class="ffs-opt"><input type="radio" name="opening_attendance" value="yes" required /> Yes</label>
+            <label class="ffs-opt"><input type="radio" name="opening_attendance" value="not_sure" /> Not sure yet</label>
+            <label class="ffs-opt"><input type="radio" name="opening_attendance" value="no" /> No</label>
+          </fieldset>
+
+          <fieldset class="ffs-field ffs-choice" data-required data-checkbox-group="session_availability">
+            <legend class="ffs-q">
+              <span class="ffs-num">14.</span> Confirm availability for the official hackathon sessions. <span class="ffs-req">*</span>
+            </legend>
+            <p class="ffs-hint">Select all that apply. Teams also work on projects outside these times.</p>
+            <label class="ffs-opt"><input type="checkbox" name="session_availability" value="mon_nov2" /> Monday, November 2, 5:30&ndash;7:00 p.m.</label>
+            <label class="ffs-opt"><input type="checkbox" name="session_availability" value="tue_nov3" /> Tuesday, November 3, 5:30&ndash;7:00 p.m.</label>
+            <label class="ffs-opt"><input type="checkbox" name="session_availability" value="wed_nov4" /> Wednesday, November 4, 5:30&ndash;7:00 p.m.</label>
+            <label class="ffs-opt">
+              <input type="checkbox" name="session_availability" value="thu_nov5" />
+              <span>Thursday, November 5, 5:30&ndash;7:00 p.m.<span class="ffs-opt-detail">Final hackathon teaching/speaker session; final project development and presentation preparation</span></span>
+            </label>
+            <label class="ffs-opt">
+              <input type="checkbox" name="session_availability" value="fri_nov6" />
+              <span>Friday, November 6, 5:30&ndash;8:30 p.m.<span class="ffs-opt-detail">Hackathon project presentations, judging, food, and results administration</span></span>
+            </label>
+            <label class="ffs-opt">
+              <input type="checkbox" name="session_availability" value="sat_nov7" />
+              <span>Saturday, November 7, 10:00 a.m.&ndash;4:55 p.m.<span class="ffs-opt-detail">Quantum Symposium; hackathon winner announcement</span></span>
+            </label>
+          </fieldset>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">15.</span> Can you attend presentations and judging on Friday, November 6, from 5:30&ndash;8:30 p.m.? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="judging_attendance" value="yes" required /> Yes</label>
+            <label class="ffs-opt"><input type="radio" name="judging_attendance" value="not_sure" /> Not sure yet</label>
+            <label class="ffs-opt"><input type="radio" name="judging_attendance" value="no" /> No</label>
+          </fieldset>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">16.</span> Are you interested in attending the Quantum Symposium on Saturday, November 7? <span class="ffs-req">*</span>
+            </legend>
+            <p class="ffs-hint">The symposium is planned for 10:00 a.m.&ndash;4:55 p.m.</p>
+            <label class="ffs-opt"><input type="radio" name="symposium_interest" value="yes" required /> Yes, I expect to attend</label>
+            <label class="ffs-opt"><input type="radio" name="symposium_interest" value="possibly" /> Possibly</label>
+            <label class="ffs-opt"><input type="radio" name="symposium_interest" value="no" /> No</label>
+          </fieldset>
+        </fieldset>
+
+        <!-- DIETARY -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Dietary requirements or food allergies</legend>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">17.</span> Would you like to tell us about any dietary restrictions? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="dietary" value="none" required /> No dietary requirements to report</label>
+            <label class="ffs-opt"><input type="radio" name="dietary" value="dairy_free" /> Dairy free</label>
+            <label class="ffs-opt"><input type="radio" name="dietary" value="nut_allergy" /> Nut allergy</label>
+            <label class="ffs-opt"><input type="radio" name="dietary" value="halal" /> Halal</label>
+            <label class="ffs-opt"><input type="radio" name="dietary" value="vegetarian" /> Vegetarian</label>
+            <label class="ffs-opt"><input type="radio" name="dietary" value="other" data-other="dietary_other" /> Other</label>
+            <input class="ffs-input ffs-other" type="text" id="dietary_other" name="dietary_other"
+                   placeholder="Tell us about your dietary needs" maxlength="500" aria-label="Other dietary requirements" hidden />
+          </fieldset>
+        </fieldset>
+
+        <!-- ACCESSIBILITY -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Accessibility or participation support requests</legend>
+          <p class="ffs-section-sub">
+            Tell us about practical arrangements that would help you
+            participate, such as accessible seating or other support. You can
+            also contact
+            <a href="mailto:uwquantumclub@outlook.com">uwquantumclub@outlook.com</a>.
+          </p>
+
+          <div class="ffs-field">
+            <label class="ffs-q" for="accessibility_requests">
+              <span class="ffs-num">18.</span> Accessibility requests
+            </label>
+            <textarea class="ffs-input ffs-textarea" id="accessibility_requests"
+                      name="accessibility_requests" rows="4" maxlength="2000"></textarea>
+          </div>
+
+          <fieldset class="ffs-field ffs-choice" data-required>
+            <legend class="ffs-q">
+              <span class="ffs-num">19.</span> Registration acknowledgement <span class="ffs-req">*</span>
+            </legend>
+            <p class="ffs-hint">
+              I have read the event information and my answers are accurate to
+              the best of my knowledge.
+            </p>
+            <label class="ffs-opt"><input type="checkbox" name="acknowledged" value="yes" required /> Yes</label>
+          </fieldset>
+        </fieldset>
+
+        <!-- Honeypot: hidden from people, often filled in by bots. -->
+        <div class="ffs-hp" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="ffs-submit-row">
+          <button type="submit" id="ffs-submit" class="hero-btn qiskit-btn primary">Submit registration</button>
+          <p id="ffs-status" class="ffs-status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div id="ffs-success" class="ffs-success" hidden tabindex="-1">
+        <h2>You're registered!</h2>
+        <p>
+          Thanks for signing up for the Qiskit Fall Fest Hackathon. We'll be in
+          touch with more details before the opening on Sunday, November 1.
+        </p>
+        <p>
+          In the meantime, join our
+          <a href="https://discord.gg/HZtSWKrqdE" target="_blank" rel="noopener noreferrer">Discord</a>
+          for updates, or head back to the
+          <a href="qiskit-fall-fest.html">Qiskit Fall Fest page</a>.
+        </p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <site-footer></site-footer>
+    </footer>
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">
+      ↑
+    </button>
+
+    <script src="scripts/site-components.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/supabase-config.js"></script>
+    <script src="scripts/fall-fest-signup.js"></script>
+    <script src="scripts/scroll-btn.js"></script>
+  </body>
+</html>
