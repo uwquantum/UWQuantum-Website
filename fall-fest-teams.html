@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team registration, Qiskit Fall Fest, Waterloo Quantum Club</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/quantumclublogo-modified.png"
+    />
+    <link rel="apple-touch-icon" href="assets/quantumclublogo-modified.png" />
+    <meta
+      name="description"
+      content="Register your team for Qiskit Fall Fest, November 1-7, 2026."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/qiskit-style.css" />
+    <link rel="stylesheet" href="styles/fall-fest-signup.css" />
+    <link rel="stylesheet" href="styles/fall-fest-teams.css" />
+  </head>
+  <body class="qiskit-page">
+    <nav class="navbar">
+      <site-navbar></site-navbar>
+    </nav>
+
+    <header class="page-hero ffs-hero">
+      <p class="ffs-eyebrow">Qiskit Fall Fest 2026</p>
+      <h1 class="page-hero-title">Team registration</h1>
+      <div class="ffs-intro">
+        <p>
+          Once your team has formed, <strong>one person per team</strong>
+          submits this form. Teams can have 1 to 5 members. Every member
+          should also have completed the
+          <a href="fall-fest-signup.html">individual hackathon registration</a>.
+        </p>
+      </div>
+
+      <aside class="fft-notice" aria-label="Prize eligibility">
+        <h2>Prize eligibility</h2>
+        <p>
+          Only teams with <strong>at least one member present in person on
+          Friday, November 6</strong> (presentations and judging, 5:30&ndash;9:00
+          p.m.) are eligible to win. Fully remote teams are judged separately.
+        </p>
+      </aside>
+    </header>
+
+    <main class="ffs-main">
+      <form id="fft-form" class="ffs-form" novalidate>
+        <p class="ffs-required-note"><span class="ffs-req">*</span> Required</p>
+
+        <!-- TEAM -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Team</legend>
+
+          <div class="ffs-field" id="team-name-field">
+            <label class="ffs-q" for="team_name">
+              Team name <span class="ffs-req">*</span>
+            </label>
+            <p class="ffs-hint">
+              2&ndash;50 characters. Keep it appropriate: names are reviewed,
+              and we'll ask you to choose another if needed.
+            </p>
+            <input class="ffs-input" type="text" id="team_name" name="team_name"
+                   minlength="2" maxlength="50" autocomplete="off" required />
+          </div>
+
+          <fieldset class="ffs-field ffs-choice" id="in-person-field">
+            <legend class="ffs-q">
+              Will at least one team member attend presentations and judging
+              in person on Friday, November 6, 5:30&ndash;8:30 p.m.? <span class="ffs-req">*</span>
+            </legend>
+            <label class="ffs-opt"><input type="radio" name="in_person_nov6" value="yes" /> Yes</label>
+            <label class="ffs-opt"><input type="radio" name="in_person_nov6" value="no" /> No, we'll present remotely</label>
+            <p class="fft-track" id="fft-track" hidden></p>
+          </fieldset>
+        </fieldset>
+
+        <!-- MEMBERS -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Team members</legend>
+          <p class="ffs-section-sub">
+            Add everyone on the team, including yourself, and mark one person
+            as the team lead to be our point of contact.
+          </p>
+
+          <div id="fft-members" class="fft-members"></div>
+
+          <div class="fft-add-row">
+            <button type="button" id="fft-add" class="hero-btn qiskit-btn outline">+ Add team member</button>
+            <span id="fft-count" class="fft-count"></span>
+          </div>
+        </fieldset>
+
+        <!-- CONFIRM -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Confirm</legend>
+          <fieldset class="ffs-field ffs-choice" id="confirm-field">
+            <legend class="ffs-q">Confirmation <span class="ffs-req">*</span></legend>
+            <label class="ffs-opt">
+              <input type="checkbox" name="confirmed" value="yes" />
+              Everyone listed has agreed to be on this team, and these details are accurate.
+            </label>
+          </fieldset>
+        </fieldset>
+
+        <!-- Honeypot: hidden from people, often filled in by bots. -->
+        <div class="ffs-hp" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="ffs-submit-row">
+          <button type="submit" id="fft-submit" class="hero-btn qiskit-btn primary">Register team</button>
+          <p id="fft-status" class="ffs-status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+
+      <div id="fft-success" class="ffs-success" hidden tabindex="-1">
+        <h2>Team registered!</h2>
+        <p id="fft-success-text">
+          Your team is registered for Qiskit Fall Fest!
+        </p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <site-footer></site-footer>
+    </footer>
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">
+      ↑
+    </button>
+
+    <script src="scripts/site-components.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/supabase-config.js"></script>
+    <script src="scripts/fall-fest-teams.js"></script>
+    <script src="scripts/scroll-btn.js"></script>
+  </body>
+</html>

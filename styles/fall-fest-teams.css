@@ -1,0 +1,187 @@
+/* ============================================================
+   Qiskit Fall Fest team registration (fall-fest-teams.html).
+   Loaded after fall-fest-signup.css and reuses its .ffs-* form
+   styles; this file only adds the team-specific pieces.
+   ============================================================ */
+
+/* Prize eligibility callout under the intro */
+.fft-notice {
+  max-width: 720px;
+  margin-top: 1.75rem;
+  padding: 1.1rem 1.35rem;
+  background: rgba(255, 255, 255, 0.75);
+  border-left: 4px solid var(--qff-violet);
+  border-radius: 10px;
+}
+.fft-notice h2 {
+  font-family: 'Anthropic Sans', 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--qff-violet);
+  margin: 0 0 0.35rem;
+}
+.fft-notice p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Live judging-track message under the in-person question */
+.fft-track {
+  margin: 0.75rem 0 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  background: #e6ecfd;
+  color: var(--qff-indigo);
+}
+.fft-track.warn {
+  background: #fde8f0;
+  color: #8a1342;
+}
+
+/* Member cards */
+.fft-members {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.fft-member {
+  background: #ffffff;
+  border: 1px solid #c7d3ee;
+  border-radius: 14px;
+  padding: 1.25rem 1.35rem 1.35rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.fft-member.is-lead {
+  border-color: var(--qff-violet);
+  box-shadow: 0 0 0 1px var(--qff-violet);
+}
+
+.fft-member-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+.fft-member-title {
+  font-family: 'Anthropic Sans', 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--qff-indigo);
+  margin: 0;
+}
+
+.fft-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #c7d3ee;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.fft-lead input {
+  accent-color: var(--qff-violet);
+  margin: 0;
+  cursor: pointer;
+}
+.fft-member.is-lead .fft-lead {
+  background: var(--qff-violet);
+  border-color: var(--qff-violet);
+  color: #ffffff;
+}
+.fft-member.is-lead .fft-lead input {
+  accent-color: #ffffff;
+}
+
+.fft-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fft-remove {
+  background: none;
+  border: none;
+  padding: 0.35rem 0.25rem;
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.fft-remove:hover {
+  color: #c0265e;
+}
+
+/* Two-column layout for the short fields on wider screens */
+.fft-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1.25rem;
+}
+.fft-grid > .ffs-field {
+  margin-top: 1.1rem !important;
+}
+.fft-span {
+  grid-column: 1 / -1;
+}
+
+/* Inline radio options (school, attendance) */
+.fft-inline-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+}
+.fft-inline-opts .ffs-opt {
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0.5rem;
+}
+.fft-member .ffs-other {
+  margin: 0.4rem 0 0;
+  width: 100%;
+}
+
+.fft-add-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 1.25rem;
+}
+.fft-add-row .hero-btn {
+  cursor: pointer;
+}
+.fft-add-row .hero-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.fft-add-row .hero-btn:disabled:hover {
+  background: transparent;
+  color: var(--qff-indigo);
+  border-color: var(--text-primary);
+}
+.fft-count {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .fft-grid {
+    grid-template-columns: 1fr;
+  }
+  .fft-member {
+    padding: 1.1rem 1rem 1.2rem;
+  }
+}
