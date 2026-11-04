@@ -273,7 +273,10 @@
     statusEl.textContent = '';
     statusEl.classList.remove('error');
 
-    
+    // Close form
+    showStatusError('Sorry, this form is now closed.');
+    return;
+
     // Honeypot: pretend success for bots, store nothing.
     if (form.elements.website.value) { showSuccess(''); return; }
 
