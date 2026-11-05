@@ -1,0 +1,143 @@
+/* ============================================================
+   Qiskit Fall Fest project submission (fall-fest-submit.html).
+   Loaded after fall-fest-signup.css and fall-fest-teams.css and
+   reuses their .ffs-* form styles; this adds the file pickers,
+   upload progress and success summary.
+   ============================================================ */
+
+/* Native file input, styled to match the text inputs */
+.ffp-input {
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px dashed #9fb0db;
+  border-radius: 8px;
+  background: #ffffff;
+  font-family: 'Anthropic Sans', 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.ffp-input:hover,
+.ffp-input:focus-visible {
+  border-color: var(--qff-violet);
+  background: #faf9ff;
+  outline: none;
+}
+.ffp-input::file-selector-button {
+  margin-right: 0.9rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--qff-violet);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--qff-violet);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.ffp-input:hover::file-selector-button {
+  background: var(--qff-violet);
+  color: #ffffff;
+}
+.ffs-field.ffs-invalid .ffp-input {
+  border-color: #c0265e;
+  border-style: solid;
+}
+
+/* "notebook.ipynb · 1.2 MB  ✓" line under a chosen file */
+.ffp-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--qff-indigo);
+}
+.ffp-chip::before {
+  content: '✓';
+  display: inline-grid;
+  place-items: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  background: #e6ecfd;
+  color: var(--qff-violet);
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex: none;
+}
+.ffp-chip[hidden] {
+  display: none;
+}
+.ffp-chip .ffp-size {
+  color: var(--text-secondary);
+}
+
+/* Upload progress list shown while submitting */
+.ffp-progress {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 1rem 1.25rem;
+  max-width: 760px;
+  background: rgba(245, 247, 255, 0.94);
+  border: 1px solid #c7d3ee;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.93rem;
+}
+.ffp-progress li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-secondary);
+}
+.ffp-progress li::before {
+  content: '';
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  border: 2px solid #b9c4e2;
+  flex: none;
+}
+.ffp-progress li.active {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.ffp-progress li.active::before {
+  border-color: var(--qff-violet);
+  border-right-color: transparent;
+  animation: ffp-spin 0.8s linear infinite;
+}
+.ffp-progress li.done {
+  color: var(--qff-indigo);
+}
+.ffp-progress li.done::before {
+  background: var(--qff-violet);
+  border-color: var(--qff-violet);
+}
+.ffp-progress li.failed {
+  color: #c0265e;
+}
+.ffp-progress li.failed::before {
+  border-color: #c0265e;
+}
+@keyframes ffp-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ffp-progress li.active::before { animation: none; }
+}
+
+/* Success summary */
+.ffp-success-files {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  line-height: 1.7;
+}
+.ffp-success-files span {
+  color: var(--text-secondary);
+}

@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project submission, Qiskit Fall Fest Hackathon, Waterloo Quantum Club</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/quantumclublogo-modified.png"
+    />
+    <link rel="apple-touch-icon" href="assets/quantumclublogo-modified.png" />
+    <meta
+      name="description"
+      content="Submit your team's project for the UW Quantum Qiskit Fall Fest Hackathon."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/qiskit-style.css" />
+    <link rel="stylesheet" href="styles/fall-fest-signup.css" />
+    <link rel="stylesheet" href="styles/fall-fest-submit.css" />
+  </head>
+  <body class="qiskit-page">
+    <nav class="navbar">
+      <site-navbar></site-navbar>
+    </nav>
+
+    <header class="page-hero ffs-hero">
+      <p class="ffs-eyebrow">Qiskit Fall Fest 2026</p>
+      <h1 class="page-hero-title">Project submission</h1>
+      <div class="ffs-intro">
+        <p>
+          One person per team submits the project. Please use your team name exactly
+          as registered and your <strong>team lead's email</strong>, which
+          confirms the submission is from your team.
+        </p>
+        <p>
+          You can resubmit if something changes. We judge your
+          most recent submission, so include every file each time.
+        </p>
+      </div>
+    </header>
+
+    <main class="ffs-main">
+      <form id="ffp-form" class="ffs-form" novalidate>
+        <p class="ffs-required-note"><span class="ffs-req">*</span> Required</p>
+
+        <!-- TEAM -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Team</legend>
+
+          <div class="ffs-field" id="team-name-field">
+            <label class="ffs-q" for="team_name">Team name <span class="ffs-req">*</span></label>
+            <input class="ffs-input" type="text" id="team_name" name="team_name"
+                   maxlength="50" autocomplete="off" required />
+          </div>
+
+          <div class="ffs-field" id="lead-email-field">
+            <label class="ffs-q" for="lead_email">Team lead's email <span class="ffs-req">*</span></label>
+            <p class="ffs-hint">The email of the person marked as team lead when your team registered.</p>
+            <input class="ffs-input" type="email" id="lead_email" name="lead_email"
+                   maxlength="254" autocomplete="email" required />
+          </div>
+        </fieldset>
+
+        <!-- REQUIRED FILES -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Project files</legend>
+
+          <div class="ffs-field ffp-file" data-kind="notebook">
+            <label class="ffs-q" for="file_notebook">Project notebook <span class="ffs-req">*</span></label>
+            <p class="ffs-hint">Jupyter notebook (.ipynb), up to 20 MB.</p>
+            <input class="ffp-input" type="file" id="file_notebook" accept=".ipynb" />
+            <p class="ffp-chip" hidden></p>
+          </div>
+
+          <div class="ffs-field ffp-file" data-kind="slides">
+            <label class="ffs-q" for="file_slides">Presentation slides <span class="ffs-req">*</span></label>
+            <p class="ffs-hint">
+              PDF or PowerPoint (.pptx), up to 25 MB. From Google Slides, use
+              File &rarr; Download.
+            </p>
+            <input class="ffp-input" type="file" id="file_slides" accept=".pdf,.pptx" />
+            <p class="ffp-chip" hidden></p>
+          </div>
+        </fieldset>
+
+        <!-- OPTIONAL -->
+        <fieldset class="ffs-section">
+          <legend class="ffs-section-title">Optional extras</legend>
+
+          <div class="ffs-field" id="github-field">
+            <label class="ffs-q" for="github_url">GitHub repository</label>
+            <input class="ffs-input" type="url" id="github_url" name="github_url"
+                   maxlength="300" placeholder="https://github.com/your-team/your-project" autocomplete="off" />
+          </div>
+
+          <div class="ffs-field ffp-file" data-kind="docs">
+            <label class="ffs-q" for="file_docs">Documentation or research paper</label>
+            <p class="ffs-hint">PDF, Word (.docx) or Markdown (.md), up to 15 MB.</p>
+            <input class="ffp-input" type="file" id="file_docs" accept=".pdf,.docx,.md" />
+            <p class="ffp-chip" hidden></p>
+          </div>
+
+          <div class="ffs-field ffp-file" data-kind="poster">
+            <label class="ffs-q" for="file_poster">Poster</label>
+            <p class="ffs-hint">
+              For the Quantum Symposium on Saturday, November 7. PDF, PNG or
+              JPG, up to 25 MB.
+            </p>
+            <input class="ffp-input" type="file" id="file_poster" accept=".pdf,.png,.jpg,.jpeg" />
+            <p class="ffp-chip" hidden></p>
+          </div>
+        </fieldset>
+
+        <!-- Honeypot: hidden from people, often filled in by bots. -->
+        <div class="ffs-hp" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="ffs-submit-row">
+          <button type="submit" id="ffp-submit" class="hero-btn qiskit-btn primary">Submit project</button>
+          <p id="ffp-status" class="ffs-status" role="status" aria-live="polite"></p>
+        </div>
+        <ol id="ffp-progress" class="ffp-progress" hidden></ol>
+      </form>
+
+      <div id="ffp-success" class="ffs-success" hidden tabindex="-1">
+        <h2>Project submitted!</h2>
+        <p id="ffp-success-text"></p>
+        <ul id="ffp-success-files" class="ffp-success-files"></ul>
+        <p>
+          Need to change something? Reload this page and submit again; we'll
+          judge your latest submission. Questions:
+          <a href="mailto:uwquantumclub@outlook.com">uwquantumclub@outlook.com</a>.
+        </p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <site-footer></site-footer>
+    </footer>
+    <button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top">
+      ↑
+    </button>
+
+    <script src="scripts/site-components.js"></script>
+    <script src="scripts/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/supabase-config.js"></script>
+    <script src="scripts/fall-fest-submit.js"></script>
+    <script src="scripts/scroll-btn.js"></script>
+  </body>
+</html>
