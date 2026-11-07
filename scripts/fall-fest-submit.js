@@ -177,6 +177,10 @@
     statusEl.textContent = '';
     statusEl.classList.remove('error');
 
+    // Close form
+    showStatusError('Sorry, this form is now closed.');
+    return;
+
     if (form.elements.website.value) { form.hidden = true; successEl.hidden = false; return; }
 
     submitBtn.disabled = true;
